@@ -108,6 +108,27 @@ namespace LuaVehicle
 #endif
         return 0;
     }
+
+	int RemoveAllGameObjects(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+	{
+		vehicle->RemoveAllGameObjects(true);
+		return 0;
+	}
+
+	int AttachPassenger(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+	{
+		Player* player = Eluna::CHECKOBJ<Player>(L, 2, NULL);
+		float radius = Eluna::CHECKVAL<float>(L, 3);
+		float angle = Eluna::CHECKVAL<float>(L, 4);
+		float pos_z = Eluna::CHECKVAL<float>(L, 5);
+		float orientation = Eluna::CHECKVAL<float>(L, 6);
+		uint32 spawnid = vehicle->GetBase()->ToCreature()->GetSpawnId();
+		uint32 guidlow = player->GetGUID().GetCounter();
+		if (spawnid && guidlow) {
+			sObjectMgr->AddVehiclePassenger(spawnid, guidlow, radius, angle, pos_z, orientation, 1);
+		}
+		return 0;
+	}
 }
 
 #endif // CLASSIC

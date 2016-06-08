@@ -57,7 +57,8 @@ enum CreatureFlagsExtra
     CREATURE_FLAG_EXTRA_NO_PLAYER_DAMAGE_REQ = 0x00200000,       // creature does not need to take player damage for kill credit
     CREATURE_FLAG_EXTRA_DUNGEON_BOSS         = 0x10000000,       // creature is a dungeon boss (SET DYNAMICALLY, DO NOT ADD IN DB)
     CREATURE_FLAG_EXTRA_IGNORE_PATHFINDING   = 0x20000000,       // creature ignore pathfinding
-    CREATURE_FLAG_EXTRA_IMMUNITY_KNOCKBACK   = 0x40000000        // creature is immune to knockback effects
+    CREATURE_FLAG_EXTRA_IMMUNITY_KNOCKBACK   = 0x40000000,	     // creature is immune to knockback effects
+	CREATURE_FLAG_EXTRA_WATERWALKING		 = 0x80000000       // creature waterwalking
 };
 
 #define CREATURE_FLAG_EXTRA_DB_ALLOWED (CREATURE_FLAG_EXTRA_INSTANCE_BIND | CREATURE_FLAG_EXTRA_CIVILIAN | \
@@ -170,6 +171,37 @@ struct TC_GAME_API CreatureTemplate
         return canTameExotic || !IsExotic();
     }
 };
+
+struct CharacterNPCUser
+{
+	CharacterNPCUser(uint32 entry, uint32 owner, uint32 modelID, uint32 Type, uint32 level, uint32 State, std::string Name) : entry(entry), owner(owner), modelID(modelID),
+		Type(Type), level(level), State(State), Name(Name) { }
+
+	//uint32 id;
+	uint32 entry;
+	uint32 owner;
+	uint32 modelID;
+	uint32 Type;
+	uint32 level;
+	uint32 State;
+	std::string Name;
+};
+
+struct CharacterNPC
+{
+	//uint32 id;
+	uint32 entry;
+	uint32 owner;
+	uint32 modelID;
+	uint32 Type;
+	uint32 level;
+	uint32 reactState;
+	std::string npcName;
+};
+
+typedef std::vector<CharacterNPCUser> CharacterNPCList;
+typedef std::unordered_map<uint32, CharacterNPC> CharacterNpcContainer;
+typedef std::unordered_map<uint32, CharacterNPCList> CharacterNpcUserContainer;
 
 typedef std::vector<uint32> CreatureQuestItemList;
 typedef std::unordered_map<uint32, CreatureQuestItemList> CreatureQuestItemMap;
@@ -288,6 +320,20 @@ struct CreatureModelInfo
 
 // Benchmarked: Faster than std::map (insert/find)
 typedef std::unordered_map<uint16, CreatureModelInfo> CreatureModelContainer;
+
+struct CreatureGameObjects
+{
+	CreatureGameObjects(uint32 gameobject_guid, uint32 gameobject_type, float radius, float angle, float pos_z, float orientation) :
+		gameobject_guid(gameobject_guid), gameobject_type(gameobject_type), radius(radius), angle(angle), pos_z(pos_z), orientation(orientation) { }
+	uint32 gameobject_guid;
+	uint32 gameobject_type;
+	float radius;
+	float angle;
+	float pos_z;
+	float orientation;
+};
+typedef std::vector<CreatureGameObjects> CreatureGameObjectsList;
+typedef std::map<uint32, CreatureGameObjectsList> CreatureGameObjectsContainer;
 
 enum InhabitTypeValues
 {

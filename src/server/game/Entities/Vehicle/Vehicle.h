@@ -45,6 +45,10 @@ class TC_GAME_API Vehicle : public TransportBase
         void InstallAllAccessories(bool evading);
         void ApplyAllImmunities();
         void InstallAccessory(uint32 entry, int8 seatId, bool minion, uint8 type, uint32 summonTime);   //! May be called from scripts
+		bool InstallGameObject(uint32 entry, float radius, float angle, float pos_z, float orientation, bool temp);
+		bool RemoveGameObject(uint32 entry);
+		void InstallAllGameObjects(bool evading);
+		void RemoveAllGameObjects(bool evading);
 
         Unit* GetBase() const { return _me; }
         VehicleEntry const* GetVehicleInfo() const { return _vehicleInfo; }
@@ -71,6 +75,17 @@ class TC_GAME_API Vehicle : public TransportBase
 
         void RemovePendingEventsForPassenger(Unit* passenger);
 
+		//Координаты выхода из транспорта. Получаем из vehicle_gameobject_template.
+		float exit_positionX;
+		float exit_positionY;
+		float exit_positionZ;
+
+		bool isHaveGameobject; //Транспорт, становящийся ГОшкой
+
+		float GetExitPositionX() { return exit_positionX; };
+		float GetExitPositionY() { return exit_positionY; };
+		float GetExitPositionZ() { return exit_positionZ; };
+
     protected:
         friend class VehicleJoinEvent;
         uint32 UsableSeatNum;                               ///< Number of seats that match VehicleSeatEntry::UsableByPlayer, used for proper display flags
@@ -85,6 +100,18 @@ class TC_GAME_API Vehicle : public TransportBase
 
         SeatMap::iterator GetSeatIteratorForPassenger(Unit* passenger);
         void InitMovementInfoForBase();
+
+		void SetExitPosition(float radius, float angle, float pos_z)
+		{
+			float obj_x = _me->GetPositionX();
+			float obj_y = _me->GetPositionY();
+			float obj_z = _me->GetPositionZ();
+			float o = _me->GetOrientation();
+
+			exit_positionX = obj_x + (std::cos(angle + o)*radius);
+			exit_positionY = obj_y + (std::sin(angle + o)*radius);
+			exit_positionZ = obj_z + pos_z;
+		}
 
         /// This method transforms supplied transport offsets into global coordinates
         void CalculatePassengerPosition(float& x, float& y, float& z, float* o /*= NULL*/) const override

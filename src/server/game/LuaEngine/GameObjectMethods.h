@@ -318,5 +318,73 @@ namespace LuaGameObject
         go->SetRespawnTime(respawn);
         return 0;
     }
+
+	/**
+	* Returns creature attached  of the [GameObject]
+	*
+	* @return uint32 creatureAttach
+	*/
+	int GetCreatureAttach(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		uint32 creature_attach = go->GetCreatureAttach();
+		CreatureData const* data = sObjectMgr->GetCreatureData(creature_attach);
+		if (!data)
+		{
+			TC_LOG_ERROR("entities.vehicle", "GetCreatureAttach failed, cannot get creature data!");
+			return 0;
+		}
+		TC_LOG_ERROR("entities.vehicle", "GUID: %u   entry: %u", creature_attach, data->id);
+		ObjectGuid guid = MAKE_NEW_GUID(creature_attach, data->id, HIGHGUID_VEHICLE);
+
+		TC_LOG_ERROR("entities.vehicle", "Result: %s", guid.ToString());
+		Eluna::Push(L, creature_attach);
+		return 1;
+	}
+
+	/**
+	* Move gameobject to coords and orientation.	*
+	*
+	* @param float x : x coordinate of the [Creature] or [GameObject]
+	* @param float y : y coordinate of the [Creature] or [GameObject]
+	* @param float z : z coordinate of the [Creature] or [GameObject]
+	* @param float o : o facing/orientation of the [Creature] or [GameObject]
+	* @return [WorldObject] worldObject : returns [GameObject]
+	*/
+	int MoveGameObject(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		float x = Eluna::CHECKVAL<float>(L, 2);
+		float y = Eluna::CHECKVAL<float>(L, 3);
+		float z = Eluna::CHECKVAL<float>(L, 4);
+		float o = Eluna::CHECKVAL<float>(L, 5);
+		uint32 guidLow = go->GetSpawnId();
+
+		if (!guidLow)
+			return 0;
+
+		if (!MapManager::IsValidMapCoord(go->GetMapId(), x, y, z))
+		{
+			return 0;
+		}
+
+		Map* map = go->GetMap();
+
+		go->Relocate(x, y, z, o);
+		go->SaveToDB();
+
+		// Generate a completely new spawn with new guid
+		// 3.3.5a client caches recently deleted objects and brings them back to life
+		// when CreateObject block for this guid is received again
+		// however it entirely skips parsing that block and only uses already known location
+		go->Delete();
+
+		go = new GameObject();
+		if (!go->LoadGameObjectFromDB(guidLow, map))
+		{
+			delete go;
+			return 0;
+		}
+		Eluna::Push(L, go);
+		return 1;
+	}
 };
 #endif

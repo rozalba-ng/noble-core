@@ -57,6 +57,7 @@ GameObject::GameObject() : WorldObject(false), MapObject(),
 
     m_spawnId = 0;
     m_rotation = 0;
+	m_ownerId = 0;
 
     m_lootRecipientGroup = 0;
     m_groupLootTimer = 0;
@@ -826,6 +827,7 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     stmt->setInt32(index++, int32(m_respawnDelayTime));
     stmt->setUInt8(index++, GetGoAnimProgress());
     stmt->setUInt8(index++, uint8(GetGoState()));
+	stmt->setUInt8(index++, m_ownerId);
     trans->Append(stmt);
 
     WorldDatabase.CommitTransaction(trans);

@@ -1277,6 +1277,56 @@ namespace LuaCreature
         creature->AddLootMode(lootMode);
         return 0;
     }
+
+	int UpdatePosition(Eluna* /*E*/, lua_State* L, Creature* creature)
+	{
+		float x = Eluna::CHECKVAL<float>(L, 2);
+		float y = Eluna::CHECKVAL<float>(L, 3);
+		float z = Eluna::CHECKVAL<float>(L, 4);
+		float o = Eluna::CHECKVAL<float>(L, 5);
+		Map* map = creature->GetMap();
+		uint32 spawnID = creature->GetSpawnId();
+
+		creature->Relocate(x, y, z, o);
+		creature->SaveToDB();
+		creature->AddObjectToRemoveList();
+
+		creature = new Creature();
+		if (!creature->LoadCreatureFromDB(spawnID, map))
+		{
+			delete creature;
+			return 0;
+		}
+		Eluna::Push(L, creature);
+		return 1;
+	}
+
+	int AttachGameobject(Eluna* /*E*/, lua_State* L, Creature* creature)
+	{
+		GameObject* go = Eluna::CHECKOBJ<GameObject>(L, 2, NULL);
+		float radius = Eluna::CHECKVAL<float>(L, 3);
+		float angle = Eluna::CHECKVAL<float>(L, 4);
+		float pos_z = Eluna::CHECKVAL<float>(L, 5);
+		float orientation = Eluna::CHECKVAL<float>(L, 6);
+		uint32 spawnid = creature->GetSpawnId();
+		uint32 guidlow = go->GetSpawnId();
+		if (spawnid && guidlow) {
+			sObjectMgr->AddCreatureGameobject(spawnid, guidlow, radius, angle, pos_z, orientation, 2, true);
+			go->SetCreatureAttach(spawnid);
+		}
+		return 0;
+	}
+
+	int RemoveAttachedGameobject(Eluna* /*E*/, lua_State* L, Creature* creature)
+	{
+		GameObject* go = Eluna::CHECKOBJ<GameObject>(L, 2, NULL);
+		uint32 spawnid = creature->GetSpawnId();
+		uint32 guidlow = go->GetSpawnId();
+		if (spawnid && guidlow) {
+			sObjectMgr->RemoveCreatureGameobject(creature->GetSpawnId(), go->GetSpawnId(), true);
+		}
+		return 0;
+	}
 #endif
 };
 #endif

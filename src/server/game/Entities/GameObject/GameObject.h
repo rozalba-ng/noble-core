@@ -599,7 +599,7 @@ struct GameObjectData
 {
     explicit GameObjectData() : id(0), mapid(0), phaseMask(0), posX(0.0f), posY(0.0f), posZ(0.0f), orientation(0.0f),
                                 rotation0(0.0f), rotation1(0.0f), rotation2(0.0f), rotation3(0.0f), spawntimesecs(0),
-                                animprogress(0), go_state(GO_STATE_ACTIVE), spawnMask(0), artKit(0), dbData(true) { }
+                                owner_id(0), animprogress(0), go_state(GO_STATE_ACTIVE), spawnMask(0), artKit(0), dbData(true), creature_attach(0) { }
     uint32 id;                                              // entry in gamobject_template
     uint16 mapid;
     uint32 phaseMask;
@@ -612,11 +612,13 @@ struct GameObjectData
     float rotation2;
     float rotation3;
     int32  spawntimesecs;
+	int64  owner_id;
     uint32 animprogress;
     GOState go_state;
     uint8 spawnMask;
     uint8 artKit;
     bool dbData;
+	uint32 creature_attach;
 };
 
 typedef std::vector<uint32> GameObjectQuestItemList;
@@ -663,6 +665,9 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         bool IsDestructibleBuilding() const;
 
         ObjectGuid::LowType GetSpawnId() const { return m_spawnId; }
+
+		uint32 GetCreatureAttach() const { return m_creatureAttach; }
+		void SetCreatureAttach(uint32 attach) { m_creatureAttach = attach; }
 
         void UpdateRotationFields(float rotation2 = 0.0f, float rotation3 = 0.0f);
 
@@ -876,6 +881,10 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         GameObjectTemplate const* m_goInfo;
         GameObjectData const* m_goData;
         GameObjectValue m_goValue;
+
+		uint64 m_ownerId;
+
+		uint32 m_creatureAttach;
 
         uint64 m_rotation;
         Position m_stationaryPosition;

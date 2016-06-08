@@ -51,6 +51,7 @@ UsableSeatNum(0), _me(unit), _vehicleInfo(vehInfo), _creatureEntry(creatureEntry
         _me->RemoveFlag(UNIT_NPC_FLAGS, (_me->GetTypeId() == TYPEID_PLAYER ? UNIT_NPC_FLAG_PLAYER_VEHICLE : UNIT_NPC_FLAG_SPELLCLICK));
 
     InitMovementInfoForBase();
+	isHaveGameobject = false;
 }
 
 Vehicle::~Vehicle()
@@ -97,6 +98,60 @@ void Vehicle::InstallAllAccessories(bool evading)
     for (VehicleAccessoryList::const_iterator itr = accessories->begin(); itr != accessories->end(); ++itr)
         if (!evading || itr->IsMinion)  // only install minions on evade mode
             InstallAccessory(itr->AccessoryEntry, itr->SeatId, itr->IsMinion, itr->SummonedType, itr->SummonTime);
+}
+
+void Vehicle::InstallAllGameObjects(bool evading)
+{
+	CreatureGameObjectsList const* gameobjects = sObjectMgr->GetCreatureGameObjectsList(_me->ToCreature()->GetSpawnId());
+	if (!gameobjects) {
+		// Нет контейнера закрепленного за этим существом, пытаемся найти тэмлейты с гошками.
+		VehicleGameObjectList const* gameobjects = sObjectMgr->GetVehicleGameObjectList(GetCreatureEntry());
+		if (!gameobjects)
+			return;
+		// Тэмлейты найдены, устанавливаем по их подобию гошки, их сохраняем в базу и заполняем закрепляемый за существом контейнер.
+		for (VehicleGameObjectList::const_iterator itr = gameobjects->begin(); itr != gameobjects->end(); ++itr) {
+			if (itr->GameObjectEntry == 0)
+			{
+				SetExitPosition(itr->radius, itr->angle, itr->pos_z);
+				sObjectMgr->AddCreatureGameobject(_me->ToCreature()->GetSpawnId(), 0, itr->radius, itr->angle, itr->pos_z, itr->orientation, 1, true);
+			}
+			else
+			{
+				InstallGameObject(itr->GameObjectEntry, itr->radius, itr->angle, itr->pos_z, itr->orientation, true);
+			}
+		}
+	}
+	else {
+		// Берём данные о ГОшках из хранимого контейнера.
+		for (CreatureGameObjectsList::const_iterator itr = gameobjects->begin(); itr != gameobjects->end(); ++itr) {
+			if (itr->gameobject_guid == 0)
+			{
+				SetExitPosition(itr->radius, itr->angle, itr->pos_z);
+			}
+			else
+			{
+				InstallGameObject(itr->gameobject_guid, itr->radius, itr->angle, itr->pos_z, itr->orientation, false);
+			}
+		}
+	}
+	isHaveGameobject = true;
+	//Uninstall();
+	_me->SetPhaseMask(2, false);
+	//_me->AddObjectToRemoveList();
+}
+
+void Vehicle::RemoveAllGameObjects(bool evading)
+{
+	CreatureGameObjectsList const* gameobjects = sObjectMgr->GetCreatureGameObjectsList(_me->ToCreature()->GetSpawnId());
+	if (!gameobjects)
+		return;
+	for (CreatureGameObjectsList::const_iterator itr = gameobjects->begin(); itr != gameobjects->end(); ++itr) {
+		if (itr->gameobject_guid != 0)
+		{
+			RemoveGameObject(itr->gameobject_guid);
+		}
+	}
+	isHaveGameobject = false;
 }
 
 /**
@@ -385,6 +440,114 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion, uint8 typ
     /// @VehicleJoinEvent::Abort
 }
 
+bool Vehicle::InstallGameObject(uint32 entry, float radius, float angle, float pos_z, float orientation, bool temp)
+{
+	float x = _me->GetPositionX();
+	float y = _me->GetPositionY();
+	float z = _me->GetPositionZ();
+	float o = _me->GetOrientation();
+	uint32 mapId = _me->GetMap()->GetId();
+	Map* map = _me->GetMap();
+	float obj_x = x + (std::cos(angle + o)*radius);
+	float obj_y = y + (std::sin(angle + o)*radius);
+	float obj_z = z + pos_z;
+	float obj_o = o + orientation;
+
+	uint32 guidLow = entry;
+
+	if (temp) {
+		const GameObjectTemplate* objectInfo = sObjectMgr->GetGameObjectTemplate(entry);
+		if (!objectInfo)
+		{
+			TC_LOG_ERROR("sql.sql", "Gameobject (Entry %u GoType: %u) not exist.", entry, objectInfo->type, objectInfo->displayId);
+			return false;
+		}
+		if (objectInfo->displayId && !sGameObjectDisplayInfoStore.LookupEntry(objectInfo->displayId))
+		{
+			// report to DB errors log as in loading case
+			TC_LOG_ERROR("sql.sql", "Gameobject (Entry %u GoType: %u) have invalid displayId (%u), not spawned.", entry, objectInfo->type, objectInfo->displayId);
+			return false;
+		}
+
+		GameObject* object = new GameObject;
+		guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
+		uint32 phase = 1;
+
+		if (!object->Create(guidLow, objectInfo->entry, map, phase, obj_x, obj_y, obj_z, obj_o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY))
+		{
+			delete object;
+			return false;
+		}
+		object->SetCreatureAttach(_me->ToCreature()->GetSpawnId());
+		// fill the gameobject data and save to the db
+		object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+		guidLow = object->GetSpawnId();
+
+		sObjectMgr->AddCreatureGameobject(_me->ToCreature()->GetSpawnId(), guidLow, radius, angle, pos_z, orientation, 1, true);
+
+		// delete the old object and do a clean load from DB with a fresh new GameObject instance.
+		// this is required to avoid weird behavior and memory leaks
+		delete object;
+	}
+	else {
+		const GameObjectData* goData = sObjectMgr->GetGOData(guidLow);
+		if (!goData)
+		{
+			TC_LOG_ERROR("sql.sql", "GameObject (GUID: %u) does not exist in `gameobject`", guidLow);
+			return false;
+		}
+	}
+
+	GameObject* object = new GameObject();
+	// this will generate a new guid if the object is in an instance
+	if (!object->LoadGameObjectFromDB(guidLow, map))
+	{
+		delete object;
+		return false;
+	}
+
+	if (!temp) {
+		object->Relocate(obj_x, obj_y, obj_z, obj_o);
+		object->SaveToDB();
+		object->Delete();
+
+		object = new GameObject();
+		if (!object->LoadGameObjectFromDB(guidLow, map))
+		{
+			delete object;
+			return false;
+		}
+	}
+
+	/// @todo is it really necessary to add both the real and DB table guid here ?
+	sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
+	return true;
+}
+
+bool Vehicle::RemoveGameObject(uint32 guidLow) {
+	GameObject* object = NULL;
+	TC_LOG_ERROR("entities.vehicle", "1: %u", guidLow);
+	if (GameObjectData const* gameObjectData = sObjectMgr->GetGOData(guidLow))
+	{
+		object = _me->GetMap()->GetGameObject(ObjectGuid(HighGuid::GameObject, gameObjectData->id, guidLow));
+		TC_LOG_ERROR("entities.vehicle", "2: %u", guidLow);
+		if (!object && sObjectMgr->GetGOData(guidLow))                   // guid is DB guid of object
+		{
+			TC_LOG_ERROR("entities.vehicle", "3: %u", guidLow);
+			auto bounds = _me->GetMap()->GetGameObjectBySpawnIdStore().equal_range(guidLow);
+			if (bounds.first == bounds.second)
+				TC_LOG_ERROR("entities.vehicle", "gameobject GUIDLow: %u not found", guidLow);
+
+			object = bounds.first->second;
+		}
+	}
+
+	object->SetRespawnTime(0);                                 // not save respawn time
+	object->Delete();
+	//object->DeleteFromDB();
+	return true;
+}
+
 /**
  * @fn bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
  *
@@ -491,8 +654,16 @@ Vehicle* Vehicle::RemovePassenger(Unit* unit)
 
     seat->second.Passenger.Reset();
 
-    if (_me->GetTypeId() == TYPEID_UNIT && unit->GetTypeId() == TYPEID_PLAYER && seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
-        _me->RemoveCharmedBy(unit);
+	if (_me->GetTypeId() == TYPEID_UNIT && unit->GetTypeId() == TYPEID_PLAYER && seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
+	{
+		if (_me->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_WATERWALKING)
+		{
+			unit->SetWaterWalking(false);
+		}
+		_me->RemoveCharmedBy(unit);
+		InstallAllGameObjects(true);
+		_me->ToCreature()->SaveToDB();
+	}
 
     if (_me->IsInWorld())
     {
@@ -584,12 +755,20 @@ void Vehicle::InitMovementInfoForBase()
         _me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_NO_STRAFE);
     if (vehicleFlags & VEHICLE_FLAG_NO_JUMPING)
         _me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_NO_JUMPING);
-    if (vehicleFlags & VEHICLE_FLAG_FULLSPEEDTURNING)
-        _me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_FULL_SPEED_TURNING);
+	if (vehicleFlags & VEHICLE_FLAG_FULLSPEEDTURNING)
+		_me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_FULL_SPEED_TURNING);
+	else
+	{
+		_me->SetSpeed(MOVE_TURN_RATE, GetVehicleInfo()->m_turnSpeed / baseMoveSpeed[MOVE_TURN_RATE]);
+	}
     if (vehicleFlags & VEHICLE_FLAG_ALLOW_PITCHING)
         _me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING);
     if (vehicleFlags & VEHICLE_FLAG_FULLSPEEDPITCHING)
         _me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_FULL_SPEED_PITCHING);
+	if (_me->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_WATERWALKING)
+	{
+		_me->SetWaterWalking(true);
+	}
 }
 
 /**

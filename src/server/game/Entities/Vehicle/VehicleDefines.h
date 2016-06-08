@@ -90,8 +90,35 @@ struct VehicleAccessory
     uint8 SummonedType;
 };
 
+struct VehicleGameObject
+{
+	VehicleGameObject(uint32 entry, float radius, float angle, float pos_z, float orientation) :
+		GameObjectEntry(entry), radius(radius), angle(angle), pos_z(pos_z), orientation(orientation) { }
+	uint32 GameObjectEntry;
+	float radius;
+	float angle;
+	float pos_z;
+	float orientation;
+};
+
+struct VehiclePassengers
+{
+	VehiclePassengers(uint32 passenger_guid, uint32 passenger_type, float radius, float angle, float pos_z, float orientation) :
+		passenger_guid(passenger_guid), passenger_type(passenger_type), radius(radius), angle(angle), pos_z(pos_z), orientation(orientation) { }
+	uint32 passenger_guid;
+	uint32 passenger_type;
+	float radius;
+	float angle;
+	float pos_z;
+	float orientation;
+};
+
 typedef std::vector<VehicleAccessory> VehicleAccessoryList;
+typedef std::vector<VehicleGameObject> VehicleGameObjectList;
+typedef std::vector<VehiclePassengers> VehiclePassengersList;
 typedef std::map<uint32, VehicleAccessoryList> VehicleAccessoryContainer;
+typedef std::map<uint32, VehicleGameObjectList> VehicleGameObjectContainer;
+typedef std::map<uint32, VehiclePassengersList> VehiclePassengersContainer;
 typedef std::map<int8, VehicleSeat> SeatMap;
 
 class TransportBase

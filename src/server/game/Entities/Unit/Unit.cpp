@@ -16775,8 +16775,41 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     if (GetTypeId() == TYPEID_UNIT && !CanFly() && height > GetMap()->GetWaterOrGroundLevel(GetPhaseMask(), pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), &height) + 0.1f)
         init.SetFall();
 
-    init.MoveTo(pos.GetPositionX(), pos.GetPositionY(), height, false);
-    init.SetFacing(GetOrientation());
+	float pos_x, pos_y, pos_z;
+	if ((!vehicle->GetBase()->IsCharmed()) && (vehicle->isHaveGameobject))
+	{
+		TC_LOG_ERROR("entities.vehicle", "WITH");
+		VehiclePassengersList const* passengers = sObjectMgr->GetVehiclePassengersList(vehicle->GetBase()->ToCreature()->GetSpawnId());
+		if (passengers) {
+			TC_LOG_ERROR("entities.vehicle", "WITH2");
+			for (VehiclePassengersList::const_iterator itr = passengers->begin(); itr != passengers->end(); ++itr) {
+				if (itr->passenger_type == 1 && itr->passenger_guid == player->GetGUID().GetCounter())
+				{
+					TC_LOG_ERROR("entities.vehicle", "WITH3");
+					pos_x = pos.GetPositionX() + (std::cos(itr->angle + pos.GetOrientation())*itr->radius);
+					pos_y = pos.GetPositionY() + (std::sin(itr->angle + pos.GetOrientation())*itr->radius);
+					pos_z = height + itr->pos_z + 1;
+					sObjectMgr->RemoveVehiclePassengers(vehicle->GetBase()->ToCreature()->GetSpawnId(), itr);
+					break;
+				}
+			}
+		}
+		if (!pos_x) {
+			pos_x = vehicle->GetExitPositionX() + (std::cos(urand(0, 3.14)*urand(2, 5)));
+			pos_y = vehicle->GetExitPositionY() + (std::sin(urand(0, 3.14)*urand(2, 5)));
+			pos_z = vehicle->GetExitPositionZ();
+		}
+	}
+	if (!pos_x && !pos_y && !pos_z)
+	{
+		TC_LOG_ERROR("entities.vehicle", "WITHout");
+		pos_x = pos.GetPositionX();
+		pos_y = pos.GetPositionY();
+		pos_z = height;
+	}
+
+	init.MoveTo(pos_x, pos_y, pos_z, false);
+	init.SetFacing(GetOrientation());
     init.SetTransportExit();
     init.Launch();
 

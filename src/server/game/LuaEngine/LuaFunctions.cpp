@@ -848,6 +848,9 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SelectVictim", &LuaCreature::SelectVictim },
     { "MoveWaypoint", &LuaCreature::MoveWaypoint },
     { "UpdateEntry", &LuaCreature::UpdateEntry },
+	{ "UpdatePosition", &LuaCreature::UpdatePosition },
+	{ "AttachGameobject", &LuaCreature::AttachGameobject },
+	{ "RemoveAttachedGameobject", &LuaCreature::RemoveAttachedGameobject },
 
     { NULL, NULL }
 };
@@ -861,6 +864,8 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "GetLootRecipient", &LuaGameObject::GetLootRecipient },
     { "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
     { "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow },
+	{ "MoveGameObject", &LuaGameObject::MoveGameObject },
+	{ "GetCreatureAttach", &LuaGameObject::GetCreatureAttach },
 
     // Setters
     { "SetGoState", &LuaGameObject::SetGoState },
@@ -1119,6 +1124,8 @@ ElunaRegister<Vehicle> VehicleMethods[] =
     // Other
     { "AddPassenger", &LuaVehicle::AddPassenger },
     { "RemovePassenger", &LuaVehicle::RemovePassenger },
+	{ "RemoveAllGameObjects", &LuaVehicle::RemoveAllGameObjects },
+	{ "AttachPassenger", &LuaVehicle::AttachPassenger },
 
     { NULL, NULL }
 };

@@ -1836,6 +1836,117 @@ void ObjectMgr::LoadCreatures()
     TC_LOG_INFO("server.loading", ">> Loaded " SZFMTD " creatures in %u ms", _creatureDataStore.size(), GetMSTimeDiffToNow(oldMSTime));
 }
 
+void ObjectMgr::LoadCreatureGameObjects()
+{
+	uint32 oldMSTime = getMSTime();
+
+	_creatureGameObjectsStore.clear();                           // needed for reload case
+	_vehiclePassengersStore.clear();
+
+	uint32 count = 0;
+
+	//                                                      0                 1                  2				3		 4		  5			  6                 
+	QueryResult result = WorldDatabase.Query("SELECT `creature_guid`, `gameobject_guid`, `gameobject_type`, `radius`, `angle`, `pos_z`, `orientation` FROM `creature_gameobjects`");
+
+	if (!result)
+	{
+		TC_LOG_ERROR("server.loading", ">> Loaded 0 creature gameobjects. DB table `creature_gameobjects` is empty.");
+		return;
+	}
+
+	do
+	{
+		Field* fields = result->Fetch();
+
+		uint32 creature_guid = fields[0].GetUInt32();
+		uint32 gameobject_guid = fields[1].GetUInt32();
+		uint32 gameobject_type = fields[2].GetFloat();
+		float radius = fields[3].GetFloat();
+		float angle = fields[4].GetFloat();
+		float pos_z = fields[5].GetFloat();
+		float orientation = fields[6].GetFloat();
+
+		CreatureData const* data = GetCreatureData(creature_guid);
+		if (!data)
+		{
+			TC_LOG_ERROR("sql.sql", "Table `creature_gameobjects`: creature guid %u does not exist.", creature_guid);
+			continue;
+		}
+
+		_creatureGameObjectsStore[creature_guid].push_back(CreatureGameObjects(gameobject_guid, gameobject_type, radius, angle, pos_z, orientation));
+
+		++count;
+	} while (result->NextRow());
+
+	TC_LOG_INFO("server.loading", ">> Loaded %u Creature Game Objects in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+}
+
+void ObjectMgr::AddCreatureGameobject(uint32 spawnid, uint32 guidLow, float radius, float angle, float pos_z, float orientation, uint32 type, bool to_db)
+{
+	_creatureGameObjectsStore[spawnid].push_back(CreatureGameObjects(guidLow, type, radius, angle, pos_z, orientation));
+
+	if (to_db)
+	{
+		SQLTransaction trans = WorldDatabase.BeginTransaction();
+		PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_INS_CREATURE_GAMEOBJECTS);
+		stmt->setUInt32(0, spawnid);
+		stmt->setUInt32(1, guidLow);
+		stmt->setUInt32(2, type);
+		stmt->setFloat(3, radius);
+		stmt->setFloat(4, angle);
+		stmt->setFloat(5, pos_z);
+		stmt->setFloat(6, orientation);
+		trans->Append(stmt);
+		WorldDatabase.CommitTransaction(trans);
+	}
+}
+
+bool ObjectMgr::RemoveCreatureGameobject(uint32 creature_id, uint32 gameobject_id, bool to_db)
+{
+	CreatureGameObjectsContainer::const_iterator container = _creatureGameObjectsStore.find(creature_id);
+	if (container != _creatureGameObjectsStore.end()) {
+		CreatureGameObjectsList const* list = &container->second;
+		for (CreatureGameObjectsList::const_iterator itr = list->begin(); itr != list->end(); ++itr) {
+			if (itr->gameobject_guid == gameobject_id)
+			{
+				_creatureGameObjectsStore[creature_id].erase(itr);
+				break;
+			}
+		}
+	}
+	else {
+		return false;
+	};
+
+	if (to_db)
+	{
+		SQLTransaction trans = WorldDatabase.BeginTransaction();
+		PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_CREATURE_GAMEOBJECTS);
+		stmt->setUInt32(0, creature_id);
+		stmt->setUInt32(1, gameobject_id);
+		trans->Append(stmt);
+		WorldDatabase.CommitTransaction(trans);
+	}
+	return true;
+}
+
+void ObjectMgr::AddVehiclePassenger(uint32 spawnid, uint32 guid, float radius, float angle, float pos_z, float orientation, uint32 type)
+{
+	_vehiclePassengersStore[spawnid].push_back(VehiclePassengers(guid, type, radius, angle, pos_z, orientation));
+}
+
+bool ObjectMgr::RemoveVehiclePassengers(uint32 spawnid, VehiclePassengersList::const_iterator passenger) //Пока что он чистит сохраненных пассажиров за транспортом, на котором можно ставить gameobjects.
+{
+	VehiclePassengersContainer::const_iterator container = _vehiclePassengersStore.find(spawnid);
+	if (container != _vehiclePassengersStore.end()) {
+		TC_LOG_ERROR("entity.vehicle", "count1: %u", _vehiclePassengersStore[spawnid].size());
+		_vehiclePassengersStore[spawnid].erase(passenger);
+		TC_LOG_ERROR("entity.vehicle", "count2: %u", _vehiclePassengersStore[spawnid].size());
+		return true;
+	}
+	return false;
+}
+
 void ObjectMgr::AddCreatureToGrid(ObjectGuid::LowType guid, CreatureData const* data)
 {
     uint8 mask = data->spawnMask;
@@ -1974,10 +2085,11 @@ void ObjectMgr::LoadGameobjects()
 
     //                                                0                1   2    3           4           5           6
     QueryResult result = WorldDatabase.Query("SELECT gameobject.guid, id, map, position_x, position_y, position_z, orientation, "
-    //   7          8          9          10         11             12            13     14         15         16          17
-        "rotation0, rotation1, rotation2, rotation3, spawntimesecs, animprogress, state, spawnMask, phaseMask, eventEntry, pool_entry "
+    //   7          8          9          10         11             12            13     14         15         16          17			18			19
+        "rotation0, rotation1, rotation2, rotation3, spawntimesecs, animprogress, state, spawnMask, phaseMask, eventEntry, pool_entry, owner_id, creature_guid "
         "FROM gameobject LEFT OUTER JOIN game_event_gameobject ON gameobject.guid = game_event_gameobject.guid "
-        "LEFT OUTER JOIN pool_gameobject ON gameobject.guid = pool_gameobject.guid");
+        "LEFT OUTER JOIN pool_gameobject ON gameobject.guid = pool_gameobject.guid"
+        "LEFT OUTER JOIN creature_gameobjects ON gameobject.guid = creature_gameobjects.gameobject_guid");
 
     if (!result)
     {
@@ -2041,6 +2153,8 @@ void ObjectMgr::LoadGameobjects()
         data.rotation2      = fields[9].GetFloat();
         data.rotation3      = fields[10].GetFloat();
         data.spawntimesecs  = fields[11].GetInt32();
+		data.owner_id = fields[18].GetInt64();
+		data.creature_attach = fields[19].GetUInt32();
 
         MapEntry const* mapEntry = sMapStore.LookupEntry(data.mapid);
         if (!mapEntry)
@@ -3096,6 +3210,123 @@ void ObjectMgr::LoadVehicleAccessories()
     while (result->NextRow());
 
     TC_LOG_INFO("server.loading", ">> Loaded %u Vehicle Accessories in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+}
+
+void ObjectMgr::LoadVehicleTemplateGameObject()
+{
+	uint32 oldMSTime = getMSTime();
+
+	_vehicleTemplateGameObjectStore.clear();                           // needed for reload case
+
+	uint32 count = 0;
+
+	//                                                  0             1               2        3        4           5                   
+	QueryResult result = WorldDatabase.Query("SELECT `entry`, `gameobject_entry`, `radius`, `angle`, `pos_z`, `orientation` FROM `vehicle_template_gameobject`");
+
+	if (!result)
+	{
+		TC_LOG_ERROR("server.loading", ">> Loaded 0 vehicle template accessories. DB table `vehicle_template_accessory` is empty.");
+		return;
+	}
+
+	do
+	{
+		Field* fields = result->Fetch();
+
+		uint32 entry = fields[0].GetUInt32();
+		uint32 gameobject = fields[1].GetUInt32();
+		float radius = fields[2].GetFloat();
+		float angle = fields[3].GetFloat();
+		float pos_z = fields[4].GetFloat();
+		float orientation = fields[5].GetFloat();
+
+		if (!sObjectMgr->GetCreatureTemplate(entry))
+		{
+			TC_LOG_ERROR("sql.sql", "Table `vehicle_template_gameobject`: creature template entry %u does not exist.", entry);
+			continue;
+		}
+
+		_vehicleTemplateGameObjectStore[entry].push_back(VehicleGameObject(gameobject, radius, angle, pos_z, orientation));
+
+		++count;
+	} while (result->NextRow());
+
+	TC_LOG_INFO("server.loading", ">> Loaded %u Vehicle Template Game Object in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+}
+
+void ObjectMgr::LoadCharacterNPC()
+{
+	uint32 oldMSTime = getMSTime();
+
+	_characterNpcUserStore.clear();                           // needed for reload case
+
+															  //                                                    0      1         2         3        4        5          6          7       8          9          10           11            12        13            
+	QueryResult result = CharacterDatabase.Query("SELECT `id`, `entry`, `owner`, `modelid`, `Type`, `level`, `Reactstate`, `name`, `slot`, `curhealth`, `curmana`, `curhappiness`, `abdata`, `equipment` FROM `character_npc`");
+
+	if (!result)
+	{
+		TC_LOG_ERROR("server.loading", ">> Loaded 0 character NPC. DB table `character_npc` is empty.");
+		return;
+	}
+	_characterNpcStore.rehash(result->GetRowCount());
+	uint32 count = 0;
+
+	do
+	{
+		Field* fields = result->Fetch();
+
+		uint32 id = fields[0].GetUInt32();
+		uint32 entry = fields[1].GetUInt32();
+		uint32 owner = fields[2].GetUInt32();
+		uint32 modelID = fields[3].GetUInt32();
+		uint32 Type = fields[4].GetUInt32();
+		uint32 level = fields[5].GetUInt32();
+		uint32 state = fields[6].GetUInt32();
+		std::string name = fields[7].GetString();
+
+		CharacterNPC& characterNPC = _characterNpcStore[entry];
+		characterNPC.owner = owner;
+		characterNPC.modelID = modelID;
+		characterNPC.Type = Type;
+		characterNPC.level = level;
+		characterNPC.reactState = state;
+		characterNPC.npcName = name;
+
+		if (!sObjectMgr->GetCreatureData(entry))
+		{
+			TC_LOG_ERROR("sql.sql", "Table `character_npc`: creature entry %u does not exist.", entry);
+			//continue;
+		}
+
+
+		_characterNpcUserStore[owner].push_back(CharacterNPCUser(entry, owner, modelID, Type, level, state, name));
+		/*if (CreatureData const* cr_data = sObjectMgr->GetCreatureData(entry))
+		{
+		TC_LOG_ERROR("server.loading", ">> NPC %u", cr_data->id);
+		Map* map = sMapMgr->CreateBaseMap(cr_data->mapid);
+		if (!map)
+		continue;
+		TC_LOG_ERROR("server.loading", ">> NPC2");
+		if (Creature* unit = map->GetCreature(ObjectGuid(HighGuid::Unit, cr_data->id, entry)))
+		{
+		TC_LOG_ERROR("server.loading", ">> NPC3 %s", Name);
+		unit->SetName(Name);
+		TC_LOG_ERROR("server.loading", ">> NPC3.5");
+		}
+		TC_LOG_ERROR("server.loading", ">> NPC4");
+		}*/
+
+		/*CharacterNPCList const* charnpc = sObjectMgr->GetCharacterNpcList(m_creatureData->id);
+		if (charnpc)
+		{
+		SetName(charnpc->Name);
+		TC_LOG_DEBUG("entities.unit", "renamed %s", charnpc->end()->Name);
+		}*/
+
+		++count;
+	} while (result->NextRow());
+
+	TC_LOG_INFO("server.loading", ">> Loaded %u Character's NPC in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
 }
 
 void ObjectMgr::LoadPetLevelInfo()
@@ -9160,6 +9391,22 @@ CreatureTemplate const* ObjectMgr::GetCreatureTemplate(uint32 entry)
     return NULL;
 }
 
+CharacterNPC const* ObjectMgr::GetCharacterNpc(uint32 entry) const
+{
+	CharacterNpcContainer::const_iterator itr = _characterNpcStore.find(entry);
+	if (itr != _characterNpcStore.end())
+		return &itr->second;
+	return NULL;
+}
+
+CharacterNPCList const* ObjectMgr::GetCharacterNpcUserList(uint32 owner) const
+{
+	CharacterNpcUserContainer::const_iterator itr = _characterNpcUserStore.find(owner);
+	if (itr != _characterNpcUserStore.end())
+		return &itr->second;
+	return NULL;
+}
+
 VehicleAccessoryList const* ObjectMgr::GetVehicleAccessoryList(Vehicle* veh) const
 {
     if (Creature* cre = veh->GetBase()->ToCreature())
@@ -9175,6 +9422,32 @@ VehicleAccessoryList const* ObjectMgr::GetVehicleAccessoryList(Vehicle* veh) con
     if (itr != _vehicleTemplateAccessoryStore.end())
         return &itr->second;
     return NULL;
+}
+
+VehicleGameObjectList const* ObjectMgr::GetVehicleGameObjectList(uint32 guid) const
+{
+	VehicleGameObjectContainer::const_iterator itr = _vehicleTemplateGameObjectStore.find(guid);
+	if (itr != _vehicleTemplateGameObjectStore.end())
+		return &itr->second;
+	return NULL;
+}
+
+CreatureGameObjectsList const* ObjectMgr::GetCreatureGameObjectsList(uint32 guid) const
+{
+	CreatureGameObjectsContainer::const_iterator itr = _creatureGameObjectsStore.find(guid);
+	if (itr != _creatureGameObjectsStore.end()) {
+		return &itr->second;
+	}
+	return NULL;
+}
+
+VehiclePassengersList const* ObjectMgr::GetVehiclePassengersList(uint32 guid) const
+{
+	VehiclePassengersContainer::const_iterator itr = _vehiclePassengersStore.find(guid);
+	if (itr != _vehiclePassengersStore.end()) {
+		return &itr->second;
+	}
+	return NULL;
 }
 
 PlayerInfo const* ObjectMgr::GetPlayerInfo(uint32 race, uint32 class_) const

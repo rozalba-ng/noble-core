@@ -718,6 +718,8 @@ class TC_GAME_API ObjectMgr
         void AddGameobjectInfo(GameObjectTemplate* goinfo);
 
         CreatureTemplate const* GetCreatureTemplate(uint32 entry);
+		CharacterNPC const* GetCharacterNpc(uint32 entry) const;
+		CharacterNPCList const* GetCharacterNpcUserList(uint32 entry) const;
         CreatureTemplateContainer const* GetCreatureTemplates() const { return &_creatureTemplateStore; }
         CreatureModelInfo const* GetCreatureModelInfo(uint32 modelId);
         CreatureModelInfo const* GetCreatureModelRandomGender(uint32* displayID);
@@ -899,6 +901,12 @@ class TC_GAME_API ObjectMgr
 
         VehicleAccessoryList const* GetVehicleAccessoryList(Vehicle* veh) const;
 
+		VehicleGameObjectList const* GetVehicleGameObjectList(uint32 guid) const;
+
+		VehiclePassengersList const* GetVehiclePassengersList(uint32 guid) const;
+
+		CreatureGameObjectsList const* GetCreatureGameObjectsList(uint32 entry) const;
+
         DungeonEncounterList const* GetDungeonEncounterList(uint32 mapId, Difficulty difficulty)
         {
             std::unordered_map<uint32, DungeonEncounterList>::const_iterator itr = _dungeonEncounterStore.find(MAKE_PAIR32(mapId, difficulty));
@@ -977,8 +985,14 @@ class TC_GAME_API ObjectMgr
         void LoadBroadcastTextLocales();
         void LoadCreatureClassLevelStats();
         void LoadCreatureLocales();
+		void LoadCharacterNPC();
         void LoadCreatureTemplates();
         void LoadCreatureTemplateAddons();
+		void LoadCreatureGameObjects();
+		void AddCreatureGameobject(uint32 spawnid, uint32 guidLow, float radius, float angle, float pos_z, float orientation, uint32 type = 1, bool to_db = true);
+		bool RemoveCreatureGameobject(uint32 entry, uint32 item, bool to_db = true);
+		void AddVehiclePassenger(uint32 spawnid, uint32 guidLow, float radius, float angle, float pos_z, float orientation, uint32 type = 1);
+		bool RemoveVehiclePassengers(uint32 spawnid, VehiclePassengersList::const_iterator passenger);
         void LoadCreatureTemplate(Field* fields);
         void CheckCreatureTemplate(CreatureTemplate const* cInfo);
         void LoadGameObjectQuestItems();
@@ -1007,6 +1021,7 @@ class TC_GAME_API ObjectMgr
         void LoadMailLevelRewards();
         void LoadVehicleTemplateAccessories();
         void LoadVehicleAccessories();
+		void LoadVehicleTemplateGameObject();
 
         void LoadGossipText();
 
@@ -1397,6 +1412,11 @@ class TC_GAME_API ObjectMgr
         VehicleAccessoryContainer _vehicleTemplateAccessoryStore;
         VehicleAccessoryContainer _vehicleAccessoryStore;
 
+		VehicleGameObjectContainer _vehicleTemplateGameObjectStore;
+		VehiclePassengersContainer _vehiclePassengersStore;
+
+		CreatureGameObjectsContainer _creatureGameObjectsStore;
+
         LocaleConstant DBCLocaleIndex;
 
         PageTextContainer _pageTextStore;
@@ -1443,6 +1463,8 @@ class TC_GAME_API ObjectMgr
         CreatureModelContainer _creatureModelStore;
         CreatureAddonContainer _creatureAddonStore;
         CreatureAddonTemplateContainer _creatureTemplateAddonStore;
+		CharacterNpcContainer _characterNpcStore;
+		CharacterNpcUserContainer _characterNpcUserStore;
         GameObjectAddonContainer _gameObjectAddonStore;
         GameObjectQuestItemMap _gameObjectQuestItemStore;
         CreatureQuestItemMap _creatureQuestItemStore;
