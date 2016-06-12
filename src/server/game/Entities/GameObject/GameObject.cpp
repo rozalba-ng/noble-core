@@ -184,7 +184,7 @@ void GameObject::RemoveFromWorld()
     }
 }
 
-bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit)
+bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit, uint64 owner_id)
 {
     ASSERT(map);
     SetMap(map);
@@ -244,6 +244,7 @@ bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, u
     SetUInt32Value(GAMEOBJECT_FLAGS, goinfo->flags);
 
     SetEntry(goinfo->entry);
+	m_ownerId = owner_id;
 
     // set name for logs usage, doesn't affect anything ingame
     SetName(goinfo->name);
@@ -800,6 +801,8 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     data.go_state = GetGoState();
     data.spawnMask = spawnMask;
     data.artKit = GetGoArtKit();
+	data.owner_id = m_ownerId;
+	data.creature_attach = m_creatureAttach;
 
     // Update in DB
     SQLTransaction trans = WorldDatabase.BeginTransaction();
@@ -859,9 +862,11 @@ bool GameObject::LoadGameObjectFromDB(ObjectGuid::LowType spawnId, Map* map, boo
     uint32 animprogress = data->animprogress;
     GOState go_state = data->go_state;
     uint32 artKit = data->artKit;
+	m_ownerId = data->owner_id;
+	m_creatureAttach = data->creature_attach;
 
     m_spawnId = spawnId;
-    if (!Create(map->GenerateLowGuid<HighGuid::GameObject>(), entry, map, phaseMask, x, y, z, ang, rotation0, rotation1, rotation2, rotation3, animprogress, go_state, artKit))
+    if (!Create(map->GenerateLowGuid<HighGuid::GameObject>(), entry, map, phaseMask, x, y, z, ang, rotation0, rotation1, rotation2, rotation3, animprogress, go_state, artKit, m_ownerId))
         return false;
 
     if (data->spawntimesecs >= 0)
