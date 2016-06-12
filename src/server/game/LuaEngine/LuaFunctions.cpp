@@ -864,6 +864,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "GetLootRecipient", &LuaGameObject::GetLootRecipient },
     { "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
     { "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow },
+	{ "GetOwner", &LuaGameObject::GetOwner },
 	{ "MoveGameObject", &LuaGameObject::MoveGameObject },
 	{ "GetCreatureAttach", &LuaGameObject::GetCreatureAttach },
 
@@ -998,6 +999,7 @@ ElunaRegister<Spell> SpellMethods[] =
     { "GetPowerCost", &LuaSpell::GetPowerCost },
     { "GetTargetDest", &LuaSpell::GetTargetDest },
     { "GetTarget", &LuaSpell::GetTarget },
+	{ "GetMiscValue", &LuaSpell::GetMiscValue },
 
     // Setters
     { "SetAutoRepeat", &LuaSpell::SetAutoRepeat },
@@ -1206,6 +1208,7 @@ ElunaRegister<Map> MapMethods[] =
     { "GetAreaId", &LuaMap::GetAreaId },
     { "GetHeight", &LuaMap::GetHeight },
     { "GetWorldObject", &LuaMap::GetWorldObject },
+	{ "GetCreatureBySpawnId", &LuaMap::GetCreatureBySpawnId },
 
     // Setters
     { "SetWeather", &LuaMap::SetWeather },
@@ -1380,7 +1383,11 @@ void RegisterFunctions(Eluna* E)
 #ifndef CLASSIC
 #ifndef TBC
     ElunaTemplate<Vehicle>::Register(E, "Vehicle");
-    ElunaTemplate<Vehicle>::SetMethods(E, VehicleMethods);
+	ElunaTemplate<Vehicle>::SetMethods(E, ObjectMethods);
+	ElunaTemplate<Vehicle>::SetMethods(E, WorldObjectMethods);
+	ElunaTemplate<Vehicle>::SetMethods(E, UnitMethods);
+	ElunaTemplate<Vehicle>::SetMethods(E, CreatureMethods);
+	ElunaTemplate<Vehicle>::SetMethods(E, VehicleMethods);
 #endif
 #endif
 

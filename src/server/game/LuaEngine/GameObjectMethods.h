@@ -319,6 +319,12 @@ namespace LuaGameObject
         return 0;
     }
 
+	int GetOwner(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(go->GetOwnerId())));
+		return 1;
+	}
+
 	/**
 	* Returns creature attached  of the [GameObject]
 	*

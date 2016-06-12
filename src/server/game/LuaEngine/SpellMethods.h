@@ -189,5 +189,12 @@ namespace LuaSpell
         spell->finish();
         return 0;
     }
+
+	int GetMiscValue(Eluna* /*E*/, lua_State* L, Spell* spell)
+	{
+		uint32 index = Eluna::CHECKVAL<uint32>(L, 2, 1);
+		Eluna::Push(L, spell->m_spellInfo->Effects[index].MiscValue);
+		return 1;
+	}
 };
 #endif

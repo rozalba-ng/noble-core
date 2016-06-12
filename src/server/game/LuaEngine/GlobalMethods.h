@@ -1715,21 +1715,28 @@ namespace LuaGlobalFunctions
             if (durorresptime)
                 object->SetRespawnTime(durorresptime);
 
-            if (save)
-            {
-                // fill the gameobject data and save to the db
-                object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+			//ÍÀÄÎ ÂÑÒÀÂÈÒÜ Â ÊÎÄ ÀÍÄÐÅß íà÷àëî Ñàøà
+			if (save)
+			{
+				// fill the gameobject data and save to the db
+				object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+				guidLow = object->GetSpawnId();
 
-                // this will generate a new lowguid if the object is in an instance
-                if (!object->LoadGameObjectFromDB(guidLow, map))
-                {
-                    delete object;
-                    Eluna::Push(L);
-                    return 1;
-                }
+				delete object;
 
-                eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGOData(guidLow));
-            }
+				object = new GameObject();
+				// this will generate a new lowguid if the object is in an instance
+				if (!object->LoadGameObjectFromDB(guidLow, map))
+				{
+					delete object;
+					Eluna::Push(L);
+					return 1;
+				}
+
+				eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGOData(guidLow));
+			}
+			//ÍÀÄÎ ÂÑÒÀÂÈÒÜ Â ÊÎÄ ÀÍÄÐÅß êîíåö Ñàøà
+
             else
                 map->AddToMap(object);
             Eluna::Push(L, object);

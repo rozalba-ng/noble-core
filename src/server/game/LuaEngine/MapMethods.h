@@ -320,5 +320,21 @@ namespace LuaMap
 
         return 0;
     }
+
+	int GetCreatureBySpawnId(Eluna* /*E*/, lua_State* L, Map* map)
+	{
+		uint32 spawnId = Eluna::CHECKVAL<uint32>(L, 2);
+
+		auto bounds = map->GetCreatureBySpawnIdStore().equal_range(spawnId);
+		for (auto itr = bounds.first; itr != bounds.second;)
+		{
+			Creature* c = itr->second;
+			++itr;
+			Eluna::Push(L, c);
+			return 1;
+		}
+
+		return 0;
+	}
 };
 #endif
