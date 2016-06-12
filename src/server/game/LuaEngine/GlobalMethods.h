@@ -1431,14 +1431,15 @@ namespace LuaGlobalFunctions
         float z = Eluna::CHECKVAL<float>(L, 7);
         float o = Eluna::CHECKVAL<float>(L, 8);
         bool save = Eluna::CHECKVAL<bool>(L, 9, false);
-        uint32 durorresptime = Eluna::CHECKVAL<uint32>(L, 10, 0);
+		uint32 owner = Eluna::CHECKVAL<uint32>(L, 10, 0);
+		uint32 durorresptime = Eluna::CHECKVAL<uint32>(L, 11, 0);
 #if (!defined(TBC) && !defined(CLASSIC))
-        uint32 phase = Eluna::CHECKVAL<uint32>(L, 11, PHASEMASK_NORMAL);
-        if (!phase)
-        {
-            Eluna::Push(L);
-            return 1;
-        }
+		uint32 phase = Eluna::CHECKVAL<uint32>(L, 12, PHASEMASK_NORMAL);
+		if (!phase)
+		{
+			Eluna::Push(L);
+			return 1;
+		}
 #endif
 
 #ifndef TRINITY
@@ -1705,7 +1706,7 @@ namespace LuaGlobalFunctions
             GameObject* object = new GameObject;
             uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
 
-            if (!object->Create(guidLow, objectInfo->entry, map, phase, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY))
+			if (!object->Create(guidLow, objectInfo->entry, map, phase, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY, 0, owner))
             {
                 delete object;
                 Eluna::Push(L);
