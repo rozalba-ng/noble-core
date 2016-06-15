@@ -144,6 +144,8 @@ namespace LuaSpell
             Eluna::Push(L, target);
         else if (WorldObject* target = spell->m_targets.GetObjectTarget())
             Eluna::Push(L, target);
+		else if (GameObject* target = spell->m_targets.GetLastGOTargetInArea())
+			Eluna::Push(L, target);
 #endif
         return 1;
     }

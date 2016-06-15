@@ -118,6 +118,8 @@ class TC_GAME_API SpellCastTargets
 
         ObjectGuid GetGOTargetGUID() const;
         GameObject* GetGOTarget() const;
+		GameObject* GetLastGOTargetInArea() const;
+		void SetLastGOTargetInArea(GameObject* target);
         void SetGOTarget(GameObject* target);
 
         ObjectGuid GetCorpseTargetGUID() const;
@@ -181,6 +183,7 @@ class TC_GAME_API SpellCastTargets
         ObjectGuid m_objectTargetGUID;
         ObjectGuid m_itemTargetGUID;
         uint32 m_itemTargetEntry;
+		WorldObject* m_lastEffectObjectTarget;
 
         SpellDestination m_src;
         SpellDestination m_dst;

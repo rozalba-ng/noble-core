@@ -109,6 +109,7 @@ SpellCastTargets::SpellCastTargets() : m_elevation(0), m_speed(0), m_strTarget()
 {
     m_objectTarget = NULL;
     m_itemTarget = NULL;
+	m_lastEffectObjectTarget = NULL;
 
     m_itemTargetEntry  = 0;
 
@@ -269,6 +270,22 @@ GameObject* SpellCastTargets::GetGOTarget() const
         return m_objectTarget->ToGameObject();
 
     return NULL;
+}
+
+GameObject* SpellCastTargets::GetLastGOTargetInArea() const
+{
+	if (m_lastEffectObjectTarget)
+		return m_lastEffectObjectTarget->ToGameObject();
+
+	return NULL;
+}
+
+void SpellCastTargets::SetLastGOTargetInArea(GameObject* target)
+{
+	if (!target)
+		return;
+
+	m_lastEffectObjectTarget = target;
 }
 
 void SpellCastTargets::SetGOTarget(GameObject* target)
@@ -2142,6 +2159,7 @@ void Spell::AddUnitTarget(Unit* target, uint32 effectMask, bool checkIfValid /*=
 
 void Spell::AddGOTarget(GameObject* go, uint32 effectMask)
 {
+	m_targets.SetLastGOTargetInArea(go);
     for (uint32 effIndex = 0; effIndex < MAX_SPELL_EFFECTS; ++effIndex)
     {
         if (!m_spellInfo->Effects[effIndex].IsEffect())
@@ -3124,7 +3142,7 @@ void Spell::cast(bool skipCheck)
     {
         // now that we've done the basic check, now run the scripts
         // should be done before the spell is actually executed
-        sScriptMgr->OnPlayerSpellCast(playerCaster, this, skipCheck);
+        //sScriptMgr->OnPlayerSpellCast(playerCaster, this, skipCheck);
 
         // As of 3.0.2 pets begin attacking their owner's target immediately
         // Let any pets know we've attacked something. Check DmgClass for harmful spells only
@@ -3314,6 +3332,12 @@ void Spell::cast(bool skipCheck)
         if (m_caster->ToPlayer()->GetCommandStatus(CHEAT_COOLDOWN))
             m_caster->GetSpellHistory()->ResetCooldown(m_spellInfo->Id, true);
     }
+
+	if (Player* playerCaster = m_caster->ToPlayer())
+	{
+		// Miton. Перенес в конец спелл каста, чтобы получить возможность выводить больше данных о спелле во время ивента.
+		sScriptMgr->OnPlayerSpellCast(playerCaster, this, skipCheck);
+	}
 
     SetExecutedCurrently(false);
 
@@ -4851,9 +4875,11 @@ SpellCastResult Spell::CheckCast(bool strict)
     if (m_caster->GetTypeId() == TYPEID_PLAYER && m_caster->ToPlayer()->isMoving() && (!m_caster->IsCharmed() || !m_caster->GetCharmerGUID().IsCreature()))
     {
         // skip stuck spell to allow use it in falling case and apply spell limitations at movement
-        if ((!m_caster->HasUnitMovementFlag(MOVEMENTFLAG_FALLING_FAR) || m_spellInfo->Effects[0].Effect != SPELL_EFFECT_STUCK) &&
-            (IsAutoRepeat() || (m_spellInfo->AuraInterruptFlags & AURA_INTERRUPT_FLAG_NOT_SEATED) != 0))
-            return SPELL_FAILED_MOVING;
+		/*if ((!m_caster->HasUnitMovementFlag(MOVEMENTFLAG_FALLING_FAR) || m_spellInfo->Effects[0].Effect != SPELL_EFFECT_STUCK) &&
+		(IsAutoRepeat() || (m_spellInfo->AuraInterruptFlags & AURA_INTERRUPT_FLAG_NOT_SEATED) != 0))*/
+		if ((!m_caster->HasUnitMovementFlag(MOVEMENTFLAG_FALLING_FAR) || m_spellInfo->Effects[0].Effect != SPELL_EFFECT_STUCK) &&
+			((m_spellInfo->AuraInterruptFlags & AURA_INTERRUPT_FLAG_NOT_SEATED) != 0))
+			return SPELL_FAILED_MOVING;
     }
 
     // Check vehicle flags

@@ -2565,8 +2565,9 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit* victim, SpellInfo const* spellInfo
 
     // Base hit chance from attacker and victim levels
     int32 modHitChance;
-    if (leveldif < 3)
-        modHitChance = 96 - leveldif;
+	if (leveldif < 3)
+		//modHitChance = 96 - leveldif; комбат
+		modHitChance = 100 - leveldif;
     else
         modHitChance = 94 - (leveldif - 2) * lchance;
 
@@ -2797,6 +2798,7 @@ float Unit::GetUnitMissChance(WeaponAttackType attType) const
     else
         miss_chance -= GetTotalAuraModifier(SPELL_AURA_MOD_ATTACKER_MELEE_HIT_CHANCE);
 
+	miss_chance = 5.00f; //Комбат
     return miss_chance;
 }
 
@@ -2994,7 +2996,7 @@ void Unit::_UpdateSpells(uint32 time)
 void Unit::_UpdateAutoRepeatSpell()
 {
     // check "realtime" interrupts
-    if ((GetTypeId() == TYPEID_PLAYER && ToPlayer()->isMoving()) || IsNonMeleeSpellCast(false, false, true, m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id == 75))
+    /*if ((GetTypeId() == TYPEID_PLAYER && ToPlayer()->isMoving()) || IsNonMeleeSpellCast(false, false, true, m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id == 75))
     {
         // cancel wand shoot
         if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 75)
@@ -3004,9 +3006,14 @@ void Unit::_UpdateAutoRepeatSpell()
     }
 
     // apply delay (Auto Shot (spellID 75) not affected)
-    if (m_AutoRepeatFirstCast && getAttackTimer(RANGED_ATTACK) < 500 && m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 75)
-        setAttackTimer(RANGED_ATTACK, 500);
-    m_AutoRepeatFirstCast = false;
+    if (m_AutoRepeatFirstCast && getAttackTimer(RANGED_ATTACK) < 500 && m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 75) комбат
+        setAttackTimer(RANGED_ATTACK, 500);*/
+	if (m_AutoRepeatFirstCast && getAttackTimer(RANGED_ATTACK) < 500)
+	{
+		setAttackTimer(RANGED_ATTACK, 500);
+	}
+
+	m_AutoRepeatFirstCast = false;
 
     // castroutine
     if (isAttackReady(RANGED_ATTACK))
@@ -3014,7 +3021,7 @@ void Unit::_UpdateAutoRepeatSpell()
         // Check if able to cast
         if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->CheckCast(true) != SPELL_CAST_OK)
         {
-            InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
+            //InterruptSpell(CURRENT_AUTOREPEAT_SPELL); комбат
             return;
         }
 
@@ -3051,9 +3058,12 @@ void Unit::SetCurrentCastSpell(Spell* pSpell)
             if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL])
             {
                 // break autorepeat if not Auto Shot
-                if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->GetSpellInfo()->Id != 75)
-                    InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
-                m_AutoRepeatFirstCast = true;
+                //if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->GetSpellInfo()->Id != 75) комбат
+				if (false)
+				{
+					InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
+				}
+				m_AutoRepeatFirstCast = true;
             }
             if (pSpell->GetCastTime() > 0)
                 AddUnitState(UNIT_STATE_CASTING);
@@ -3067,9 +3077,11 @@ void Unit::SetCurrentCastSpell(Spell* pSpell)
             InterruptSpell(CURRENT_CHANNELED_SPELL);
 
             // it also does break autorepeat if not Auto Shot
-            if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL] &&
-                m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->GetSpellInfo()->Id != 75)
-                InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
+			//if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL] && m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->GetSpellInfo()->Id != 75) комбат
+			if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL])
+			{
+				InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
+			}
             AddUnitState(UNIT_STATE_CASTING);
 
             break;
@@ -3077,12 +3089,13 @@ void Unit::SetCurrentCastSpell(Spell* pSpell)
         case CURRENT_AUTOREPEAT_SPELL:
         {
             // only Auto Shoot does not break anything
-            if (pSpell->GetSpellInfo()->Id != 75)
-            {
-                // generic autorepeats break generic non-delayed and channeled non-delayed spells
-                InterruptSpell(CURRENT_GENERIC_SPELL, false);
-                InterruptSpell(CURRENT_CHANNELED_SPELL, false);
-            }
+			//if (pSpell->GetSpellInfo()->Id != 75) комбат
+			if (false)
+			{
+				// generic autorepeats break generic non-delayed and channeled non-delayed spells
+				InterruptSpell(CURRENT_GENERIC_SPELL, false);
+				InterruptSpell(CURRENT_CHANNELED_SPELL, false);
+			}
             // special action: set first cast flag
             m_AutoRepeatFirstCast = true;
 
@@ -11806,7 +11819,8 @@ int32 Unit::ModifyPowerPct(Powers power, float pct, bool apply)
 
 uint32 Unit::GetAttackTime(WeaponAttackType att) const
 {
-    float f_BaseAttackTime = GetFloatValue(UNIT_FIELD_BASEATTACKTIME+att) / m_modAttackSpeedPct[att];
+	//float f_BaseAttackTime = GetFloatValue(UNIT_FIELD_BASEATTACKTIME+att) / m_modAttackSpeedPct[att]; Комбат
+	float f_BaseAttackTime = GetFloatValue(UNIT_FIELD_BASEATTACKTIME);
     return (uint32)f_BaseAttackTime;
 }
 
@@ -14627,17 +14641,20 @@ float Unit::GetAPMultiplier(WeaponAttackType attType, bool normalized)
 
     switch (Weapon->GetTemplate()->InventoryType)
     {
-        case INVTYPE_2HWEAPON:
-            return 3.3f;
-        case INVTYPE_RANGED:
-        case INVTYPE_RANGEDRIGHT:
-        case INVTYPE_THROWN:
-            return 2.8f;
-        case INVTYPE_WEAPON:
-        case INVTYPE_WEAPONMAINHAND:
-        case INVTYPE_WEAPONOFFHAND:
-        default:
-            return Weapon->GetTemplate()->SubClass == ITEM_SUBCLASS_WEAPON_DAGGER ? 1.7f : 2.4f;
+		case INVTYPE_2HWEAPON:
+			//return 3.3f; комбат
+			return 2.4f;
+		case INVTYPE_RANGED:
+		case INVTYPE_RANGEDRIGHT:
+		case INVTYPE_THROWN:
+			//return 2.8f; комбат
+			return 2.4f;
+		case INVTYPE_WEAPON:
+		case INVTYPE_WEAPONMAINHAND:
+		case INVTYPE_WEAPONOFFHAND:
+		default:
+			//return Weapon->GetTemplate()->SubClass == ITEM_SUBCLASS_WEAPON_DAGGER ? 1.7f : 2.4f; комбат
+			return 2.4f;
     }
 }
 

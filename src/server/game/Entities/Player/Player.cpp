@@ -5331,9 +5331,9 @@ uint32 Player::GetShieldBlockValue() const
 {
     float value = (m_auraBaseMod[SHIELD_BLOCK_VALUE][FLAT_MOD] + GetStat(STAT_STRENGTH) * 0.5f - 10)*m_auraBaseMod[SHIELD_BLOCK_VALUE][PCT_MOD];
 
-    value = (value < 0) ? 0 : value;
-
-    return uint32(value);
+	value = (value < 0) ? 0 : value;
+	value = 0.0f; // Êîìáàò
+	return uint32(value);
 }
 
 float Player::GetMeleeCritFromAgility() const
@@ -5350,7 +5350,8 @@ float Player::GetMeleeCritFromAgility() const
         return 0.0f;
 
     float crit = critBase->base + GetStat(STAT_AGILITY)*critRatio->ratio;
-    return crit*100.0f;
+	crit = 0.0f; // Êîìáàò
+	return crit*100.0f;
 }
 
 void Player::GetDodgeFromAgility(float &diminishing, float &nondiminishing) const
@@ -5402,8 +5403,10 @@ void Player::GetDodgeFromAgility(float &diminishing, float &nondiminishing) cons
     float bonus_agility = GetStat(STAT_AGILITY) - base_agility;
 
     // calculate diminishing (green in char screen) and non-diminishing (white) contribution
-    diminishing = 100.0f * bonus_agility * dodgeRatio->ratio * crit_to_dodge[pclass-1];
-    nondiminishing = 100.0f * (dodge_base[pclass-1] + base_agility * dodgeRatio->ratio * crit_to_dodge[pclass-1]);
+    //diminishing = 100.0f * bonus_agility * dodgeRatio->ratio * crit_to_dodge[pclass-1];
+    //nondiminishing = 100.0f * (dodge_base[pclass-1] + base_agility * dodgeRatio->ratio * crit_to_dodge[pclass-1]); êîìáàò
+	diminishing = 100.0f * bonus_agility * 0.01f;
+	nondiminishing = 100.0f * (0.03f + base_agility * 0.01f);
 }
 
 float Player::GetSpellCritFromIntellect() const
@@ -5439,9 +5442,14 @@ float Player::GetRatingMultiplier(CombatRating cr) const
     return classRating->ratio / Rating->ratio;
 }
 
+/*float Player::GetRatingBonusValue(CombatRating cr) const
+{
+    return float(GetUInt32Value(PLAYER_FIELD_COMBAT_RATING_1 + cr)) * GetRatingMultiplier(cr); êîìáàò
+}*/
+
 float Player::GetRatingBonusValue(CombatRating cr) const
 {
-    return float(GetUInt32Value(PLAYER_FIELD_COMBAT_RATING_1 + cr)) * GetRatingMultiplier(cr);
+	return float(GetUInt32Value(PLAYER_FIELD_COMBAT_RATING_1 + cr));
 }
 
 float Player::GetExpertiseDodgeOrParryReduction(WeaponAttackType attType) const
@@ -21260,9 +21268,10 @@ void Player::InitDataForForm(bool reapplyMods)
         }
         default:                                            // 0, for example
         {
-            ChrClassesEntry const* cEntry = sChrClassesStore.LookupEntry(getClass());
+            /*ChrClassesEntry const* cEntry = sChrClassesStore.LookupEntry(getClass());
             if (cEntry && cEntry->powerType < MAX_POWERS && uint32(getPowerType()) != cEntry->powerType)
-                setPowerType(Powers(cEntry->powerType));
+                setPowerType(Powers(cEntry->powerType)); êîìáàò*/
+			setPowerType(POWER_MANA);
             break;
         }
     }
