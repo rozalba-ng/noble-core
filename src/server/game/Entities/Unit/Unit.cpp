@@ -16812,6 +16812,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 			}
 		}
 		if (!pos_x) {
+			TC_LOG_ERROR("entities.vehicle", "WITH4");
 			pos_x = vehicle->GetExitPositionX() + (std::cos(urand(0, 3.14)*urand(2, 5)));
 			pos_y = vehicle->GetExitPositionY() + (std::sin(urand(0, 3.14)*urand(2, 5)));
 			pos_z = vehicle->GetExitPositionZ();

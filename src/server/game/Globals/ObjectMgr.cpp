@@ -2084,7 +2084,7 @@ void ObjectMgr::LoadGameobjects()
     uint32 oldMSTime = getMSTime();
 
     //                                                0                1   2    3           4           5           6
-    QueryResult result = WorldDatabase.Query("SELECT gameobject.guid, id, map, position_x, position_y, position_z, orientation, "
+    QueryResult result = WorldDatabase.Query("SELECT gameobject.guid, id, map, position_x, position_y, position_z, gameobject.orientation, "
     //   7          8          9          10         11             12            13     14         15         16          17			18			19
         "rotation0, rotation1, rotation2, rotation3, spawntimesecs, animprogress, state, spawnMask, phaseMask, eventEntry, pool_entry, owner_id, creature_guid "
         "FROM gameobject LEFT OUTER JOIN game_event_gameobject ON gameobject.guid = game_event_gameobject.guid "

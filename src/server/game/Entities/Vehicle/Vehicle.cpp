@@ -576,6 +576,10 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
         unit->GetName().c_str(), _me->GetEntry(), _vehicleInfo->m_ID, _me->GetGUID().GetCounter(),
         (_me->GetTypeId() == TYPEID_UNIT ? _me->ToCreature()->GetSpawnId() : 0), (int32)seatId);
 
+	float pos_x = unit->GetPositionX();
+	float pos_y = unit->GetPositionY();
+	float pos_z = unit->GetPositionZ();
+
     // The seat selection code may kick other passengers off the vehicle.
     // While the validity of the following may be arguable, it is possible that when such a passenger
     // exits the vehicle will dismiss. That's why the actual adding the passenger to the vehicle is scheduled
@@ -678,7 +682,7 @@ Vehicle* Vehicle::RemovePassenger(Unit* unit)
 
     // only for flyable vehicles
     if (unit->IsFlying())
-        _me->CastSpell(unit, VEHICLE_SPELL_PARACHUTE, true);
+        //_me->CastSpell(unit, VEHICLE_SPELL_PARACHUTE, true);
 
     if (_me->GetTypeId() == TYPEID_UNIT && _me->ToCreature()->IsAIEnabled)
         _me->ToCreature()->AI()->PassengerBoarded(unit, seat->first, false);
@@ -714,6 +718,8 @@ void Vehicle::RelocatePassengers()
             passenger->m_movementInfo.transport.pos.GetPosition(px, py, pz, po);
             CalculatePassengerPosition(px, py, pz, &po);
             passenger->UpdatePosition(px, py, pz, po);
+			if (itr->second.SeatInfo->m_flagsB & VEHICLE_SEAT_FLAG_B_MOVE_ANIM)
+				passenger->CastSpell(passenger, itr->second.SeatInfo->m_vehicleRideAnimLoop, true);
         }
     }
 }
