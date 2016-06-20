@@ -1722,8 +1722,8 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
             case RACE_TAUREN:
             case RACE_UNDEAD_PLAYER:
             case RACE_TROLL:
-            case RACE_BLOODELF:
-                team = TEAM_HORDE;
+			//case RACE_BLOODELF:
+				team = TEAM_HORDE; //BY MITON
                 break;
             default:
                 break;
