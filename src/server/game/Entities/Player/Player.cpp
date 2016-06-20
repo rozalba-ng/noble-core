@@ -724,6 +724,7 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
         switch (GetTeam())
         {
         case ALLIANCE:
+			TC_LOG_ERROR("entities.player", "%u FACTION", GetTeam());
             GetReputationMgr().SetReputation(sFactionStore.LookupEntry(72), 42999);
             GetReputationMgr().SetReputation(sFactionStore.LookupEntry(47), 42999);
             GetReputationMgr().SetReputation(sFactionStore.LookupEntry(69), 42999);
@@ -734,6 +735,7 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
             GetReputationMgr().SetReputation(sFactionStore.LookupEntry(946), 42999);
             break;
         case HORDE:
+			TC_LOG_ERROR("entities.player", "%u FACTION", GetTeam());
             GetReputationMgr().SetReputation(sFactionStore.LookupEntry(76), 42999);
             GetReputationMgr().SetReputation(sFactionStore.LookupEntry(68), 42999);
             GetReputationMgr().SetReputation(sFactionStore.LookupEntry(81), 42999);
