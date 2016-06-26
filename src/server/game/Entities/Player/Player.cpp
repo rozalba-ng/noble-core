@@ -6508,8 +6508,6 @@ uint32 Player::TeamForRace(uint8 race)
 {
     if (ChrRacesEntry const* rEntry = sChrRacesStore.LookupEntry(race))
 	{
-		if (race == RACE_BLOODELF)
-			return ALLIANCE;
         switch (rEntry->TeamID)
         {
             case 1: return HORDE;

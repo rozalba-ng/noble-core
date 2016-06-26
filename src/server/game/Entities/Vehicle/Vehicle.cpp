@@ -765,7 +765,7 @@ void Vehicle::InitMovementInfoForBase()
 		_me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_FULL_SPEED_TURNING);
 	else
 	{
-		_me->SetSpeed(MOVE_TURN_RATE, GetVehicleInfo()->m_turnSpeed / baseMoveSpeed[MOVE_TURN_RATE]);
+		//_me->SetSpeed(MOVE_TURN_RATE, GetVehicleInfo()->m_turnSpeed / baseMoveSpeed[MOVE_TURN_RATE]);
 	}
     if (vehicleFlags & VEHICLE_FLAG_ALLOW_PITCHING)
         _me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING);
