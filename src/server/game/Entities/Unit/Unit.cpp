@@ -16793,9 +16793,15 @@ void Unit::_ExitVehicle(Position const* exitPosition)
         init.SetFall();
 
 	float pos_x, pos_y, pos_z;
+	pos_x = pos.GetPositionX();
+	pos_y = pos.GetPositionY();
+	pos_z = height;
 	if ((!vehicle->GetBase()->IsCharmed()) && (vehicle->isHaveGameobject))
 	{
 		TC_LOG_ERROR("entities.vehicle", "WITH");
+		pos_x = 0.0f;
+		pos_y = 0.0f;
+		pos_z = 0.0f;
 		VehiclePassengersList const* passengers = sObjectMgr->GetVehiclePassengersList(vehicle->GetBase()->ToCreature()->GetSpawnId());
 		if (passengers) {
 			TC_LOG_ERROR("entities.vehicle", "WITH2");
@@ -16811,19 +16817,16 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 				}
 			}
 		}
-		if (!pos_x) {
+		if (pos_x == 0.0f) {
 			TC_LOG_ERROR("entities.vehicle", "WITH4");
 			pos_x = vehicle->GetExitPositionX() + (std::cos(urand(0, 3.14)*urand(2, 5)));
 			pos_y = vehicle->GetExitPositionY() + (std::sin(urand(0, 3.14)*urand(2, 5)));
 			pos_z = vehicle->GetExitPositionZ();
 		}
 	}
-	if (pos_x == 0.0f && pos_y == 0.0f && pos_z == 0.0f)
+	else
 	{
 		TC_LOG_ERROR("entities.vehicle", "WITHout");
-		pos_x = pos.GetPositionX();
-		pos_y = pos.GetPositionY();
-		pos_z = height;
 	}
 
 	init.MoveTo(pos_x, pos_y, pos_z, false);
