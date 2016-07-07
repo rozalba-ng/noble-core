@@ -16818,7 +16818,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 			pos_z = vehicle->GetExitPositionZ();
 		}
 	}
-	if (pos_x == 0 && pos_y == 0 && pos_z == 0)
+	if (pos_x == 0.0f && pos_y == 0.0f && pos_z == 0.0f)
 	{
 		TC_LOG_ERROR("entities.vehicle", "WITHout");
 		pos_x = pos.GetPositionX();
