@@ -620,7 +620,8 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
 
     SetMap(sMapMgr->CreateMap(info->mapId, this));
 
-    uint8 powertype = cEntry->powerType;
+    //uint8 powertype = cEntry->powerType; комбат
+	uint8 powertype = 0;
 
     SetObjectScale(1.0f);
 
@@ -5486,8 +5487,9 @@ float Player::OCTRegenHPPerSpirit() const
     float baseSpirit = spirit;
     if (baseSpirit > 50)
         baseSpirit = 50;
-    float moreSpirit = spirit - baseSpirit;
-    float regen = baseSpirit * baseRatio->ratio + moreSpirit * moreRatio->ratio;
+    //float moreSpirit = spirit - baseSpirit;
+    //float regen = baseSpirit * baseRatio->ratio + moreSpirit * moreRatio->ratio; комбат
+	float regen = spirit * 0.025f;
     return regen;
 }
 
@@ -5506,7 +5508,8 @@ float Player::OCTRegenMPPerSpirit() const
 
     // Formula get from PaperDollFrame script
     float spirit    = GetStat(STAT_SPIRIT);
-    float regen     = spirit * moreRatio->ratio;
+    //float regen     = spirit * moreRatio->ratio; комбат
+	float regen = spirit * 0.025f;
     return regen;
 }
 

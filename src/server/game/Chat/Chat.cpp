@@ -656,8 +656,14 @@ size_t ChatHandler::BuildChatPacket(WorldPacket& data, ChatMsg chatType, Languag
 
             if (chatType == CHAT_MSG_CHANNEL)
             {
-                ASSERT(channelName.length() > 0);
-                data << channelName;
+				if (channelName.length() > 0) {
+					//ASSERT(channelName.length() > 0);
+					data << channelName;
+				}
+				else {
+					TC_LOG_ERROR("entities.player", "Send malf ch message: %S", senderName);
+					return false;
+				}
             }
 
             receiverGUIDPos = data.wpos();
