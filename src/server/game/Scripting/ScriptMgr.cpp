@@ -989,7 +989,7 @@ void ScriptMgr::Initialize()
     FillSpellSummary();
 
     // Load core scripts
-    SetScriptContext("___static___");
+    SetScriptContext(GetNameOfStaticContext());
 
     // SmartAI
     AddSC_SmartScripts();
@@ -1042,6 +1042,12 @@ void ScriptMgr::SwapScriptContext(bool initialize)
 {
     sScriptRegistryCompositum->SwapContext(initialize);
     _currentContext.clear();
+}
+
+std::string const& ScriptMgr::GetNameOfStaticContext()
+{
+    static std::string const name = "___static___";
+    return name;
 }
 
 void ScriptMgr::ReleaseScriptContext(std::string const& context)
