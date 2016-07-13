@@ -24173,6 +24173,7 @@ uint32 Player::GetBarberShopCost(uint8 newhairstyle, uint8 newhaircolor, uint8 n
     if (newSkin && skincolor != newSkin->hair_id)
         cost += bsc->cost * 0.75f;                          // +5/6 of price
 
+	cost = 0;
     return uint32(cost);
 }
 

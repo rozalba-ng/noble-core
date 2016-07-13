@@ -3153,6 +3153,7 @@ void Spell::EffectWeaponDmg(SpellEffIndex effIndex)
     float totalDamagePercentMod  = 1.0f;                    // applied to final bonus+weapon damage
     int32 fixed_bonus = 0;
     int32 spell_bonus = 0;                                  // bonus specific for spell
+	int32 totalDamageForced = 0;
 
     switch (m_spellInfo->SpellFamilyName)
     {
@@ -3174,6 +3175,17 @@ void Spell::EffectWeaponDmg(SpellEffIndex effIndex)
                     fixed_bonus += (aur->GetStackAmount() - 1) * CalculateDamage(2, unitTarget);
                 }
             }
+			if (m_spellInfo->SpellFamilyFlags[2] & 0x80) //Удар правый, при наличии второго оружия.
+			{
+				Item* mainhand = m_caster->ToPlayer()->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND);
+				Item* offhand = m_caster->ToPlayer()->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND);
+				if(offhand && mainhand)
+				{
+					int32 mainhanddmg = m_caster->CalculateDamage(BASE_ATTACK, true, true);
+					int32 offhanddmg = m_caster->CalculateDamage(OFF_ATTACK, true, true);
+					totalDamageForced = offhanddmg + mainhanddmg;
+				}				
+			}
             if (m_spellInfo->SpellFamilyFlags[0] & 0x8000000) // Mocking Blow
             {
                 if (unitTarget->IsImmunedToSpellEffect(m_spellInfo, EFFECT_1) || unitTarget->GetTypeId() == TYPEID_PLAYER)
@@ -3386,6 +3398,9 @@ void Spell::EffectWeaponDmg(SpellEffIndex effIndex)
     }
 
     int32 weaponDamage = m_caster->CalculateDamage(m_attackType, normalized, true);
+
+	if (totalDamageForced != 0)
+		weaponDamage = totalDamageForced;
 
     // Sequence is important
     for (int j = 0; j < MAX_SPELL_EFFECTS; ++j)
