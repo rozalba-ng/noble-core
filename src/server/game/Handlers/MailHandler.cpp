@@ -127,7 +127,7 @@ void WorldSession::HandleSendMail(WorldPacket& recvData)
         return;
     }
 
-    uint32 cost = items_count ? 30 * items_count : 30;  // price hardcoded in client
+    uint32 cost = items_count ? 6 * items_count : 2;  // price hardcoded in client
 
     uint32 reqmoney = cost + money;
 
