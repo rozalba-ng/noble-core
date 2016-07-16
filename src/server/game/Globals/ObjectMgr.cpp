@@ -2153,7 +2153,7 @@ void ObjectMgr::LoadGameobjects()
         data.rotation2      = fields[9].GetFloat();
         data.rotation3      = fields[10].GetFloat();
         data.spawntimesecs  = fields[11].GetInt32();
-		data.owner_id = fields[18].GetInt64();
+		data.owner_id = fields[18].GetInt32();
 		data.creature_attach = fields[19].GetUInt32();
 
         MapEntry const* mapEntry = sMapStore.LookupEntry(data.mapid);
