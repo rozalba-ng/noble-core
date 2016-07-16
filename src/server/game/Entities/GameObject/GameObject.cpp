@@ -830,7 +830,7 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     stmt->setInt32(index++, int32(m_respawnDelayTime));
     stmt->setUInt8(index++, GetGoAnimProgress());
     stmt->setUInt8(index++, uint8(GetGoState()));
-	stmt->setUInt8(index++, m_ownerId);
+	stmt->setUInt32(index++, m_ownerId);
     trans->Append(stmt);
 
     WorldDatabase.CommitTransaction(trans);
