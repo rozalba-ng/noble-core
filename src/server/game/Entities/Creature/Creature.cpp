@@ -855,7 +855,7 @@ void Creature::Motion_Initialize()
         GetMotionMaster()->Initialize();
 }
 
-bool Creature::Create(ObjectGuid::LowType guidlow, Map* map, uint32 phaseMask, uint32 entry, float x, float y, float z, float ang, CreatureData const* data /*= nullptr*/, uint32 vehId /*= 0*/)
+bool Creature::Create(ObjectGuid::LowType guidlow, Map* map, uint32 phaseMask, uint32 entry, float x, float y, float z, float ang, CreatureData const* data /*= nullptr*/, uint32 vehId /*= 0*/, uint32 owner_id /*= 0*/)
 {
     ASSERT(map);
     SetMap(map);
@@ -917,6 +917,8 @@ bool Creature::Create(ObjectGuid::LowType guidlow, Map* map, uint32 phaseMask, u
         SetNativeDisplayId(displayID);
         SetByteValue(UNIT_FIELD_BYTES_0, UNIT_BYTES_0_OFFSET_GENDER, minfo->gender);
     }
+
+	m_ownerId = owner_id;
 
     LastUsedScriptID = GetCreatureTemplate()->ScriptID;
 
@@ -1125,6 +1127,7 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     data.npcflag = npcflag;
     data.unit_flags = unit_flags;
     data.dynamicflags = dynamicflags;
+	data.owner_id = m_ownerId;
 
     // update in DB
     SQLTransaction trans = WorldDatabase.BeginTransaction();
@@ -1157,6 +1160,7 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     stmt->setUInt32(index++, npcflag);
     stmt->setUInt32(index++, unit_flags);
     stmt->setUInt32(index++, dynamicflags);
+	stmt->setUInt32(index++, m_ownerId);
     trans->Append(stmt);
 
     WorldDatabase.CommitTransaction(trans);
@@ -1374,6 +1378,7 @@ bool Creature::LoadCreatureFromDB(ObjectGuid::LowType spawnId, Map* map, bool ad
 
     m_respawnDelay = data->spawntimesecs;
     m_deathState = ALIVE;
+	m_ownerId = data->owner_id;
 
     m_respawnTime  = GetMap()->GetCreatureRespawnTime(m_spawnId);
     if (m_respawnTime)                          // respawn on Update

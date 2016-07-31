@@ -1327,6 +1327,12 @@ namespace LuaCreature
 		}
 		return 0;
 	}
+
+	int GetOwner(Eluna* /*E*/, lua_State* L, Creature* creature)
+	{
+		Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(creature->GetOwnerId())));
+		return 1;
+	}
 #endif
 };
 #endif

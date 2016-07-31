@@ -776,6 +776,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
 #endif
     { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
+	{ "GetOwner", &LuaCreature::GetOwner },	
 
     // Setters
     { "SetHover", &LuaCreature::SetHover },
