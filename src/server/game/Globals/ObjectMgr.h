@@ -708,7 +708,7 @@ class TC_GAME_API ObjectMgr
 
         typedef std::map<uint32, uint32> CharacterConversionMap;
 
-        Player* GetPlayerByLowGUID(ObjectGuid::LowType lowguid) const;
+        Player* GetPlayerByLowGUID(ObjectGuid::LowType lowguid) const;		
 
         GameObjectTemplate const* GetGameObjectTemplate(uint32 entry);
         GameObjectTemplateContainer const* GetGameObjectTemplates() const { return &_gameObjectTemplateStore; }
@@ -791,6 +791,7 @@ class TC_GAME_API ObjectMgr
         */
         bool GetPlayerNameByGUID(ObjectGuid guid, std::string& name) const;
         uint32 GetPlayerTeamByGUID(ObjectGuid guid) const;
+		uint32 GetPlayerDmLevelByAccountId(uint32 accountID) const;
         uint32 GetPlayerAccountIdByGUID(ObjectGuid guid) const;
         uint32 GetPlayerAccountIdByPlayerName(std::string const& name) const;
 

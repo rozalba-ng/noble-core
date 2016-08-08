@@ -3938,6 +3938,18 @@ namespace LuaPlayer
     }
 #endif
 
+	int GetTargetCreature(Eluna* /*E*/, lua_State* L, Player* player)
+	{		
+		Eluna::Push(L, ObjectAccessor::GetCreatureOrPetOrVehicle(*player, player->GetTarget()));
+		return 1;
+	}
+
+	int GetDmLevel(Eluna* /*E*/, lua_State* L, Player* player)
+	{
+		Eluna::Push(L, player->GetDmLevel());
+		return 1;
+	}	
+
     /*int BindToInstance(Eluna* E, lua_State* L, Player* player)
     {
     player->BindToInstance();

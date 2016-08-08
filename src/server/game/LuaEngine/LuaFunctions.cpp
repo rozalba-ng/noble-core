@@ -502,6 +502,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetCorpse", &LuaPlayer::GetCorpse },
     { "GetGossipTextId", &LuaPlayer::GetGossipTextId },
     { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
+	{ "GetTargetCreature", &LuaPlayer::GetTargetCreature },
+	{ "GetDmLevel", &LuaPlayer::GetDmLevel },	
 #ifndef CATA
     { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
 #endif
@@ -852,6 +854,7 @@ ElunaRegister<Creature> CreatureMethods[] =
 	{ "UpdatePosition", &LuaCreature::UpdatePosition },
 	{ "AttachGameobject", &LuaCreature::AttachGameobject },
 	{ "RemoveAttachedGameobject", &LuaCreature::RemoveAttachedGameobject },
+	{ "Delete", &LuaCreature::Delete },		
 
     { NULL, NULL }
 };

@@ -2141,6 +2141,8 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
 
         uint32 DoRandomRoll(uint32 minimum, uint32 maximum);
 
+		uint32 GetDmLevel() const { return m_dmlevel; }
+
         /*********************************************************/
         /***                 INSTANCE SYSTEM                   ***/
         /*********************************************************/
@@ -2394,6 +2396,8 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         Difficulty m_raidMapDifficulty;
 
         uint32 m_atLoginFlags;
+
+		uint32 m_dmlevel;
 
         Item* m_items[PLAYER_SLOTS_COUNT];
         uint32 m_currentBuybackSlot;

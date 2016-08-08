@@ -2338,6 +2338,23 @@ uint32 ObjectMgr::GetPlayerTeamByGUID(ObjectGuid guid) const
     return 0;
 }
 
+uint32 ObjectMgr::GetPlayerDmLevelByAccountId(uint32 accountID) const
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_ACCOUNT_DMLEVEL);
+
+	stmt->setUInt32(0, accountID);
+
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (result)
+	{
+		uint32 dmlevel = (*result)[0].GetUInt32();
+		return dmlevel;
+	}
+
+	return 0;
+}
+
 uint32 ObjectMgr::GetPlayerAccountIdByGUID(ObjectGuid guid) const
 {
     if (CharacterInfo const* characterInfo = sWorld->GetCharacterInfo(guid))

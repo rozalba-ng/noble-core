@@ -1333,6 +1333,20 @@ namespace LuaCreature
 		Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(creature->GetOwnerId())));
 		return 1;
 	}
+
+	int Delete(Eluna* /*E*/, lua_State* L, Creature* creature)
+	{
+		if (!creature || creature->IsPet() || creature->IsTotem())
+		{
+			return 0;
+		}
+
+		// Delete the creature
+		creature->CombatStop();
+		creature->DeleteFromDB();
+		creature->AddObjectToRemoveList();
+		return 0;
+	}
 #endif
 };
 #endif

@@ -533,6 +533,8 @@ Player::Player(WorldSession* session): Unit(true)
 
     m_achievementMgr = new AchievementMgr(this);
     m_reputationMgr = new ReputationMgr(this);
+
+	m_dmlevel = 0;
 }
 
 Player::~Player()
@@ -17483,6 +17485,8 @@ bool Player::LoadFromDB(ObjectGuid guid, SQLQueryHolder *holder)
 
     TC_LOG_DEBUG("entities.player.loading", "Player::LoadFromDB: The value of player '%s' after load item and aura is: ", m_name.c_str());
     outDebugValues();
+
+	m_dmlevel = sObjectMgr->GetPlayerDmLevelByAccountId(GetSession()->GetAccountId());
 
     // GM state
     if (GetSession()->HasPermission(rbac::RBAC_PERM_RESTORE_SAVED_GM_STATE))

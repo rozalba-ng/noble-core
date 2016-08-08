@@ -1642,7 +1642,7 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 Creature* creature = new Creature();
-                if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, x, y, z, o))
+                if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, x, y, z, o, nullptr, 0, owner))
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1670,7 +1670,7 @@ namespace LuaGlobalFunctions
             }
             else
             {
-                TempSummon* creature = map->SummonCreature(entry, pos, NULL, durorresptime);
+                TempSummon* creature = map->SummonCreature(entry, pos, NULL, durorresptime, NULL, 0, 0, owner);
                 if (!creature)
                 {
                     Eluna::Push(L);
