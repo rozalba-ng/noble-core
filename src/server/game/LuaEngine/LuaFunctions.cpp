@@ -504,6 +504,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
 	{ "GetTargetCreature", &LuaPlayer::GetTargetCreature },
 	{ "GetDmLevel", &LuaPlayer::GetDmLevel },	
+	{ "GetSelectedUnit", &LuaPlayer::GetSelectedUnit },
 #ifndef CATA
     { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
 #endif

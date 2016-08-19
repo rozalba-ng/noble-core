@@ -3950,6 +3950,12 @@ namespace LuaPlayer
 		return 1;
 	}	
 
+	int GetSelectedUnit(Eluna* /*E*/, lua_State* L, Player* player)
+	{
+		Eluna::Push(L, player->GetSelectedUnit());
+		return 1;
+	}	
+
     /*int BindToInstance(Eluna* E, lua_State* L, Player* player)
     {
     player->BindToInstance();
