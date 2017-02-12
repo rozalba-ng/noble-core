@@ -1390,6 +1390,7 @@ void Guild::HandleSetInfo(WorldSession* session, std::string const& info)
 void Guild::HandleSetEmblem(WorldSession* session, const EmblemInfo& emblemInfo)
 {
     Player* player = session->GetPlayer();
+	TC_LOG_ERROR("entities.player", "HandleSetEmblem");
     if (!_IsLeader(player))
         SendSaveEmblemResult(session, ERR_GUILDEMBLEM_NOTGUILDMASTER); // "Only guild leaders can create emblems."
     else if (!player->HasEnoughMoney(EMBLEM_PRICE))

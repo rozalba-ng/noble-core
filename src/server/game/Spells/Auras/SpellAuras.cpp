@@ -37,6 +37,10 @@
 #include "SpellScript.h"
 #include "Vehicle.h"
 #include "Config.h"
+#ifdef ELUNA
+#include "LuaEngine.h"
+#include "ElunaEventMgr.h"
+#endif
 
 AuraApplication::AuraApplication(Unit* target, Unit* caster, Aura* aura, uint8 effMask):
 _target(target), _base(aura), _removeMode(AURA_REMOVE_NONE), _slot(MAX_AURAS),
@@ -269,10 +273,26 @@ Aura* Aura::TryRefreshStackOrCreate(SpellInfo const* spellproto, uint8 tryEffMas
 
         if (refresh)
             *refresh = true;
+
+#ifdef ELUNA
+		if (owner->ToUnit())
+		{
+			sEluna->OnAuraApply(owner->ToUnit(), foundAura);
+		}
+#endif
         return foundAura;
     }
-    else
-        return Create(spellproto, effMask, owner, caster, baseAmount, castItem, casterGUID);
+	else
+	{
+		Aura* aura = Create(spellproto, effMask, owner, caster, baseAmount, castItem, casterGUID);
+#ifdef ELUNA
+		if (owner->ToUnit())
+		{
+			sEluna->OnAuraApply(owner->ToUnit(), aura);
+		}
+#endif
+		return aura;
+	}
 }
 
 Aura* Aura::TryCreate(SpellInfo const* spellproto, uint8 tryEffMask, WorldObject* owner, Unit* caster, int32* baseAmount /*= NULL*/, Item* castItem /*= NULL*/, ObjectGuid casterGUID /*= ObjectGuid::Empty*/)
@@ -464,6 +484,12 @@ void Aura::_Remove(AuraRemoveMode removeMode)
     {
         AuraApplication * aurApp = appItr->second;
         Unit* target = aurApp->GetTarget();
+#ifdef ELUNA
+		if (target)
+		{
+			sEluna->OnAuraRemove(target, this);
+		}
+#endif
         target->_UnapplyAura(aurApp, removeMode);
         appItr = m_applications.begin();
     }

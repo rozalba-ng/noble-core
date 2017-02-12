@@ -80,6 +80,22 @@ void Eluna::OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void Eluna::OnAuraApply(Unit* pUnit, Aura* pAura)
+{
+	START_HOOK(PLAYER_EVENT_ON_AURA_APPLY);
+	Push(pUnit);
+	Push(pAura);
+	CallAllFunctions(PlayerEventBindings, key);
+}
+
+void Eluna::OnAuraRemove(Unit* pUnit, Aura* pAura)
+{
+	START_HOOK(PLAYER_EVENT_ON_AURA_REMOVE);
+	Push(pUnit);
+	Push(pAura);
+	CallAllFunctions(PlayerEventBindings, key);
+}
+
 void Eluna::OnLootMoney(Player* pPlayer, uint32 amount)
 {
     START_HOOK(PLAYER_EVENT_ON_LOOT_MONEY);

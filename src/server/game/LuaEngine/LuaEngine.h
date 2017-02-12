@@ -69,6 +69,7 @@ class InstanceData;
 #endif
 class ElunaInstanceAI;
 class Item;
+class Aura;
 class Pet;
 class Player;
 class Quest;
@@ -329,6 +330,8 @@ public:
     bool OnCommand(Player* player, const char* text);
     void OnWorldUpdate(uint32 diff);
     void OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid);
+	void OnAuraApply(Unit* pUnit, Aura* pAura);
+	void OnAuraRemove(Unit* pUnit, Aura* pAura);
     void OnLootMoney(Player* pPlayer, uint32 amount);
     void OnFirstLogin(Player* pPlayer);
     void OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);

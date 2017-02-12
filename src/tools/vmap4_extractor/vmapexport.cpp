@@ -333,14 +333,16 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames)
     {
         pArchiveNames.push_back(in_path + *i + "/locale-" + *i + ".MPQ");
         pArchiveNames.push_back(in_path + *i + "/expansion-locale-" + *i + ".MPQ");
-        pArchiveNames.push_back(in_path + *i + "/lichking-locale-" + *i + ".MPQ");
+        pArchiveNames.push_back(in_path + *i + "/lichking-locale-" + *i + ".MPQ");		
     }
 
     // open expansion and common files
     pArchiveNames.push_back(input_path + std::string("common.MPQ"));
     pArchiveNames.push_back(input_path + std::string("common-2.MPQ"));
     pArchiveNames.push_back(input_path + std::string("expansion.MPQ"));
-    pArchiveNames.push_back(input_path + std::string("lichking.MPQ"));
+	pArchiveNames.push_back(input_path + std::string("patch-X.MPQ"));
+	pArchiveNames.push_back(input_path + std::string("patch-Y.MPQ"));
+	pArchiveNames.push_back(input_path + std::string("patch-Z.MPQ"));
 
     // now, scan for the patch levels in the core dir
     printf("Scanning patch levels from data directory.\n");
@@ -358,6 +360,23 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames)
         if(scan_patches(path, pArchiveNames))
             foundOne = true;
     }
+	char MPQ_alphabet[] = { 'R','S','T','U','V','W','X','Y','Z' };
+	for (int j = 0; j < 9; ++j)
+	{
+		char filePath[512];
+		//char filePath[512] = in_path + *i + "/patch-" + *i + "-" + MPQ_alphabet[j] + ".MPQ";
+		sprintf(filePath, "%s/ruRU/patch-ruRU-%c.MPQ", input_path, MPQ_alphabet[j]);
+#ifdef __linux__
+		if (FILE* h = fopen64(filePath, "rb"))
+#else
+		if (FILE* h = fopen(filePath, "rb"))
+#endif
+		{
+			fclose(h);
+			//matches.push_back(path);
+			pArchiveNames.push_back(filePath);
+		}
+	}
 
     printf("\n");
 

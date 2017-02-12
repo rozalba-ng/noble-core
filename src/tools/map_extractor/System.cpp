@@ -937,7 +937,7 @@ void ExtractMapsFromMpq(uint32 build)
         WDT_file wdt;
         if (!wdt.loadFile(mpqMapName, false))
         {
-//            printf("Error loading %s map wdt data\n", map_ids[z].name);
+            printf("Error loading %s map wdt data\n", map_ids[z].name);
             continue;
         }
 
@@ -1092,6 +1092,16 @@ void LoadLocaleMPQFiles(int const locale)
         if (boost::filesystem::exists(fileName))
             new MPQArchive(fileName.c_str());
     }
+	char MPQ_alphabet[] = { 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z' };
+	for (int i = 0; i < 26; ++i)
+	{
+		std::string ext;
+		ext = Trinity::StringFormat("-%c", MPQ_alphabet[i]);
+
+		fileName = Trinity::StringFormat("%s/Data/%s/patch-%s%s.MPQ", input_path, langs[locale], langs[locale], ext.c_str());
+		if (boost::filesystem::exists(fileName))
+			new MPQArchive(fileName.c_str());
+	}
 }
 
 void LoadCommonMPQFiles()

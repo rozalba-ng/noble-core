@@ -50,7 +50,6 @@ bool FileLoader::loadFile(std::string const& fileName, bool log)
     }
 
     data_size = mf.getSize();
-
     data = new uint8 [data_size];
     mf.read(data, data_size);
     mf.close();
@@ -66,11 +65,15 @@ bool FileLoader::loadFile(std::string const& fileName, bool log)
 bool FileLoader::prepareLoadedData()
 {
     // Check version
-    version = (file_MVER *) data;
-    if (version->fcc != MverMagic.fcc)
-        return false;
-    if (version->ver != FILE_FORMAT_VERSION)
-        return false;
+    version = (file_MVER *) data;	
+	if (version->fcc != MverMagic.fcc) {
+		printf("Wrong MVER");
+		return false;
+	}
+	if (version->ver != FILE_FORMAT_VERSION) {
+		printf("Wrong MVER 2");
+		return false;
+	}
     return true;
 }
 
