@@ -20569,6 +20569,8 @@ void Player::VehicleSpellInitialize()
         {
             TC_LOG_DEBUG("condition", "Player::VehicleSpellInitialize: Player '%s' (%s) doesn't meet conditions for vehicle (Entry: %u, Spell: %u)",
                 GetName().c_str(), GetGUID().ToString().c_str(), vehicle->ToCreature()->GetEntry(), spellId);
+			TC_LOG_ERROR("Entity:Player", "Player::VehicleSpellInitialize: Player '%s' (%s) doesn't meet conditions for vehicle (Entry: %u, Spell: %u)",
+				GetName().c_str(), GetGUID().ToString().c_str(), vehicle->ToCreature()->GetEntry(), spellId);
             data << uint16(0) << uint8(0) << uint8(i+8);
             continue;
         }

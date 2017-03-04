@@ -14,334 +14,359 @@
  */
 namespace LuaGlobalFunctions
 {
-    /**
-     * Returns Lua engine's name.
-     *
-     * Always returns "ElunaEngine" on Eluna.
-     *
-     * @return string engineName
-     */
-    int GetLuaEngine(Eluna* /*E*/, lua_State* L)
-    {
-        Eluna::Push(L, "ElunaEngine");
-        return 1;
-    }
+	/**
+	 * Returns Lua engine's name.
+	 *
+	 * Always returns "ElunaEngine" on Eluna.
+	 *
+	 * @return string engineName
+	 */
+	int GetLuaEngine(Eluna* /*E*/, lua_State* L)
+	{
+		Eluna::Push(L, "ElunaEngine");
+		return 1;
+	}
 
-    /**
-     * Returns emulator's name.
-     *
-     * The result will be either `MaNGOS`, `cMaNGOS`, or `TrinityCore`.
-     *
-     * @return string coreName
-     */
-    int GetCoreName(Eluna* /*E*/, lua_State* L)
-    {
-        Eluna::Push(L, CORE_NAME);
-        return 1;
-    }
+	/**
+	 * Returns emulator's name.
+	 *
+	 * The result will be either `MaNGOS`, `cMaNGOS`, or `TrinityCore`.
+	 *
+	 * @return string coreName
+	 */
+	int GetCoreName(Eluna* /*E*/, lua_State* L)
+	{
+		Eluna::Push(L, CORE_NAME);
+		return 1;
+	}
 
-    /**
-     * Returns emulator version
-     *
-     * - For TrinityCore returns the date of the last revision, e.g. `2015-08-26 22:53:12 +0300`
-     * - For cMaNGOS returns the date and time of the last revision, e.g. `2015-09-06 13:18:50`
-     * - for MaNGOS returns the version number as string, e.g. `21000`
-     *
-     * @return string version
-     */
-    int GetCoreVersion(Eluna* /*E*/, lua_State* L)
-    {
-        Eluna::Push(L, CORE_VERSION);
-        return 1;
-    }
+	/**
+	 * Returns emulator version
+	 *
+	 * - For TrinityCore returns the date of the last revision, e.g. `2015-08-26 22:53:12 +0300`
+	 * - For cMaNGOS returns the date and time of the last revision, e.g. `2015-09-06 13:18:50`
+	 * - for MaNGOS returns the version number as string, e.g. `21000`
+	 *
+	 * @return string version
+	 */
+	int GetCoreVersion(Eluna* /*E*/, lua_State* L)
+	{
+		Eluna::Push(L, CORE_VERSION);
+		return 1;
+	}
 
-    /**
-     * Returns emulator's supported expansion.
-     *
-     * Expansion is 0 for pre-TBC, 1 for TBC, 2 for WotLK, and 3 for Cataclysm.
-     *
-     * @return int32 expansion
-     */
-    int GetCoreExpansion(Eluna* /*E*/, lua_State* L)
-    {
+	/**
+	 * Returns emulator's supported expansion.
+	 *
+	 * Expansion is 0 for pre-TBC, 1 for TBC, 2 for WotLK, and 3 for Cataclysm.
+	 *
+	 * @return int32 expansion
+	 */
+	int GetCoreExpansion(Eluna* /*E*/, lua_State* L)
+	{
 #ifdef CLASSIC
-        Eluna::Push(L, 0);
+		Eluna::Push(L, 0);
 #elif defined(TBC)
-        Eluna::Push(L, 1);
+		Eluna::Push(L, 1);
 #elif defined(WOTLK)
-        Eluna::Push(L, 2);
+		Eluna::Push(L, 2);
 #elif defined(CATA)
-        Eluna::Push(L, 3);
+		Eluna::Push(L, 3);
 #endif
-        return 1;
-    }
+		return 1;
+	}
 
-    /**
-     * Returns [Quest] template
-     *
-     * @param uint32 questId : [Quest] entry ID
-     * @return [Quest] quest
-     */
-    int GetQuest(Eluna* /*E*/, lua_State* L)
-    {
-        uint32 questId = Eluna::CHECKVAL<uint32>(L, 1);
+	/**
+	 * Returns [Quest] template
+	 *
+	 * @param uint32 questId : [Quest] entry ID
+	 * @return [Quest] quest
+	 */
+	int GetQuest(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 questId = Eluna::CHECKVAL<uint32>(L, 1);
 
-        Eluna::Push(L, eObjectMgr->GetQuestTemplate(questId));
-        return 1;
-    }
+		Eluna::Push(L, eObjectMgr->GetQuestTemplate(questId));
+		return 1;
+	}
 
-    /**
-     * Finds and Returns [Player] by guid if found
-     *
-     * @param uint64 guid : guid of the [Player], you can get it with [Object:GetGUID]
-     * @return [Player] player
-     */
-    int GetPlayerByGUID(Eluna* /*E*/, lua_State* L)
-    {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-        Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(guid)));
-        return 1;
-    }
+	/**
+	 * Finds and Returns [Player] by guid if found
+	 *
+	 * @param uint64 guid : guid of the [Player], you can get it with [Object:GetGUID]
+	 * @return [Player] player
+	 */
+	int GetPlayerByGUID(Eluna* /*E*/, lua_State* L)
+	{
+		uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+		Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(guid)));
+		return 1;
+	}
 
-    /**
-     * Finds and Returns [Player] by name if found
-     *
-     * @param string name : name of the [Player]
-     * @return [Player] player
-     */
-    int GetPlayerByName(Eluna* /*E*/, lua_State* L)
-    {
-        const char* name = Eluna::CHECKVAL<const char*>(L, 1);
-        Eluna::Push(L, eObjectAccessor()FindPlayerByName(name));
-        return 1;
-    }
+	/**
+	 * Finds and Returns [Player] by name if found
+	 *
+	 * @param string name : name of the [Player]
+	 * @return [Player] player
+	 */
+	int GetPlayerByName(Eluna* /*E*/, lua_State* L)
+	{
+		const char* name = Eluna::CHECKVAL<const char*>(L, 1);
+		Eluna::Push(L, eObjectAccessor()FindPlayerByName(name));
+		return 1;
+	}
 
-    /**
-     * Returns game time in seconds
-     *
-     * @return uint32 time
-     */
-    int GetGameTime(Eluna* /*E*/, lua_State* L)
-    {
-        Eluna::Push(L, eWorld->GetGameTime());
-        return 1;
-    }
+	/**
+	 * Returns game time in seconds
+	 *
+	 * @return uint32 time
+	 */
+	int GetGameTime(Eluna* /*E*/, lua_State* L)
+	{
+		Eluna::Push(L, eWorld->GetGameTime());
+		return 1;
+	}
 
-    /**
-     * Returns a table with all the current [Player]s in the world
-     *
-     *     enum TeamId
-     *     {
-     *         TEAM_ALLIANCE = 0,
-     *         TEAM_HORDE = 1,
-     *         TEAM_NEUTRAL = 2
-     *     };
-     *
-     * @param [TeamId] team = TEAM_NEUTRAL : optional check team of the [Player], Alliance, Horde or Neutral (All)
-     * @param bool onlyGM = false : optional check if GM only
-     * @return table worldPlayers
-     */
-    int GetPlayersInWorld(Eluna* /*E*/, lua_State* L)
-    {
-        uint32 team = Eluna::CHECKVAL<uint32>(L, 1, TEAM_NEUTRAL);
-        bool onlyGM = Eluna::CHECKVAL<bool>(L, 2, false);
+	/**
+	 * Returns a table with all the current [Player]s in the world
+	 *
+	 *     enum TeamId
+	 *     {
+	 *         TEAM_ALLIANCE = 0,
+	 *         TEAM_HORDE = 1,
+	 *         TEAM_NEUTRAL = 2
+	 *     };
+	 *
+	 * @param [TeamId] team = TEAM_NEUTRAL : optional check team of the [Player], Alliance, Horde or Neutral (All)
+	 * @param bool onlyGM = false : optional check if GM only
+	 * @return table worldPlayers
+	 */
+	int GetPlayersInWorld(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 team = Eluna::CHECKVAL<uint32>(L, 1, TEAM_NEUTRAL);
+		bool onlyGM = Eluna::CHECKVAL<bool>(L, 2, false);
 
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
-        uint32 i = 0;
+		lua_newtable(L);
+		int tbl = lua_gettop(L);
+		uint32 i = 0;
 
-        {
+		{
 #ifdef TRINITY
-            boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+			boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
 #else
 #ifdef MANGOS
-            ACE_READ_GUARD_RETURN(HashMapHolder<Player>::LockType, g, HashMapHolder<Player>::GetLock(), 0)
+			ACE_READ_GUARD_RETURN(HashMapHolder<Player>::LockType, g, HashMapHolder<Player>::GetLock(), 0)
 #else
-            HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
+			HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
 #endif
-            const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
-            for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
-            {
-                if (Player* player = it->second)
-                {
+			const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
+			for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
+			{
+				if (Player* player = it->second)
+				{
 #ifndef TRINITY
-                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
+					if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
 #else
-                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
+					if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
 #endif
-                    {
-                        ++i;
-                        Eluna::Push(L, i);
-                        Eluna::Push(L, player);
-                        lua_settable(L, tbl);
-                    }
-                }
-            }
-        }
+					{
+						++i;
+						Eluna::Push(L, i);
+						Eluna::Push(L, player);
+						lua_settable(L, tbl);
+					}
+				}
+			}
+		}
 
-        lua_settop(L, tbl); // push table to top of stack
-        return 1;
-    }
+		lua_settop(L, tbl); // push table to top of stack
+		return 1;
+	}
 
-    /**
-     * Returns a table with all the current [Player]s in a map
-     *
-     *     enum TeamId
-     *     {
-     *         TEAM_ALLIANCE = 0,
-     *         TEAM_HORDE = 1,
-     *         TEAM_NEUTRAL = 2
-     *     };
-     *
-     * @param uint32 mapId : the [Map] entry ID
-     * @param uint32 instanceId : the instance ID to search in the map
-     * @param [TeamId] team : optional check team of the [Player], Alliance, Horde or Neutral (All)
-     * @return table mapPlayers
-     */
-    int GetPlayersInMap(Eluna* /*E*/, lua_State* L)
-    {
-        uint32 mapID = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 instanceID = Eluna::CHECKVAL<uint32>(L, 2, 0);
-        uint32 team = Eluna::CHECKVAL<uint32>(L, 3, TEAM_NEUTRAL);
+	/**
+	 * Returns a table with all the current [Player]s in a map
+	 *
+	 *     enum TeamId
+	 *     {
+	 *         TEAM_ALLIANCE = 0,
+	 *         TEAM_HORDE = 1,
+	 *         TEAM_NEUTRAL = 2
+	 *     };
+	 *
+	 * @param uint32 mapId : the [Map] entry ID
+	 * @param uint32 instanceId : the instance ID to search in the map
+	 * @param [TeamId] team : optional check team of the [Player], Alliance, Horde or Neutral (All)
+	 * @return table mapPlayers
+	 */
+	int GetPlayersInMap(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 mapID = Eluna::CHECKVAL<uint32>(L, 1);
+		uint32 instanceID = Eluna::CHECKVAL<uint32>(L, 2, 0);
+		uint32 team = Eluna::CHECKVAL<uint32>(L, 3, TEAM_NEUTRAL);
 
-        lua_newtable(L);
-        Map* map = eMapMgr->FindMap(mapID, instanceID);
-        if (!map)
-            return 1;
+		lua_newtable(L);
+		Map* map = eMapMgr->FindMap(mapID, instanceID);
+		if (!map)
+			return 1;
 
-        int tbl = lua_gettop(L);
-        uint32 i = 0;
+		int tbl = lua_gettop(L);
+		uint32 i = 0;
 
-        Map::PlayerList const& players = map->GetPlayers();
-        for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-        {
+		Map::PlayerList const& players = map->GetPlayers();
+		for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+		{
 #ifndef TRINITY
-            Player* player = itr->getSource();
+			Player* player = itr->getSource();
 #else
-            Player* player = itr->GetSource();
+			Player* player = itr->GetSource();
 #endif
-            if (!player)
-                continue;
-            if (player->GetSession() && (team >= TEAM_NEUTRAL || player->GetTeamId() == team))
-            {
-                ++i;
-                Eluna::Push(L, i);
-                Eluna::Push(L, player);
-                lua_settable(L, tbl);
-            }
-        }
+			if (!player)
+				continue;
+			if (player->GetSession() && (team >= TEAM_NEUTRAL || player->GetTeamId() == team))
+			{
+				++i;
+				Eluna::Push(L, i);
+				Eluna::Push(L, player);
+				lua_settable(L, tbl);
+			}
+		}
 
-        lua_settop(L, tbl);
-        return 1;
-    }
+		lua_settop(L, tbl);
+		return 1;
+	}
 
-    /**
-     * Returns a [Guild] by name.
-     *
-     * @param string name
-     * @return [Guild] guild : the Guild, or `nil` if it doesn't exist
-     */
-    int GetGuildByName(Eluna* /*E*/, lua_State* L)
-    {
-        const char* name = Eluna::CHECKVAL<const char*>(L, 1);
-        Eluna::Push(L, eGuildMgr->GetGuildByName(name));
-        return 1;
-    }
+	/**
+	 * Returns a [Guild] by name.
+	 *
+	 * @param string name
+	 * @return [Guild] guild : the Guild, or `nil` if it doesn't exist
+	 */
+	int GetGuildByName(Eluna* /*E*/, lua_State* L)
+	{
+		const char* name = Eluna::CHECKVAL<const char*>(L, 1);
+		Eluna::Push(L, eGuildMgr->GetGuildByName(name));
+		return 1;
+	}
 
-    /**
-     * Returns a [Map] by ID.
-     *
-     * @param uint32 mapId : see [Map.dbc](https://github.com/cmangos/issues/wiki/Map.dbc)
-     * @param uint32 instanceId = 0 : required if the map is an instance, otherwise don't pass anything
-     * @return [Map] map : the Map, or `nil` if it doesn't exist
-     */
-    int GetMapById(Eluna* /*E*/, lua_State* L)
-    {
-        uint32 mapid = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 instance = Eluna::CHECKVAL<uint32>(L, 2, 0);
+	/**
+	 * Returns a [Map] by ID.
+	 *
+	 * @param uint32 mapId : see [Map.dbc](https://github.com/cmangos/issues/wiki/Map.dbc)
+	 * @param uint32 instanceId = 0 : required if the map is an instance, otherwise don't pass anything
+	 * @return [Map] map : the Map, or `nil` if it doesn't exist
+	 */
+	int GetMapById(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 mapid = Eluna::CHECKVAL<uint32>(L, 1);
+		uint32 instance = Eluna::CHECKVAL<uint32>(L, 2, 0);
 
-        Eluna::Push(L, eMapMgr->FindMap(mapid, instance));
-        return 1;
-    }
+		Eluna::Push(L, eMapMgr->FindMap(mapid, instance));
+		return 1;
+	}
 
-    /**
-     * Returns [Guild] by the leader's GUID
-     *
-     * @param uint64 guid : the guid of a [Guild] leader
-     * @return [Guild] guild, or `nil` if it doesn't exist
-     */
-    int GetGuildByLeaderGUID(Eluna* /*E*/, lua_State* L)
-    {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+	/**
+	 * Returns [Guild] by the leader's GUID
+	 *
+	 * @param uint64 guid : the guid of a [Guild] leader
+	 * @return [Guild] guild, or `nil` if it doesn't exist
+	 */
+	int GetGuildByLeaderGUID(Eluna* /*E*/, lua_State* L)
+	{
+		uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
 
-        Eluna::Push(L, eGuildMgr->GetGuildByLeader(ObjectGuid(guid)));
-        return 1;
-    }
+		Eluna::Push(L, eGuildMgr->GetGuildByLeader(ObjectGuid(guid)));
+		return 1;
+	}
 
-    /**
-     * Returns the amount of [Player]s in the world.
-     *
-     * @return uint32 count
-     */
-    int GetPlayerCount(Eluna* /*E*/, lua_State* L)
-    {
-        Eluna::Push(L, eWorld->GetActiveSessionCount());
-        return 1;
-    }
+	/**
+	 * Returns the amount of [Player]s in the world.
+	 *
+	 * @return uint32 count
+	 */
+	int GetPlayerCount(Eluna* /*E*/, lua_State* L)
+	{
+		Eluna::Push(L, eWorld->GetActiveSessionCount());
+		return 1;
+	}
 
-    /**
-     * Builds a [Player]'s GUID
-     *
-     * [Player] GUID consist of low GUID and type ID
-     *
-     * [Player] and [Creature] for example can have the same low GUID but not GUID.
-     *
-     * @param uint32 lowguid : low GUID of the [Player]
-     * @return uint64 guid
-     */
-    int GetPlayerGUID(Eluna* /*E*/, lua_State* L)
-    {
-        uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
-        Eluna::Push(L, MAKE_NEW_GUID(lowguid, 0, HIGHGUID_PLAYER));
-        return 1;
-    }
+	/**
+	 * Builds a [Player]'s GUID
+	 *
+	 * [Player] GUID consist of low GUID and type ID
+	 *
+	 * [Player] and [Creature] for example can have the same low GUID but not GUID.
+	 *
+	 * @param uint32 lowguid : low GUID of the [Player]
+	 * @return uint64 guid
+	 */
+	int GetPlayerGUID(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
+		Eluna::Push(L, MAKE_NEW_GUID(lowguid, 0, HIGHGUID_PLAYER));
+		return 1;
+	}
 
-    /**
-     * Builds an [Item]'s GUID.
-     *
-     * [Item] GUID consist of low GUID and type ID
-     * [Player] and [Item] for example can have the same low GUID but not GUID.
-     *
-     * @param uint32 lowguid : low GUID of the [Item]
-     * @return uint64 guid
-     */
-    int GetItemGUID(Eluna* /*E*/, lua_State* L)
-    {
-        uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
-        Eluna::Push(L, MAKE_NEW_GUID(lowguid, 0, HIGHGUID_ITEM));
-        return 1;
-    }
+	/**
+	 * Builds an [Item]'s GUID.
+	 *
+	 * [Item] GUID consist of low GUID and type ID
+	 * [Player] and [Item] for example can have the same low GUID but not GUID.
+	 *
+	 * @param uint32 lowguid : low GUID of the [Item]
+	 * @return uint64 guid
+	 */
+	int GetItemGUID(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
+		Eluna::Push(L, MAKE_NEW_GUID(lowguid, 0, HIGHGUID_ITEM));
+		return 1;
+	}
 
-    /**
-     * Builds a [GameObject]'s GUID.
-     *
-     * A GameObject's GUID consist of entry ID, low GUID and type ID
-     *
-     * A [Player] and GameObject for example can have the same low GUID but not GUID.
-     *
-     * @param uint32 lowguid : low GUID of the [GameObject]
-     * @param uint32 entry : entry ID of the [GameObject]
-     * @return uint64 guid
-     */
-    int GetObjectGUID(Eluna* /*E*/, lua_State* L)
-    {
-        uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
-        Eluna::Push(L, MAKE_NEW_GUID(lowguid, entry, HIGHGUID_GAMEOBJECT));
-        return 1;
-    }
+	/**
+	 * Builds a [GameObject]'s GUID.
+	 *
+	 * A GameObject's GUID consist of entry ID, low GUID and type ID
+	 *
+	 * A [Player] and GameObject for example can have the same low GUID but not GUID.
+	 *
+	 * @param uint32 lowguid : low GUID of the [GameObject]
+	 * @param uint32 entry : entry ID of the [GameObject]
+	 * @return uint64 guid
+	 */
+	int GetObjectGUID(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
+		uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+		Eluna::Push(L, MAKE_NEW_GUID(lowguid, entry, HIGHGUID_GAMEOBJECT));
+		return 1;
+	}
 
+	int GetGameObject(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
+		uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+		uint32 mapID = Eluna::CHECKVAL<uint32>(L, 3);
+		uint32 instanceID = Eluna::CHECKVAL<uint32>(L, 4, 0);		
+
+		Map* map = eMapMgr->FindMap(mapID, instanceID);
+		if (!map)
+			return 1;
+
+		GameObject* obj = map->GetGameObject(ObjectGuid(HighGuid::GameObject, entry, lowguid));
+
+		if (!obj && sObjectMgr->GetGOData(lowguid))                   // guid is DB guid of object
+		{
+			auto bounds = map->GetGameObjectBySpawnIdStore().equal_range(lowguid);
+			if (bounds.first == bounds.second)
+				return 1;
+
+			obj = bounds.first->second;
+		}
+
+		Eluna::Push(L, obj);
+		return 1;
+	}
     /**
      * Builds a [Creature]'s GUID.
      *
@@ -360,6 +385,32 @@ namespace LuaGlobalFunctions
         Eluna::Push(L, MAKE_NEW_GUID(lowguid, entry, HIGHGUID_UNIT));
         return 1;
     }
+
+	int GetCreature(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 lowguid = Eluna::CHECKVAL<uint32>(L, 1);
+		uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+		uint32 mapID = Eluna::CHECKVAL<uint32>(L, 3);
+		uint32 instanceID = Eluna::CHECKVAL<uint32>(L, 4, 0);
+
+		Map* map = eMapMgr->FindMap(mapID, instanceID);
+		if (!map)
+			return 1;
+
+		Creature* unit = map->GetCreature(ObjectGuid(HighGuid::Unit, entry, lowguid));
+
+		if (!unit && sObjectMgr->GetCreatureData(lowguid))                   // guid is DB guid of object
+		{
+			auto bounds = map->GetCreatureBySpawnIdStore().equal_range(lowguid);
+			if (bounds.first == bounds.second)
+				return 1;
+
+			unit = bounds.first->second;
+		}
+		
+		Eluna::Push(L, unit);
+		return 1;
+	}
 
     /**
      * Returns the low GUID from a GUID.

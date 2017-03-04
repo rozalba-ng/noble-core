@@ -105,6 +105,7 @@ struct GameObjectTemplate
             uint32 openTextID;                              //14 can be used to replace castBarCaption?
             uint32 groupLootRules;                          //15
             uint32 floatingTooltip;                         //16
+			uint32 size;									//17 Noblegarden custom
         } chest;
         //4 GAMEOBJECT_TYPE_BINDER - empty
         //5 GAMEOBJECT_TYPE_GENERIC
@@ -584,6 +585,12 @@ struct GameObjectAddon
 
 typedef std::unordered_map<ObjectGuid::LowType, GameObjectAddon> GameObjectAddonContainer;
 
+struct GameObjectContainerItem
+{
+	Item* item;
+	uint32 slotId;
+};
+
 // client side GO show states
 enum GOState
 {
@@ -695,6 +702,17 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
 
 		uint64 GetOwnerId() const { return m_ownerId; }
 
+		uint32 GetContainerSize() const { return m_containerSize; }
+
+		inline Item* GetContainerItem(uint32 slotId) const { return slotId < m_containerSize ? m_items[slotId] : NULL; }
+
+		//void SetContainerItem(Item* item, uint32 slotId);
+		void SwapContainerItem(Item* itemSrc, Item* itemDest, uint32 slotIdSrc, uint32 slotIdDest, uint32 splitedAmount);
+		void SwapContainerItemWithInventory(Player* player, uint32 slotId, Item* pItem, uint32 splitedAmount);
+		bool SetContainerItem(Item* item, uint32 slotIdDest);
+		bool StoreContainerItem(Player* player, uint32 slotId, uint8 playerBag, uint8 playerSlotId, uint32 splitedAmount);
+		bool MoveContainerItem(uint32 slotIdSrc, uint32 slotIdDest, uint32 splitedAmount);
+
         void SetSpellId(uint32 id)
         {
             m_spawnedByDefault = false;                     // all summoned object is despawned after delay
@@ -731,6 +749,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         void Delete();
         void getFishLoot(Loot* loot, Player* loot_owner);
         void getFishLootJunk(Loot* loot, Player* loot_owner);
+		bool LoadItemFromDB(Item* item, uint32 slotId, uint32 size);
         GameobjectTypes GetGoType() const { return GameobjectTypes(GetByteValue(GAMEOBJECT_BYTES_1, 1)); }
         void SetGoType(GameobjectTypes type) { SetByteValue(GAMEOBJECT_BYTES_1, 1, type); }
         GOState GetGoState() const { return GOState(GetByteValue(GAMEOBJECT_BYTES_1, 0)); }
@@ -894,6 +913,9 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         ObjectGuid m_lootRecipient;
         uint32 m_lootRecipientGroup;
         uint16 m_LootMode;                                  // bitmask, default LOOT_MODE_DEFAULT, determines what loot will be lootable
+
+		Item* m_items[36];
+		uint32 m_containerSize;
     private:
         void RemoveFromOwner();
         void SwitchDoorOrButton(bool activate, bool alternative = false);

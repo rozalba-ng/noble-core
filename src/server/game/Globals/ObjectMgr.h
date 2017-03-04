@@ -478,6 +478,9 @@ typedef std::unordered_map<uint32, PointOfInterestLocale> PointOfInterestLocaleC
 
 typedef std::unordered_map<uint32, TrinityString> TrinityStringContainer;
 
+typedef std::vector<GameObjectContainerItem> GameObjectContainerItemList;
+typedef std::map<uint32, GameObjectContainerItemList> GameObjectContainerItemContainer;
+
 typedef std::multimap<uint32, uint32> QuestRelations; // unit/go -> quest
 typedef std::multimap<uint32, uint32> QuestRelationsReverse; // quest -> unit/go
 typedef std::pair<QuestRelations::const_iterator, QuestRelations::const_iterator> QuestRelationBounds;
@@ -902,11 +905,13 @@ class TC_GAME_API ObjectMgr
 
         VehicleAccessoryList const* GetVehicleAccessoryList(Vehicle* veh) const;
 
-		VehicleGameObjectList const* GetVehicleGameObjectList(uint32 guid) const;
+		VehicleGameObjectList const* GetVehicleGameObjectList(uint32 guid) const;		
 
 		VehiclePassengersList const* GetVehiclePassengersList(uint32 guid) const;
 
 		CreatureGameObjectsList const* GetCreatureGameObjectsList(uint32 entry) const;
+
+		GameObjectContainerItemList const* GetGameObjectContainerItemList(uint32 spawnid) const;
 
         DungeonEncounterList const* GetDungeonEncounterList(uint32 mapId, Difficulty difficulty)
         {
@@ -1007,6 +1012,7 @@ class TC_GAME_API ObjectMgr
         void LoadCreatureModelInfo();
         void LoadEquipmentTemplates();
         void LoadGameObjectLocales();
+		void LoadGameobjectsContainerItem();
         void LoadGameobjects();
         void LoadItemTemplates();
         void LoadItemLocales();
@@ -1477,6 +1483,7 @@ class TC_GAME_API ObjectMgr
         GameObjectTemplateContainer _gameObjectTemplateStore;
         /// Stores temp summon data grouped by summoner's entry, summoner's type and group id
         TempSummonDataContainer _tempSummonDataStore;
+		GameObjectContainerItemContainer _gameObjectContainerItemStore;
 
         BroadcastTextContainer _broadcastTextStore;
         ItemTemplateContainer _itemTemplateStore;

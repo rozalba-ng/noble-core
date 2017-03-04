@@ -286,9 +286,10 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recvData)
             {
                 SendPlayerNotFoundNotice(to);
                 break;
-            }
+            }		
 
             Player* receiver = ObjectAccessor::FindConnectedPlayerByName(to);
+
             if (!receiver || (lang != LANG_ADDON && !receiver->isAcceptWhispers() && receiver->GetSession()->HasPermission(rbac::RBAC_PERM_CAN_FILTER_WHISPERS) && !receiver->IsInWhisperWhiteList(sender->GetGUID())))
             {
                 SendPlayerNotFoundNotice(to);
@@ -305,6 +306,33 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recvData)
                 SendWrongFactionNotice();
                 return;
             }
+
+			/*if (lang == LANG_ADDON && sender == receiver) Перенесено в Элуну.
+			{
+				std::string prefix, code;
+				std::uint32_t pos;
+				if (pos = msg.find("\t")) 
+				{
+					prefix = msg.substr(0, pos);
+					code = msg.substr(pos + 2);
+					if (stoi(prefix)) 
+					{
+						switch (stoi(prefix))
+						{
+						case 1: //CHAT_TYPING
+							break;
+						case 2: //OPEN_CHEST
+
+							break;
+						case 3: //CLOSE_CHEST
+
+							break;
+						default:
+							break;
+						}
+					}
+				}
+			}*/
 
             if (GetPlayer()->HasAura(1852) && !receiver->IsGameMaster())
             {

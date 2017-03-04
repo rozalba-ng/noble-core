@@ -616,4 +616,8 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
     // DeserterTracker
     PrepareStatement(CHAR_INS_DESERTER_TRACK, "INSERT INTO battleground_deserters (guid, type, datetime) VALUES (?, ?, NOW())", CONNECTION_ASYNC);
+
+	PrepareStatement(CHAR_DEL_NONEXISTENT_CONTAINER_ITEM, "DELETE FROM container_item WHERE ContainerID = ? AND SlotID = ?", CONNECTION_ASYNC);
+
+	PrepareStatement(CHAR_INS_CONTAINER_ITEM, "INSERT INTO container_item (ContainerID, SlotID, item_guid) VALUES (?, ?, ?)", CONNECTION_ASYNC);
 }

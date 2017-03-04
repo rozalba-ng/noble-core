@@ -392,5 +392,60 @@ namespace LuaGameObject
 		Eluna::Push(L, go);
 		return 1;
 	}
+
+	int GetContainerSize(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{		
+		Eluna::Push(L, go->GetContainerSize());
+		return 1;
+	}
+
+	int GetContainerItemList(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		uint32 containerSize = go->GetContainerSize();
+		if (containerSize == 0)
+		{
+			return 0;
+		}
+		std::string itemList = "";
+		for (uint32 i = 0; i < containerSize; ++i)
+		{
+			Item* item = go->GetContainerItem(i);
+			if (item)
+			{
+				const ItemTemplate* temp = item->GetTemplate();
+				std::string name = temp->Name1;
+				if (ItemLocale const* il = eObjectMgr->GetItemLocale(temp->ItemId))
+					ObjectMgr::GetLocaleString(il->Name, LOCALE_ruRU, name);
+
+				char buffer[2048];
+				sprintf(buffer, "item:%u:%u:%u:%u:%u:%u:%u[%u,%s,%u]|", item->GetEntry(), item->GetEnchantmentId(PERM_ENCHANTMENT_SLOT), item->GetEnchantmentId(SOCK_ENCHANTMENT_SLOT),
+					item->GetEnchantmentId(SOCK_ENCHANTMENT_SLOT_2), item->GetEnchantmentId(SOCK_ENCHANTMENT_SLOT_3), item->GetEnchantmentId(BONUS_ENCHANTMENT_SLOT),
+					item->GetItemRandomPropertyId(), i, name.c_str(), item->GetCount());
+
+				itemList += buffer;
+			}
+		}		
+		Eluna::Push(L, itemList);
+		return 1;
+	}
+
+	int MoveContainerItem(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		uint32 slotIdSrc = Eluna::CHECKVAL<uint32>(L, 2, 0);
+		uint32 slotIdDest = Eluna::CHECKVAL<uint32>(L, 3, 0);
+		Eluna::Push(L, go->MoveContainerItem(slotIdSrc, slotIdDest, 1));
+		return 1;
+	}
+
+	int StoreContainerItem(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+		uint8 bagSlotIdSrc = Eluna::CHECKVAL<uint8>(L, 3, 0);
+		uint8 slotIdSrc = Eluna::CHECKVAL<uint8>(L, 4, 0);
+		uint32 slotIdDest = Eluna::CHECKVAL<uint32>(L, 5, 0);
+		Eluna::Push(L, go->StoreContainerItem(player, slotIdDest, bagSlotIdSrc, slotIdSrc, 1));
+		return 1;
+	}
+
 };
 #endif

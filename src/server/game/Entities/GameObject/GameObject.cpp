@@ -54,6 +54,8 @@ GameObject::GameObject() : WorldObject(false), MapObject(),
     m_cooldownTime = 0;
     m_goInfo = nullptr;
     m_goData = nullptr;
+	m_containerSize = 0;
+	memset(m_items, 0, 36 * sizeof(Item*));
 
     m_spawnId = 0;
     m_rotation = 0;
@@ -256,7 +258,6 @@ bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, u
     SetGoType(GameobjectTypes(goinfo->type));
     SetGoState(go_state);
     SetGoArtKit(artKit);
-
     switch (goinfo->type)
     {
         case GAMEOBJECT_TYPE_FISHINGHOLE:
@@ -292,6 +293,18 @@ bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, u
                 m_invisibility.AddValue(INVISIBILITY_TRAP, 300);
             }
             break;
+		case GAMEOBJECT_TYPE_CHEST:
+			if (GetGOInfo()->chest.size && GetGOInfo()->chest.size <= 36)
+			{
+				m_containerSize = GetGOInfo()->chest.size;
+				GameObjectContainerItemList const* items = sObjectMgr->GetGameObjectContainerItemList(GetSpawnId());
+				if (!items)
+					break;
+				for (GameObjectContainerItemList::const_iterator itr = items->begin(); itr != items->end(); ++itr) {
+					LoadItemFromDB(itr->item, itr->slotId, m_containerSize);
+				}			
+			}
+			break;
         default:
             SetGoAnimProgress(animprogress);
             break;
@@ -757,6 +770,137 @@ void GameObject::getFishLootJunk(Loot* fishloot, Player* loot_owner)
     }
 }
 
+bool GameObject::LoadItemFromDB(Item* item, uint32 slotId, uint32 size)
+{
+	/*TC_LOG_ERROR("gameobject", "1");
+	uint32 slotId = fields[12].GetUInt32();
+	ObjectGuid::LowType itemGuid = fields[13].GetUInt32();
+	uint32 itemEntry = fields[14].GetUInt32();
+	if (slotId >= size)
+	{
+		TC_LOG_ERROR("gameobject", "Invalid slot for item (GUID: %u, id: %u) in container, skipped.", itemGuid, itemEntry);
+		return false;
+	}
+	ItemTemplate const* proto = sObjectMgr->GetItemTemplate(itemEntry);
+	if (!proto)
+	{
+		TC_LOG_ERROR("gameobject", "Unknown item (GUID: %u, id: %u) in container, skipped.", itemGuid, itemEntry);
+		return false;
+	}
+
+	Item* pItem = NewItemOrBag(proto);
+	if (!pItem->LoadFromDB(itemGuid, ObjectGuid::Empty, fields, itemEntry))
+	{
+		TC_LOG_ERROR("gameobject", "Item (GUID %u, id: %u) not found in item_instance, deleting from container!", itemGuid, itemEntry);
+
+		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_NONEXISTENT_CONTAINER_ITEM);
+		stmt->setUInt32(0, m_spawnId);
+		stmt->setUInt8(1, slotId);
+		CharacterDatabase.Execute(stmt);
+
+		delete pItem;
+		return false;
+	}
+	TC_LOG_ERROR("gameobject", "55555");
+	pItem->AddToWorld();*/
+	if (slotId >= size)
+	{
+		TC_LOG_ERROR("gameobject", "Invalid slot for item (GUID: %u, id: %u) in container, skipped.", item->GetGUID(), item->GetEntry());
+		return false;
+	}
+	TC_LOG_ERROR("gameobject", "Slot: %u", slotId);
+	m_items[slotId] = item;
+	return true;
+}
+
+void GameObject::SwapContainerItem(Item* itemSrc, Item* itemDest, uint32 slotIdSrc, uint32 slotIdDest, uint32 splitedAmount)
+{
+	if (itemSrc && itemDest)
+	{
+		if (SetContainerItem(itemSrc, slotIdDest))
+		{
+			SetContainerItem(itemDest, slotIdSrc);
+		}
+	}
+}
+
+void GameObject::SwapContainerItemWithInventory(Player* player, uint32 slotId, Item* Item, uint32 splitedAmount)
+{
+
+}
+
+bool GameObject::SetContainerItem(Item* item, uint32 slotIdDest)
+{
+	if (slotIdDest >= m_containerSize)
+		return false;
+
+	m_items[slotIdDest] = item;
+	return true;
+}
+
+bool GameObject::StoreContainerItem(Player* player, uint32 slotId, uint8 playerBag, uint8 playerSlotId, uint32 splitedAmount)
+{
+	if (slotId >= m_containerSize)
+		return false;
+	TC_LOG_ERROR("misc", "0");
+
+	Item* pItem = player->GetItemByPos(playerBag, playerSlotId);
+	if (pItem)
+	{
+		// Anti-WPE protection. Do not move non-empty bags to bank.
+		if (pItem->IsNotEmptyBag())
+		{
+			player->SendEquipError(EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS, pItem);
+			TC_LOG_ERROR("misc", "1");
+			return false;
+		}
+		// Bound items cannot be put into bank.
+		else if (!pItem->CanBeTraded())
+		{
+			player->SendEquipError(EQUIP_ERR_ITEMS_CANT_BE_SWAPPED, pItem);
+			TC_LOG_ERROR("misc", "2");
+			return false;
+		}
+		if (Item* itemDest = GetContainerItem(slotId))
+		{
+			SwapContainerItemWithInventory(player, slotId, pItem, splitedAmount);
+			TC_LOG_ERROR("misc", "3");
+			return true;
+		}
+		else 
+		{
+			TC_LOG_ERROR("misc", "4");
+			if (SetContainerItem(pItem, slotId)) {
+				TC_LOG_ERROR("misc", "5");
+				player->DestroyItem(playerBag, playerSlotId, true);
+				return true;
+			}
+		}		
+	}
+}
+
+bool GameObject::MoveContainerItem(uint32 slotIdSrc, uint32 slotIdDest, uint32 splitedAmount)
+{
+	if (slotIdSrc == slotIdDest)
+		return false;
+
+	if (Item* itemSrc = GetContainerItem(slotIdSrc))
+	{
+		if (Item* itemDest = GetContainerItem(slotIdDest))
+		{
+			SwapContainerItem(itemSrc, itemDest, slotIdSrc, slotIdDest, splitedAmount);
+			return true;
+		}
+		else
+		{
+			if (SetContainerItem(itemSrc, slotIdDest))
+			{
+				return SetContainerItem(NULL, slotIdSrc);
+			}
+		}
+	}
+}
+
 void GameObject::SaveToDB()
 {
     // this should only be used when the gameobject has already been loaded
@@ -834,6 +978,21 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     trans->Append(stmt);
 
     WorldDatabase.CommitTransaction(trans);
+
+	if (m_containerSize)
+	{
+		trans = CharacterDatabase.BeginTransaction();
+		for (uint32 i = 0; i < m_containerSize; ++i)
+		{
+			TC_LOG_ERROR("gameobject", "SAVING ITEM");			
+			stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CONTAINER_ITEM);
+			stmt->setUInt32(0, m_spawnId);
+			stmt->setUInt32(0, i);
+			stmt->setUInt32(0, m_items[i]->GetGUID());
+			trans->Append(stmt);			
+		}
+		CharacterDatabase.CommitTransaction(trans);
+	}
 }
 
 bool GameObject::LoadGameObjectFromDB(ObjectGuid::LowType spawnId, Map* map, bool addToMap)

@@ -109,6 +109,8 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "PrintInfo", &LuaGlobalFunctions::PrintInfo },
     { "PrintError", &LuaGlobalFunctions::PrintError },
     { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
+	{ "GetGameObject", &LuaGlobalFunctions::GetGameObject },
+	{ "GetCreature", &LuaGlobalFunctions::GetCreature },	
 
     // Boolean
     { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
@@ -872,6 +874,8 @@ ElunaRegister<GameObject> GameObjectMethods[] =
 	{ "GetOwner", &LuaGameObject::GetOwner },
 	{ "MoveGameObject", &LuaGameObject::MoveGameObject },
 	{ "GetCreatureAttach", &LuaGameObject::GetCreatureAttach },
+	{ "GetContainerSize", &LuaGameObject::GetContainerSize },
+	{ "GetContainerItemList", &LuaGameObject::GetContainerItemList },
 
     // Setters
     { "SetGoState", &LuaGameObject::SetGoState },
@@ -883,7 +887,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     // {"IsDestructible", &LuaGameObject::IsDestructible},    // :IsDestructible() - UNDOCUMENTED
     { "IsActive", &LuaGameObject::IsActive },
     { "HasQuest", &LuaGameObject::HasQuest },
-    { "IsSpawned", &LuaGameObject::IsSpawned },
+    { "IsSpawned", &LuaGameObject::IsSpawned },	
 
     // Other
     { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },
@@ -891,6 +895,8 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "Despawn", &LuaGameObject::Despawn },
     { "Respawn", &LuaGameObject::Respawn },
     { "SaveToDB", &LuaGameObject::SaveToDB },
+	{ "MoveContainerItem", &LuaGameObject::MoveContainerItem },
+	{ "StoreContainerItem", &LuaGameObject::StoreContainerItem },	
 
     { NULL, NULL }
 };

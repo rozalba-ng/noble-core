@@ -2080,6 +2080,64 @@ ObjectGuid::LowType ObjectMgr::AddCreatureData(uint32 entry, uint32 mapId, float
     return guid;
 }
 
+void ObjectMgr::LoadGameobjectsContainerItem()
+{
+	uint32 oldMSTime = getMSTime();
+
+	_gameObjectContainerItemStore.clear();                           // needed for reload case
+
+	QueryResult result = CharacterDatabase.Query("SELECT creatorGuid, giftCreatorGuid, count, duration, charges, flags, enchantments, randomPropertyId, durability, playedTime, text, "
+		//   11          12      13         14
+		"ContainerID, SlotID, item_guid, itemEntry FROM container_item ci INNER JOIN item_instance ii ON ci.item_guid = ii.guid");
+
+	if (!result)
+	{
+		TC_LOG_INFO("server.loading", ">> Loaded 0 container item. DB table `container_item` or `item_instance` is empty.");
+		return;
+	}
+	uint32 count = 0;
+
+	do
+	{
+		Field* fields = result->Fetch();
+		uint32 containerId = fields[11].GetUInt32();
+		uint32 slotId = fields[12].GetUInt32();
+		ObjectGuid::LowType itemGuid = fields[13].GetUInt32();
+		uint32 itemEntry = fields[14].GetUInt32();
+		ItemTemplate const* proto = sObjectMgr->GetItemTemplate(itemEntry);
+		if (!proto)
+		{
+			TC_LOG_ERROR("server.loading", "Unknown item (GUID: %u, id: %u) in container, skipped.", itemGuid, itemEntry);
+			continue;
+		}
+
+		Item* pItem = NewItemOrBag(proto);
+		if (!pItem->LoadFromDB(itemGuid, ObjectGuid::Empty, fields, itemEntry))
+		{
+			TC_LOG_ERROR("server.loading", "Item (GUID %u, id: %u) not found in item_instance, deleting from container!", itemGuid, itemEntry);
+
+			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_NONEXISTENT_CONTAINER_ITEM);
+			stmt->setUInt32(0, containerId);
+			stmt->setUInt8(1, slotId);
+			CharacterDatabase.Execute(stmt);
+
+			delete pItem;
+			continue;
+		}
+		pItem->AddToWorld();
+
+		GameObjectContainerItem data;
+		data.slotId = slotId;
+		data.item = pItem;
+
+		_gameObjectContainerItemStore[containerId].push_back(data);
+
+		++count;
+	} while (result->NextRow());
+
+	TC_LOG_INFO("server.loading", ">> Loaded %u container item in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+}
+
 void ObjectMgr::LoadGameobjects()
 {
     uint32 oldMSTime = getMSTime();
@@ -2237,7 +2295,7 @@ void ObjectMgr::LoadGameobjects()
         if (gameEvent == 0 && PoolId == 0)                      // if not this is to be managed by GameEvent System or Pool system
             AddGameobjectToGrid(guid, &data);
     }
-    while (result->NextRow());
+    while (result->NextRow());	
 
     TC_LOG_INFO("server.loading", ">> Loaded " SZFMTD " gameobjects in %u ms", _gameObjectDataStore.size(), GetMSTimeDiffToNow(oldMSTime));
 }
@@ -9446,6 +9504,14 @@ VehicleGameObjectList const* ObjectMgr::GetVehicleGameObjectList(uint32 guid) co
 {
 	VehicleGameObjectContainer::const_iterator itr = _vehicleTemplateGameObjectStore.find(guid);
 	if (itr != _vehicleTemplateGameObjectStore.end())
+		return &itr->second;
+	return NULL;
+}
+
+GameObjectContainerItemList const* ObjectMgr::GetGameObjectContainerItemList(uint32 spawnid) const
+{
+	GameObjectContainerItemContainer::const_iterator itr = _gameObjectContainerItemStore.find(spawnid);
+	if (itr != _gameObjectContainerItemStore.end())
 		return &itr->second;
 	return NULL;
 }
