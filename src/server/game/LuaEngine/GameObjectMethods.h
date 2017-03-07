@@ -319,6 +319,14 @@ namespace LuaGameObject
         return 0;
     }
 
+	int SetPhaseMask(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		uint32 phaseMask = Eluna::CHECKVAL<uint32>(L, 2);
+		bool update = Eluna::CHECKVAL<bool>(L, 3, true);
+		go->SetPhaseMask(phaseMask, update);
+		return 0;
+	}
+
 	int GetOwner(Eluna* /*E*/, lua_State* L, GameObject* go)
 	{
 		Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(go->GetOwnerId())));
