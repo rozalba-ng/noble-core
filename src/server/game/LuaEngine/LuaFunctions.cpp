@@ -282,7 +282,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
 #if (!defined(TBC) && !defined(CLASSIC))
     { "GetVehicleKit", &LuaUnit::GetVehicleKit },
-    // {"GetVehicle", &LuaUnit::GetVehicle},                           // :GetVehicle() - UNDOCUMENTED - Gets the Vehicle kit of the vehicle the unit is on
+    {"GetVehicle", &LuaUnit::GetVehicle},                           // :GetVehicle() - UNDOCUMENTED - Gets the Vehicle kit of the vehicle the unit is on
 #endif
     { "GetMovementType", &LuaUnit::GetMovementType },
 
@@ -423,6 +423,8 @@ ElunaRegister<Unit> UnitMethods[] =
     { "DealDamage", &LuaUnit::DealDamage },
     { "DealHeal", &LuaUnit::DealHeal },
     { "AddThreat", &LuaUnit::AddThreat },
+	{ "ExitVehicle", &LuaUnit::ExitVehicle },
+	{ "ChangeSeat", &LuaUnit::ChangeSeat },
 
     { NULL, NULL }
 };

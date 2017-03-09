@@ -1270,13 +1270,11 @@ namespace LuaUnit
         return 1;
     }
 
-    /*
     int GetVehicle(Eluna* E, lua_State* L, Unit* unit)
     {
-    Eluna::Push(L, unit->GetVehicle());
-    return 1;
+		Eluna::Push(L, unit->GetVehicle());
+		return 1;
     }
-    */
 
     /**
      * Returns the Critter Guid
@@ -2638,6 +2636,21 @@ namespace LuaUnit
         return 0;
     }
 
+	int ChangeSeat(Eluna* /*E*/, lua_State* L, Unit* unit)
+	{
+		uint8 seatId = Eluna::CHECKVAL<uint8>(L, 2);
+		bool next = Eluna::CHECKVAL<bool>(L, 3, true);
+		
+		unit->ChangeSeat(seatId, next);
+		return 0;
+	}
+
+	int ExitVehicle(Eluna* /*E*/, lua_State* L, Unit* unit)
+	{
+		unit->ExitVehicle();
+		return 0;
+	}
+	
     /**
      * Makes the [Unit] kill the target [Unit]
      *
