@@ -113,11 +113,11 @@ void Vehicle::InstallAllGameObjects(bool evading)
 			if (itr->GameObjectEntry == 0)
 			{
 				SetExitPosition(itr->radius, itr->angle, itr->pos_z);
-				sObjectMgr->AddCreatureGameobject(_me->ToCreature()->GetSpawnId(), 0, itr->radius, itr->angle, itr->pos_z, itr->orientation, 1, true);
+				sObjectMgr->AddCreatureGameobject(_me->ToCreature()->GetSpawnId(), 0, itr->radius, itr->angle, itr->pos_z, itr->orientation, itr->type, true);
 			}
 			else
 			{
-				InstallGameObject(itr->GameObjectEntry, itr->radius, itr->angle, itr->pos_z, itr->orientation, true);
+				InstallGameObject(itr->GameObjectEntry, itr->radius, itr->angle, itr->pos_z, itr->orientation, itr->type, true);
 			}
 		}
 	}
@@ -130,7 +130,7 @@ void Vehicle::InstallAllGameObjects(bool evading)
 			}
 			else
 			{
-				InstallGameObject(itr->gameobject_guid, itr->radius, itr->angle, itr->pos_z, itr->orientation, false);
+				InstallGameObject(itr->gameobject_guid, itr->radius, itr->angle, itr->pos_z, itr->orientation, itr->gameobject_type, false);
 			}
 		}
 	}
@@ -151,7 +151,7 @@ void Vehicle::RemoveAllGameObjects(bool evading)
 			RemoveGameObject(itr->gameobject_guid);
 		}
 	}
-	isHaveGameobject = false;
+	//isHaveGameobject = false;
 }
 
 /**
@@ -440,7 +440,7 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion, uint8 typ
     /// @VehicleJoinEvent::Abort
 }
 
-bool Vehicle::InstallGameObject(uint32 entry, float radius, float angle, float pos_z, float orientation, bool temp)
+bool Vehicle::InstallGameObject(uint32 entry, float radius, float angle, float pos_z, float orientation, uint8 type, bool temp)
 {
 	float x = _me->GetPositionX();
 	float y = _me->GetPositionY();
@@ -483,7 +483,7 @@ bool Vehicle::InstallGameObject(uint32 entry, float radius, float angle, float p
 		object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 		guidLow = object->GetSpawnId();
 
-		sObjectMgr->AddCreatureGameobject(_me->ToCreature()->GetSpawnId(), guidLow, radius, angle, pos_z, orientation, 1, true);
+		sObjectMgr->AddCreatureGameobject(_me->ToCreature()->GetSpawnId(), guidLow, radius, angle, pos_z, orientation, type, true);
 
 		// delete the old object and do a clean load from DB with a fresh new GameObject instance.
 		// this is required to avoid weird behavior and memory leaks
@@ -765,7 +765,7 @@ void Vehicle::InitMovementInfoForBase()
 		_me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_FULL_SPEED_TURNING);
 	else
 	{
-		//_me->SetSpeed(MOVE_TURN_RATE, GetVehicleInfo()->m_turnSpeed / baseMoveSpeed[MOVE_TURN_RATE]);
+		_me->SetSpeed(MOVE_TURN_RATE, GetVehicleInfo()->m_turnSpeed / baseMoveSpeed[MOVE_TURN_RATE]);
 	}
     if (vehicleFlags & VEHICLE_FLAG_ALLOW_PITCHING)
         _me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING);

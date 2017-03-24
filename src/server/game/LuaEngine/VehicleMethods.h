@@ -129,6 +129,26 @@ namespace LuaVehicle
 		}
 		return 0;
 	}
+
+	int GetBodyGameObjectGUID(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+	{
+		CreatureGameObjectsList const* gameobjects = sObjectMgr->GetCreatureGameObjectsList(vehicle->GetBase()->ToCreature()->GetSpawnId());
+		if (!gameobjects) {
+			return 0;
+		}
+		else {
+			// Берём данные о ГОшках из хранимого контейнера.
+			for (CreatureGameObjectsList::const_iterator itr = gameobjects->begin(); itr != gameobjects->end(); ++itr) {
+				if (itr->gameobject_type == 1)
+				{
+					Eluna::Push(L, itr->gameobject_guid);
+					return 1;
+				}
+			}
+		}
+		return 0;
+	}
+
 }
 
 #endif // CLASSIC

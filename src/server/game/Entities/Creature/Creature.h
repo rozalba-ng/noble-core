@@ -324,10 +324,10 @@ typedef std::unordered_map<uint16, CreatureModelInfo> CreatureModelContainer;
 
 struct CreatureGameObjects
 {
-	CreatureGameObjects(uint32 gameobject_guid, uint32 gameobject_type, float radius, float angle, float pos_z, float orientation) :
+	CreatureGameObjects(uint32 gameobject_guid, uint8 gameobject_type, float radius, float angle, float pos_z, float orientation) :
 		gameobject_guid(gameobject_guid), gameobject_type(gameobject_type), radius(radius), angle(angle), pos_z(pos_z), orientation(orientation) { }
 	uint32 gameobject_guid;
-	uint32 gameobject_type;
+	uint8 gameobject_type;
 	float radius;
 	float angle;
 	float pos_z;

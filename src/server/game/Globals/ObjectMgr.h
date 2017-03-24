@@ -995,7 +995,7 @@ class TC_GAME_API ObjectMgr
         void LoadCreatureTemplates();
         void LoadCreatureTemplateAddons();
 		void LoadCreatureGameObjects();
-		void AddCreatureGameobject(uint32 spawnid, uint32 guidLow, float radius, float angle, float pos_z, float orientation, uint32 type = 1, bool to_db = true);
+		void AddCreatureGameobject(uint32 spawnid, uint32 guidLow, float radius, float angle, float pos_z, float orientation, uint8 type = 1, bool to_db = true);
 		bool RemoveCreatureGameobject(uint32 entry, uint32 item, bool to_db = true);
 		void AddVehiclePassenger(uint32 spawnid, uint32 guidLow, float radius, float angle, float pos_z, float orientation, uint32 type = 1);
 		bool RemoveVehiclePassengers(uint32 spawnid, VehiclePassengersList::const_iterator passenger);

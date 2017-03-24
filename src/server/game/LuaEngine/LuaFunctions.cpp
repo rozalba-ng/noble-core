@@ -1133,6 +1133,7 @@ ElunaRegister<Vehicle> VehicleMethods[] =
     { "GetOwner", &LuaVehicle::GetOwner },
     { "GetEntry", &LuaVehicle::GetEntry },
     { "GetPassenger", &LuaVehicle::GetPassenger },
+	{ "GetBodyGameObjectGUID", &LuaVehicle::GetBodyGameObjectGUID },
 
     // Boolean
     { "IsOnBoard", &LuaVehicle::IsOnBoard },

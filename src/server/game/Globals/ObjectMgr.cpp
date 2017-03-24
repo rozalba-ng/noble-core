@@ -1861,7 +1861,7 @@ void ObjectMgr::LoadCreatureGameObjects()
 
 		uint32 creature_guid = fields[0].GetUInt32();
 		uint32 gameobject_guid = fields[1].GetUInt32();
-		uint32 gameobject_type = fields[2].GetFloat();
+		uint8 gameobject_type = fields[2].GetUInt8();
 		float radius = fields[3].GetFloat();
 		float angle = fields[4].GetFloat();
 		float pos_z = fields[5].GetFloat();
@@ -1882,7 +1882,7 @@ void ObjectMgr::LoadCreatureGameObjects()
 	TC_LOG_INFO("server.loading", ">> Loaded %u Creature Game Objects in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
 }
 
-void ObjectMgr::AddCreatureGameobject(uint32 spawnid, uint32 guidLow, float radius, float angle, float pos_z, float orientation, uint32 type, bool to_db)
+void ObjectMgr::AddCreatureGameobject(uint32 spawnid, uint32 guidLow, float radius, float angle, float pos_z, float orientation, uint8 type, bool to_db)
 {
 	_creatureGameObjectsStore[spawnid].push_back(CreatureGameObjects(guidLow, type, radius, angle, pos_z, orientation));
 
@@ -1892,7 +1892,7 @@ void ObjectMgr::AddCreatureGameobject(uint32 spawnid, uint32 guidLow, float radi
 		PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_INS_CREATURE_GAMEOBJECTS);
 		stmt->setUInt32(0, spawnid);
 		stmt->setUInt32(1, guidLow);
-		stmt->setUInt32(2, type);
+		stmt->setUInt8(2, type);
 		stmt->setFloat(3, radius);
 		stmt->setFloat(4, angle);
 		stmt->setFloat(5, pos_z);
@@ -3296,8 +3296,8 @@ void ObjectMgr::LoadVehicleTemplateGameObject()
 
 	uint32 count = 0;
 
-	//                                                  0             1               2        3        4           5                   
-	QueryResult result = WorldDatabase.Query("SELECT `entry`, `gameobject_entry`, `radius`, `angle`, `pos_z`, `orientation` FROM `vehicle_template_gameobject`");
+	//                                                  0             1               2        3        4           5			6              
+	QueryResult result = WorldDatabase.Query("SELECT `entry`, `gameobject_entry`, `radius`, `angle`, `pos_z`, `orientation`, `type` FROM `vehicle_template_gameobject`");
 
 	if (!result)
 	{
@@ -3315,6 +3315,7 @@ void ObjectMgr::LoadVehicleTemplateGameObject()
 		float angle = fields[3].GetFloat();
 		float pos_z = fields[4].GetFloat();
 		float orientation = fields[5].GetFloat();
+		uint8 type = fields[6].GetUInt8();
 
 		if (!sObjectMgr->GetCreatureTemplate(entry))
 		{
@@ -3322,7 +3323,7 @@ void ObjectMgr::LoadVehicleTemplateGameObject()
 			continue;
 		}
 
-		_vehicleTemplateGameObjectStore[entry].push_back(VehicleGameObject(gameobject, radius, angle, pos_z, orientation));
+		_vehicleTemplateGameObjectStore[entry].push_back(VehicleGameObject(gameobject, type, radius, angle, pos_z, orientation));
 
 		++count;
 	} while (result->NextRow());

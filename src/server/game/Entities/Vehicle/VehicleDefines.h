@@ -92,9 +92,10 @@ struct VehicleAccessory
 
 struct VehicleGameObject
 {
-	VehicleGameObject(uint32 entry, float radius, float angle, float pos_z, float orientation) :
-		GameObjectEntry(entry), radius(radius), angle(angle), pos_z(pos_z), orientation(orientation) { }
+	VehicleGameObject(uint32 entry, uint8 type, float radius, float angle, float pos_z, float orientation) :
+		GameObjectEntry(entry), type(type), radius(radius), angle(angle), pos_z(pos_z), orientation(orientation) { }
 	uint32 GameObjectEntry;
+	uint8 type;
 	float radius;
 	float angle;
 	float pos_z;

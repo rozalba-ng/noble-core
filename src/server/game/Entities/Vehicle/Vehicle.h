@@ -45,7 +45,7 @@ class TC_GAME_API Vehicle : public TransportBase
         void InstallAllAccessories(bool evading);
         void ApplyAllImmunities();
         void InstallAccessory(uint32 entry, int8 seatId, bool minion, uint8 type, uint32 summonTime);   //! May be called from scripts
-		bool InstallGameObject(uint32 entry, float radius, float angle, float pos_z, float orientation, bool temp);
+		bool InstallGameObject(uint32 entry, float radius, float angle, float pos_z, float orientation, uint8 type, bool temp);
 		bool RemoveGameObject(uint32 entry);
 		void InstallAllGameObjects(bool evading);
 		void RemoveAllGameObjects(bool evading);

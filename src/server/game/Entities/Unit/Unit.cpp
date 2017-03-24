@@ -16796,32 +16796,44 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 	pos_x = pos.GetPositionX();
 	pos_y = pos.GetPositionY();
 	pos_z = height;
-	if ((!vehicle->GetBase()->IsCharmed()) && (vehicle->isHaveGameobject))
+	Vehicle* main_vehicle;
+	if (Vehicle* parent = vehicle->GetBase()->GetVehicle())
+	{
+		main_vehicle = parent;
+		TC_LOG_ERROR("entities.vehicle", "Parent_exist");
+	}
+	else
+	{
+		main_vehicle = vehicle;
+		TC_LOG_ERROR("entities.vehicle", "No_parent_found");
+	}
+	if ((!main_vehicle->GetBase()->IsCharmed()) && (main_vehicle->isHaveGameobject))
 	{
 		TC_LOG_ERROR("entities.vehicle", "WITH");
 		pos_x = 0.0f;
 		pos_y = 0.0f;
 		pos_z = 0.0f;
-		VehiclePassengersList const* passengers = sObjectMgr->GetVehiclePassengersList(vehicle->GetBase()->ToCreature()->GetSpawnId());
-		if (passengers) {
+		VehiclePassengersList const* passengers = sObjectMgr->GetVehiclePassengersList(main_vehicle->GetBase()->ToCreature()->GetSpawnId());
+		if (passengers && player) {
 			TC_LOG_ERROR("entities.vehicle", "WITH2");
 			for (VehiclePassengersList::const_iterator itr = passengers->begin(); itr != passengers->end(); ++itr) {
+				TC_LOG_ERROR("entities.vehicle", "WITH2.5");
 				if (itr->passenger_type == 1 && itr->passenger_guid == player->GetGUID().GetCounter())
 				{
 					TC_LOG_ERROR("entities.vehicle", "WITH3");
 					pos_x = pos.GetPositionX() + (std::cos(itr->angle + pos.GetOrientation())*itr->radius);
 					pos_y = pos.GetPositionY() + (std::sin(itr->angle + pos.GetOrientation())*itr->radius);
 					pos_z = height + itr->pos_z + 1;
-					sObjectMgr->RemoveVehiclePassengers(vehicle->GetBase()->ToCreature()->GetSpawnId(), itr);
+					sObjectMgr->RemoveVehiclePassengers(main_vehicle->GetBase()->ToCreature()->GetSpawnId(), itr);
 					break;
 				}
 			}
 		}
 		if (pos_x == 0.0f) {
 			TC_LOG_ERROR("entities.vehicle", "WITH4");
-			pos_x = vehicle->GetExitPositionX() + (std::cos(urand(0, 3.14)*urand(2, 5)));
-			pos_y = vehicle->GetExitPositionY() + (std::sin(urand(0, 3.14)*urand(2, 5)));
-			pos_z = vehicle->GetExitPositionZ();
+			pos_x = main_vehicle->GetExitPositionX() + (std::cos(urand(0, 3.14)*urand(2, 5)));
+			pos_y = main_vehicle->GetExitPositionY() + (std::sin(urand(0, 3.14)*urand(2, 5)));
+			pos_z = main_vehicle->GetExitPositionZ();
 		}
 	}
 	else
