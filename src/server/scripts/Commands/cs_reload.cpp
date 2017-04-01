@@ -156,6 +156,9 @@ public:
             { "waypoint_data",                 rbac::RBAC_PERM_COMMAND_RELOAD_WAYPOINT_DATA,                    true,  &HandleReloadWpCommand,                         "" },
             { "vehicle_accessory",             rbac::RBAC_PERM_COMMAND_RELOAD_VEHICLE_ACCESORY,                 true,  &HandleReloadVehicleAccessoryCommand,           "" },
             { "vehicle_template_accessory",    rbac::RBAC_PERM_COMMAND_RELOAD_VEHICLE_TEMPLATE_ACCESSORY,       true,  &HandleReloadVehicleTemplateAccessoryCommand,   "" },
+			{ "all_creature_template",         rbac::RBAC_PERM_COMMAND_RELOAD_ALL_CREATURE_TEMPLATE,            true,  &HandleReloadAllCreatureTemplateCommand,        "" },
+			{ "all_gameobject_template",       rbac::RBAC_PERM_COMMAND_RELOAD_ALL_GAMEOBJECT_TEMPLATE,          true,  &HandleReloadAllGameObjectTemplateCommand,      "" },
+			{ "all_item_template",			   rbac::RBAC_PERM_COMMAND_RELOAD_ALL_ITEM_TEMPLATE,                true,  &HandleReloadAllItemTemplateCommand,			   "" },			
         };
         static std::vector<ChatCommand> commandTable =
         {
@@ -453,6 +456,14 @@ public:
         return true;
     }
 
+	static bool HandleReloadAllCreatureTemplateCommand(ChatHandler* handler, const char* /*args*/)
+	{
+		TC_LOG_INFO("misc", "Loading Creature Templates... (`creature_template`)");
+		sObjectMgr->LoadCreatureTemplates();
+		handler->SendGlobalGMSysMessage("DB table `creature_template` reloaded.");
+		return true;
+	}
+
     static bool HandleReloadCreatureQuestStarterCommand(ChatHandler* handler, const char* /*args*/)
     {
         TC_LOG_INFO("misc", "Loading Quests Relations... (`creature_queststarter`)");
@@ -494,6 +505,14 @@ public:
         sConditionMgr->LoadConditions(true);
         return true;
     }
+
+	static bool HandleReloadAllGameObjectTemplateCommand(ChatHandler* handler, const char* /*args*/)
+	{
+		TC_LOG_INFO("misc", "Loading Gameobject Templates... (`gameobject_template`)");
+		sObjectMgr->LoadGameObjectTemplate();
+		handler->SendGlobalGMSysMessage("DB table `gameobject_template` reloaded.");
+		return true;
+	}
 
     static bool HandleReloadGOQuestStarterCommand(ChatHandler* handler, const char* /*args*/)
     {
@@ -874,6 +893,14 @@ public:
         handler->SendGlobalGMSysMessage("DB table `page_texts` reloaded.");
         return true;
     }
+
+	static bool HandleReloadAllItemTemplateCommand(ChatHandler* handler, const char* /*args*/)
+	{
+		TC_LOG_INFO("misc", "Loading Item Templates... (`item_template`)");
+		sObjectMgr->LoadItemTemplates();
+		handler->SendGlobalGMSysMessage("DB table `item_template` reloaded.");
+		return true;
+	}
 
     static bool HandleReloadItemEnchantementsCommand(ChatHandler* handler, const char* /*args*/)
     {
