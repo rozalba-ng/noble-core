@@ -158,7 +158,9 @@ public:
             { "vehicle_template_accessory",    rbac::RBAC_PERM_COMMAND_RELOAD_VEHICLE_TEMPLATE_ACCESSORY,       true,  &HandleReloadVehicleTemplateAccessoryCommand,   "" },
 			{ "all_creature_template",         rbac::RBAC_PERM_COMMAND_RELOAD_ALL_CREATURE_TEMPLATE,            true,  &HandleReloadAllCreatureTemplateCommand,        "" },
 			{ "all_gameobject_template",       rbac::RBAC_PERM_COMMAND_RELOAD_ALL_GAMEOBJECT_TEMPLATE,          true,  &HandleReloadAllGameObjectTemplateCommand,      "" },
-			{ "all_item_template",			   rbac::RBAC_PERM_COMMAND_RELOAD_ALL_ITEM_TEMPLATE,                true,  &HandleReloadAllItemTemplateCommand,			   "" },			
+			{ "all_item_template",			   rbac::RBAC_PERM_COMMAND_RELOAD_ALL_ITEM_TEMPLATE,                true,  &HandleReloadAllItemTemplateCommand,			   "" },
+			{ "npc_text",					   rbac::RBAC_PERM_COMMAND_RELOAD_NPC_TEXT,							true,  &HandleReloadNpcTextCommand,					   "" },
+			{ "creature_equip_template",	   rbac::RBAC_PERM_COMMAND_RELOAD_CREATURE_EQUIPMENT_TEMPLATE,      true,  &HandleReloadEquipmentTemplateCommand,		   "" },
         };
         static std::vector<ChatCommand> commandTable =
         {
@@ -400,6 +402,14 @@ public:
         handler->SendGlobalGMSysMessage("DB table `command` will be reloaded at next chat command use.");
         return true;
     }
+	
+	static bool HandleReloadEquipmentTemplateCommand(ChatHandler* handler, const char* /*args*/)
+	{
+		TC_LOG_INFO("misc", "Re-Loading creature equipment template...");
+		sObjectMgr->LoadEquipmentTemplates();
+		handler->SendGlobalGMSysMessage("DB table `creature_equip_template` reloaded.");
+		return true;
+	}
 
     static bool HandleReloadOnKillReputationCommand(ChatHandler* handler, const char* /*args*/)
     {
@@ -505,6 +515,14 @@ public:
         sConditionMgr->LoadConditions(true);
         return true;
     }
+
+	static bool HandleReloadNpcTextCommand(ChatHandler* handler, const char* /*args*/)
+	{
+		TC_LOG_INFO("misc", "Re-Loading `npc_text` Table!");
+		sObjectMgr->LoadGossipText();
+		handler->SendGlobalGMSysMessage("DB table `npc_text` reloaded.");
+		return true;
+	}
 
 	static bool HandleReloadAllGameObjectTemplateCommand(ChatHandler* handler, const char* /*args*/)
 	{
