@@ -1722,6 +1722,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
             case RACE_TAUREN:
             case RACE_UNDEAD_PLAYER:
             case RACE_TROLL:
+			case RACE_GOBLIN:
 			//case RACE_BLOODELF:
 				team = TEAM_HORDE; //BY MITON
                 break;
@@ -1764,6 +1765,9 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
                 case RACE_GNOME:
                     stmt->setUInt16(1, 313);
                     break;
+				case RACE_GOBLIN:
+					stmt->setUInt16(1, 313);
+					break;
                 case RACE_NIGHTELF:
                     stmt->setUInt16(1, 113);
                     break;
@@ -2101,7 +2105,6 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
             }
         }
     }
-
     CharacterDatabase.CommitTransaction(trans);
 
     TC_LOG_DEBUG("entities.player", "%s (IP: %s) changed race from %u to %u", GetPlayerInfo().c_str(), GetRemoteAddress().c_str(), oldRace, factionChangeInfo.Race);
