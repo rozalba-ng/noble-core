@@ -477,8 +477,7 @@ bool Vehicle::InstallGameObject(uint32 entry, float radius, float angle, float p
 		{
 			delete object;
 			return false;
-		}
-		object->SetCreatureAttach(_me->ToCreature()->GetSpawnId());
+		}		
 		// fill the gameobject data and save to the db
 		object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 		guidLow = object->GetSpawnId();
@@ -518,6 +517,7 @@ bool Vehicle::InstallGameObject(uint32 entry, float radius, float angle, float p
 			return false;
 		}
 	}
+	object->SetCreatureAttach(_me->ToCreature()->GetSpawnId());
 
 	/// @todo is it really necessary to add both the real and DB table guid here ?
 	sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
