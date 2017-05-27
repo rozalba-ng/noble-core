@@ -162,6 +162,7 @@ public:
 			{ "all_item_template",			   rbac::RBAC_PERM_COMMAND_RELOAD_ALL_ITEM_TEMPLATE,                true,  &HandleReloadAllItemTemplateCommand,			   "" },
 			{ "npc_text",					   rbac::RBAC_PERM_COMMAND_RELOAD_NPC_TEXT,							true,  &HandleReloadNpcTextCommand,					   "" },
 			{ "creature_equip_template",	   rbac::RBAC_PERM_COMMAND_RELOAD_CREATURE_EQUIPMENT_TEMPLATE,      true,  &HandleReloadEquipmentTemplateCommand,		   "" },
+			{ "creature_template_addon",	   rbac::RBAC_PERM_COMMAND_RELOAD_CREATURE_TEMPLATE_ADDON ,			true,  &HandleReloadCreatureTemplateAddonCommand,	   "" },
         };
         static std::vector<ChatCommand> commandTable =
         {
@@ -531,6 +532,14 @@ public:
 		TC_LOG_INFO("misc", "Re-Loading `npc_text` Table!");
 		sObjectMgr->LoadGossipText();
 		handler->SendGlobalGMSysMessage("DB table `npc_text` reloaded.");
+		return true;
+	}
+
+	static bool HandleReloadCreatureTemplateAddonCommand(ChatHandler* handler, const char* /*args*/)
+	{
+		TC_LOG_INFO("misc", "Re-Loading `creature_template_addon` Table!");
+		sObjectMgr->LoadCreatureTemplateAddons();
+		handler->SendGlobalGMSysMessage("DB table `creature_template_addon` reloaded.");
 		return true;
 	}
 
