@@ -455,5 +455,15 @@ namespace LuaGameObject
 		return 1;
 	}
 
+	int TakeContainerItem(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+		uint8 bagSlotIdSrc = Eluna::CHECKVAL<uint8>(L, 3, 0);
+		uint8 slotIdSrc = Eluna::CHECKVAL<uint8>(L, 4, 0);
+		uint32 slotIdDest = Eluna::CHECKVAL<uint32>(L, 5, 0);
+		Eluna::Push(L, go->TakeContainerItem(player, slotIdDest, bagSlotIdSrc, slotIdSrc, 1));
+		return 1;
+	}
+
 };
 #endif

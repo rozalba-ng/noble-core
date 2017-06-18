@@ -709,9 +709,11 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
 		//void SetContainerItem(Item* item, uint32 slotId);
 		void SwapContainerItem(Item* itemSrc, Item* itemDest, uint32 slotIdSrc, uint32 slotIdDest, uint32 splitedAmount);
 		void SwapContainerItemWithInventory(Player* player, uint32 slotId, Item* pItem, uint32 splitedAmount);
+		void DeleteContainerItem(SQLTransaction& trans, bool removeItemsFromDB);
 		bool SetContainerItem(Item* item, uint32 slotIdDest);
 		bool StoreContainerItem(Player* player, uint32 slotId, uint8 playerBag, uint8 playerSlotId, uint32 splitedAmount);
 		bool MoveContainerItem(uint32 slotIdSrc, uint32 slotIdDest, uint32 splitedAmount);
+		bool TakeContainerItem(Player* player, uint32 slotId, uint8 playerBag, uint8 playerSlotId, uint32 splitedAmount);
 
         void SetSpellId(uint32 id)
         {

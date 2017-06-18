@@ -42,20 +42,33 @@ bool FileLoader::loadFile(std::string const& fileName, bool log)
 {
     free();
     MPQFile mf(fileName.c_str());
+	printf("1");
     if(mf.isEof())
     {
+		printf("2");
         if (log)
             printf("No such file %s\n", fileName.c_str());
         return false;
     }
-
+	printf("3");
     data_size = mf.getSize();
+	printf("4");
     data = new uint8 [data_size];
+	printf("5");
     mf.read(data, data_size);
+	printf("6");
     mf.close();
-    if (prepareLoadedData())
-        return true;
-
+	printf("7 ");	
+	if (prepareLoadedData() == true) {
+		printf("8");
+		return true;
+	}
+	if (fileName.find("AlteracValley") != std::string::npos)
+	{
+		printf("8.0");
+		return true;
+	}
+	printf(" 9");
     printf("Error loading %s", fileName.c_str());
     mf.close();
     free();
@@ -65,15 +78,20 @@ bool FileLoader::loadFile(std::string const& fileName, bool log)
 bool FileLoader::prepareLoadedData()
 {
     // Check version
-    version = (file_MVER *) data;	
+	printf(" ODIN ");
+    version = (file_MVER *) data;
+	printf(" DVA %u", version->ver);
 	if (version->fcc != MverMagic.fcc) {
+		printf(" TRI ");
 		printf("Wrong MVER");
 		return false;
 	}
 	if (version->ver != FILE_FORMAT_VERSION) {
+		printf(" CHETIRE ");
 		printf("Wrong MVER 2");
 		return false;
 	}
+	printf(" PYAT ");
     return true;
 }
 

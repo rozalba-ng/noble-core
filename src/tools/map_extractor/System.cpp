@@ -82,6 +82,12 @@ const char *CONF_mpq_list[]={
     "patch-3.MPQ",
     "patch-4.MPQ",
     "patch-5.MPQ",
+	"patch-R.MPQ",
+	"patch-V.MPQ",
+	"patch-W.MPQ",
+	"patch-X.MPQ",
+	"patch-Y.MPQ",
+	"patch-Z.MPQ",
 };
 
 static const char* const langs[] = {"enGB", "enUS", "deDE", "esES", "frFR", "koKR", "zhCN", "zhTW", "enCN", "enTW", "esMX", "ruRU" };
@@ -935,7 +941,7 @@ void ExtractMapsFromMpq(uint32 build)
 
         mpqMapName = Trinity::StringFormat("World\\Maps\\%s\\%s.wdt", map_ids[z].name, map_ids[z].name);
         WDT_file wdt;
-        if (!wdt.loadFile(mpqMapName, false))
+        if (!wdt.loadFile(mpqMapName, true))
         {
             printf("Error loading %s map wdt data\n", map_ids[z].name);
             continue;

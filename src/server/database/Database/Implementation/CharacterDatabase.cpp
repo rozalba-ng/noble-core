@@ -619,5 +619,6 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 	PrepareStatement(CHAR_DEL_NONEXISTENT_CONTAINER_ITEM, "DELETE FROM container_item WHERE ContainerID = ? AND SlotID = ?", CONNECTION_ASYNC);
 
+	PrepareStatement(CHAR_DEL_CONTAINER_ITEMS, "DELETE FROM container_item WHERE ContainerID = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_INS_CONTAINER_ITEM, "INSERT INTO container_item (ContainerID, SlotID, item_guid) VALUES (?, ?, ?)", CONNECTION_ASYNC);
 }

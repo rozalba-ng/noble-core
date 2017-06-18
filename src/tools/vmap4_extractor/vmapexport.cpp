@@ -340,6 +340,8 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames)
     pArchiveNames.push_back(input_path + std::string("common.MPQ"));
     pArchiveNames.push_back(input_path + std::string("common-2.MPQ"));
     pArchiveNames.push_back(input_path + std::string("expansion.MPQ"));
+	pArchiveNames.push_back(input_path + std::string("patch-V.MPQ"));
+	pArchiveNames.push_back(input_path + std::string("patch-W.MPQ"));
 	pArchiveNames.push_back(input_path + std::string("patch-X.MPQ"));
 	pArchiveNames.push_back(input_path + std::string("patch-Y.MPQ"));
 	pArchiveNames.push_back(input_path + std::string("patch-Z.MPQ"));
@@ -360,8 +362,8 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames)
         if(scan_patches(path, pArchiveNames))
             foundOne = true;
     }
-	char MPQ_alphabet[] = { 'R','S','T','U','V','W','X','Y','Z' };
-	for (int j = 0; j < 9; ++j)
+	char MPQ_alphabet[] = { 'P','Q','R','S','T','U','V','W','X','Y','Z' };
+	for (int j = 0; j < 11; ++j)
 	{
 		char filePath[512];
 		//char filePath[512] = in_path + *i + "/patch-" + *i + "-" + MPQ_alphabet[j] + ".MPQ";

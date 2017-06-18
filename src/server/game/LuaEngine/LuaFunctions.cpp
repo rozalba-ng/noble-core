@@ -900,6 +900,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "SaveToDB", &LuaGameObject::SaveToDB },
 	{ "MoveContainerItem", &LuaGameObject::MoveContainerItem },
 	{ "StoreContainerItem", &LuaGameObject::StoreContainerItem },	
+	{ "TakeContainerItem", &LuaGameObject::TakeContainerItem },
 
     { NULL, NULL }
 };

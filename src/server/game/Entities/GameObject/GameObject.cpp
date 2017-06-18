@@ -808,7 +808,6 @@ bool GameObject::LoadItemFromDB(Item* item, uint32 slotId, uint32 size)
 		TC_LOG_ERROR("gameobject", "Invalid slot for item (GUID: %u, id: %u) in container, skipped.", item->GetGUID(), item->GetEntry());
 		return false;
 	}
-	TC_LOG_ERROR("gameobject", "Slot: %u", slotId);
 	m_items[slotId] = item;
 	return true;
 }
@@ -829,6 +828,19 @@ void GameObject::SwapContainerItemWithInventory(Player* player, uint32 slotId, I
 
 }
 
+void GameObject::DeleteContainerItem(SQLTransaction& trans, bool removeItemsFromDB)
+{
+	for (uint8 slotId = 0; slotId < 36; ++slotId)
+		if (Item* pItem = m_items[slotId])
+		{
+			pItem->RemoveFromWorld();
+			if (removeItemsFromDB)
+				pItem->DeleteFromDB(trans);
+			delete pItem;
+			pItem = NULL;
+		}
+}
+
 bool GameObject::SetContainerItem(Item* item, uint32 slotIdDest)
 {
 	if (slotIdDest >= m_containerSize)
@@ -842,7 +854,6 @@ bool GameObject::StoreContainerItem(Player* player, uint32 slotId, uint8 playerB
 {
 	if (slotId >= m_containerSize)
 		return false;
-	TC_LOG_ERROR("misc", "0");
 
 	Item* pItem = player->GetItemByPos(playerBag, playerSlotId);
 	if (pItem)
@@ -851,32 +862,35 @@ bool GameObject::StoreContainerItem(Player* player, uint32 slotId, uint8 playerB
 		if (pItem->IsNotEmptyBag())
 		{
 			player->SendEquipError(EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS, pItem);
-			TC_LOG_ERROR("misc", "1");
 			return false;
 		}
 		// Bound items cannot be put into bank.
 		else if (!pItem->CanBeTraded())
 		{
 			player->SendEquipError(EQUIP_ERR_ITEMS_CANT_BE_SWAPPED, pItem);
-			TC_LOG_ERROR("misc", "2");
 			return false;
 		}
 		if (Item* itemDest = GetContainerItem(slotId))
 		{
 			SwapContainerItemWithInventory(player, slotId, pItem, splitedAmount);
-			TC_LOG_ERROR("misc", "3");
+			SaveToDB();
 			return true;
 		}
 		else 
 		{
-			TC_LOG_ERROR("misc", "4");
 			if (SetContainerItem(pItem, slotId)) {
-				TC_LOG_ERROR("misc", "5");
-				player->DestroyItem(playerBag, playerSlotId, true);
+				SQLTransaction trans = CharacterDatabase.BeginTransaction();
+				player->MoveItemFromInventory(playerBag, playerSlotId, true);
+				pItem->DeleteFromInventoryDB(trans);
+				//player->DestroyItem(playerBag, playerSlotId, true);
+				CharacterDatabase.CommitTransaction(trans);
+				pItem->FSetState(ITEM_CHANGED);
+				SaveToDB();
 				return true;
 			}
 		}		
 	}
+	return false;
 }
 
 bool GameObject::MoveContainerItem(uint32 slotIdSrc, uint32 slotIdDest, uint32 splitedAmount)
@@ -899,6 +913,60 @@ bool GameObject::MoveContainerItem(uint32 slotIdSrc, uint32 slotIdDest, uint32 s
 			}
 		}
 	}
+}
+
+bool GameObject::TakeContainerItem(Player* player, uint32 slotId, uint8 playerBag, uint8 playerSlotId, uint32 splitedAmount)
+{
+	if (slotId >= m_containerSize)
+		return false;
+
+	Item* pItem = GetContainerItem(slotId);
+	if (pItem)
+	{
+		Item* itemDest = player->GetItemByPos(playerBag, playerSlotId);
+		if (itemDest)
+		{
+			SwapContainerItemWithInventory(player, slotId, pItem, splitedAmount);
+			SaveToDB();
+			return true;
+		}
+		else
+		{
+			if (SetContainerItem(pItem, slotId)) {
+				uint32 requiredSpace = pItem->GetMaxStackCount();
+				/*if (itemDest)
+				{
+					// Make sure source and destination items match and destination item has space for more stacks.
+					if (itemDest->GetEntry() != pItem->GetEntry() || itemDest->GetCount() >= pItem->GetMaxStackCount())
+						return false;
+					requiredSpace -= itemDest->GetCount();
+				}*/
+
+				// Reserve space
+				requiredSpace = std::min(requiredSpace, pItem->GetCount());
+
+				ItemPosCountVec vec_dest;
+				ItemPosCount newPosition = ItemPosCount((playerBag << 8) | playerSlotId, requiredSpace);
+				if (!newPosition.isContainedIn(vec_dest))
+				{
+					vec_dest.push_back(newPosition);
+				}
+				SQLTransaction trans = CharacterDatabase.BeginTransaction();
+				
+				player->MoveItemToInventory(vec_dest, pItem, true);
+				player->SaveInventoryAndGoldToDB(trans);
+
+				m_items[slotId] = NULL;
+				//DeleteContainerItem(trans, false);
+
+				CharacterDatabase.CommitTransaction(trans);
+				pItem->FSetState(ITEM_CHANGED);
+				SaveToDB();
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void GameObject::SaveToDB()
@@ -981,17 +1049,23 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
 
 	if (m_containerSize)
 	{
-		trans = CharacterDatabase.BeginTransaction();
+		SQLTransaction charTrans = CharacterDatabase.BeginTransaction();
+		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_CONTAINER_ITEMS);
+		stmt->setUInt32(0, m_spawnId);
+		charTrans->Append(stmt);
 		for (uint32 i = 0; i < m_containerSize; ++i)
-		{
-			TC_LOG_ERROR("gameobject", "SAVING ITEM");			
-			stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CONTAINER_ITEM);
-			stmt->setUInt32(0, m_spawnId);
-			stmt->setUInt32(0, i);
-			stmt->setUInt32(0, m_items[i]->GetGUID());
-			trans->Append(stmt);			
+		{					
+			if (m_items[i]) {
+				uint8 index = 0;
+
+				PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CONTAINER_ITEM);
+				stmt->setUInt32(index++, m_spawnId);
+				stmt->setUInt32(index++, i);
+				stmt->setUInt32(index++, m_items[i]->GetGUID().GetCounter());
+				charTrans->Append(stmt);
+			}
 		}
-		CharacterDatabase.CommitTransaction(trans);
+		CharacterDatabase.CommitTransaction(charTrans);
 	}
 }
 
