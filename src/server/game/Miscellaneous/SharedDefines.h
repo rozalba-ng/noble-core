@@ -2903,10 +2903,12 @@ enum SkillType
 	SKILL_ONE_HANDED			   = 811,
 	SKILL_TWO_HANDED			   = 812,
 	SKILL_SHIELD2				   = 813,
-	SKILL_RANGED				   = 814
+	SKILL_RANGED				   = 814,
+	SKILL_CARPENTRY				   = 830,
+	SKILL_POTTERY				   = 831
 };
 
-#define MAX_SKILL_TYPE               815
+#define MAX_SKILL_TYPE               832
 
 inline SkillType SkillByLockType(LockType locktype)
 {
