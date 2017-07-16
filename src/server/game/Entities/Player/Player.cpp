@@ -17927,6 +17927,7 @@ void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
 			SetRoleStat(3, fields[3].GetUInt32(), true, false);
 			SetRoleStat(4, fields[4].GetUInt32(), true, false);
 			SetRoleStat(5, fields[5].GetUInt32(), true, false);
+			sEluna->OnRoleStatUpdate(this, 0);
 		} while (result->NextRow());
 	}
 }
