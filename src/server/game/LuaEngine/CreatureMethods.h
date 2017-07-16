@@ -871,6 +871,12 @@ namespace LuaCreature
         return 1;
     }
 
+	int GetNameForLocaleRu(Eluna* /*E*/, lua_State* L, Creature* creature)
+	{
+		Eluna::Push(L, creature->GetNameForLocaleIdx(LOCALE_ruRU));
+		return 1;
+	}	
+
     /**
      * Sets the [Creature]'s NPC flags to `flags`.
      *

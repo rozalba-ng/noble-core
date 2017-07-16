@@ -785,7 +785,8 @@ ElunaRegister<Creature> CreatureMethods[] =
 #endif
     { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
 	{ "GetOwner", &LuaCreature::GetOwner },	
-
+	{ "GetNameForLocaleRu", &LuaCreature::GetNameForLocaleRu },
+	
     // Setters
     { "SetHover", &LuaCreature::SetHover },
     { "SetDisableGravity", &LuaCreature::SetDisableGravity },
