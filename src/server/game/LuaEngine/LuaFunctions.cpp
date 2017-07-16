@@ -285,6 +285,7 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GetVehicle", &LuaUnit::GetVehicle},                           // :GetVehicle() - UNDOCUMENTED - Gets the Vehicle kit of the vehicle the unit is on
 #endif
     { "GetMovementType", &LuaUnit::GetMovementType },
+	{ "GetRoleStat", &LuaUnit::GetRoleStat }, // ROLE STAT SYSTEM	
 
     // Setters
     { "SetFaction", &LuaUnit::SetFaction },

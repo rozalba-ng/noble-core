@@ -283,6 +283,12 @@ Unit::Unit(bool isWorldObject) :
 
     _oldFactionId = 0;
     _isWalkingBeforeCharm = false;
+
+	for (uint8 i = 0; i < 6; ++i) // ROLE STAT SYSTEM
+		role_stats[i] = 0;
+
+	for (uint8 i = 0; i < 6; ++i)
+		role_stats_mods[i] = 0;
 }
 
 ////////////////////////////////////////////////////////////
@@ -13026,6 +13032,23 @@ void Unit::SetLevel(uint8 lvl)
 
         sWorld->UpdateCharacterInfoLevel(GetGUID(), lvl);
     }
+}
+
+void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROLE STAT SYSTEM
+{
+	//float oldRating = role_stats[stat];
+	role_stats[stat] += (apply ? value : -value);
+	if (Player* player = ToPlayer())
+	{
+#ifdef ELUNA
+		if(update)
+			sEluna->OnRoleStatUpdate(player, stat);
+#endif
+	}
+	// explicit affected values
+	//float const multiplier = role_stats_mods[stat];
+	//float const oldVal = oldRating * multiplier;
+	//float const newVal = role_stats[stat] * multiplier;
 }
 
 void Unit::SetHealth(uint32 val)

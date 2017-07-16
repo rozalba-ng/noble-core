@@ -1365,6 +1365,14 @@ namespace LuaUnit
         return 1;
     }
 
+	int GetRoleStat(Eluna* E, lua_State* L, Unit* unit) // ROLE STAT SYSTEM
+	{
+		uint32 stat = Eluna::CHECKVAL<uint32>(L, 2, 0);
+
+		Eluna::Push(L, unit->GetRoleStat(stat));
+		return 1;
+	}
+
     /**
      * Sets the [Unit]'s owner GUID to given GUID.
      *

@@ -211,6 +211,10 @@ bool LoginQueryHolder::Initialize()
     stmt->setUInt64(0, lowGuid);
     res &= SetPreparedQuery(PLAYER_LOGIN_QUERY_LOAD_CORPSE_LOCATION, stmt);
 
+	stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARACTER_ROLE_STATS); // ROLE STAT SYSTEM
+	stmt->setUInt32(0, lowGuid);
+	res &= SetPreparedQuery(PLAYER_LOGIN_QUERY_LOAD_ROLE_STATS, stmt);
+
     return res;
 }
 

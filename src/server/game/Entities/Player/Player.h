@@ -817,6 +817,7 @@ enum PlayerLoginQueryIndex
     PLAYER_LOGIN_QUERY_LOAD_SEASONAL_QUEST_STATUS   = 31,
     PLAYER_LOGIN_QUERY_LOAD_MONTHLY_QUEST_STATUS    = 32,
     PLAYER_LOGIN_QUERY_LOAD_CORPSE_LOCATION         = 33,
+	PLAYER_LOGIN_QUERY_LOAD_ROLE_STATS				= 34, // ROLE STAT SYSTEM
     MAX_PLAYER_LOGIN_QUERY
 };
 
@@ -2347,6 +2348,7 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         void _LoadGlyphs(PreparedQueryResult result);
         void _LoadTalents(PreparedQueryResult result);
         void _LoadInstanceTimeRestrictions(PreparedQueryResult result);
+		void _LoadRoleStats(PreparedQueryResult result); // ROLE STAT SYSTEM
 
         /*********************************************************/
         /***                   SAVE SYSTEM                     ***/

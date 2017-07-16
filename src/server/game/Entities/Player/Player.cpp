@@ -13813,8 +13813,26 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
                             HandleBaseModValue(SHIELD_BLOCK_VALUE, FLAT_MOD, float(enchant_amount), apply);
                             TC_LOG_DEBUG("entities.player.items", "+ %u BLOCK_VALUE", enchant_amount);
                             break;
+						case ITEM_MOD_ROLE_STR: // ROLE STAT SYSTEM
+							SetRoleStat(0, enchant_amount, apply);
+							break;
+						case ITEM_MOD_ROLE_AGI:
+							SetRoleStat(1, enchant_amount, apply);
+							break;
+						case ITEM_MOD_ROLE_INT:
+							SetRoleStat(2, enchant_amount, apply);
+							break;
+						case ITEM_MOD_ROLE_VIT:
+							SetRoleStat(3, enchant_amount, apply);
+							break;
+						case ITEM_MOD_ROLE_DEX:
+							SetRoleStat(4, enchant_amount, apply);
+							break;
+						case ITEM_MOD_ROLE_WILL:
+							SetRoleStat(5, enchant_amount, apply);
+							break;
                         case ITEM_MOD_SPELL_HEALING_DONE:   // deprecated
-                        case ITEM_MOD_SPELL_DAMAGE_DONE:    // deprecated
+                        case ITEM_MOD_SPELL_DAMAGE_DONE:    // deprecated						
                         default:
                             break;
                     }
@@ -17438,6 +17456,8 @@ bool Player::LoadFromDB(ObjectGuid guid, SQLQueryHolder *holder)
     // must be before inventory (some items required reputation check)
     m_reputationMgr->LoadFromDB(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_REPUTATION));
 
+	_LoadRoleStats(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_ROLE_STATS)); // ROLE STAT SYSTEM
+
     _LoadInventory(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_INVENTORY), time_diff);
 
     // update items with duration and realtime
@@ -17887,6 +17907,28 @@ void Player::_LoadInventory(PreparedQueryResult result, uint32 timeDiff)
     }
     //if (IsAlive())
     _ApplyAllItemMods();
+}
+
+void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
+{
+	if (result)
+	{
+		do
+		{
+			Field* fields = result->Fetch();
+			if ((fields[0].GetUInt32() + fields[1].GetUInt32() + fields[2].GetUInt32() + fields[3].GetUInt32() + fields[4].GetUInt32() + fields[5].GetUInt32()) > 8)
+			{
+				TC_LOG_ERROR("entities.player", "Player::_LoadRoleStats: Player '%s' try to load more than 5 stats.", GetName().c_str());
+				return;
+			}
+			SetRoleStat(0, fields[0].GetUInt32(), true, false);
+			SetRoleStat(1, fields[1].GetUInt32(), true, false);
+			SetRoleStat(2, fields[2].GetUInt32(), true, false);
+			SetRoleStat(3, fields[3].GetUInt32(), true, false);
+			SetRoleStat(4, fields[4].GetUInt32(), true, false);
+			SetRoleStat(5, fields[5].GetUInt32(), true, false);
+		} while (result->NextRow());
+	}
 }
 
 Item* Player::_LoadItem(SQLTransaction& trans, uint32 zoneId, uint32 timeDiff, Field* fields)

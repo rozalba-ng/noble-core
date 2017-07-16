@@ -203,6 +203,7 @@ namespace Hooks
         PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
 		PLAYER_EVENT_ON_AURA_APPLY				=	  43,       // (event, player, aura)
 		PLAYER_EVENT_ON_AURA_REMOVE				=	  44,       // (event, player, aura)
+		PLAYER_EVENT_ON_ROLE_STAT_UPDATE		=	  45,       // (event, player, aura) // ROLE STAT SYSTEM
 
         PLAYER_EVENT_COUNT
     };

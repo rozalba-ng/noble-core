@@ -621,4 +621,5 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 	PrepareStatement(CHAR_DEL_CONTAINER_ITEMS, "DELETE FROM container_item WHERE ContainerID = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_INS_CONTAINER_ITEM, "INSERT INTO container_item (ContainerID, SlotID, item_guid) VALUES (?, ?, ?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_SEL_CHARACTER_ROLE_STATS, "SELECT STR, AGI, INTEL, VIT, DEX, WILL FROM character_role_stats WHERE guid = ?", CONNECTION_ASYNC); // ROLE STAT SYSTEM
 }
