@@ -2364,8 +2364,8 @@ float Map::GetHeight(float x, float y, float z, bool checkVMap /*= true*/, float
 
 float Map::GetMinHeight(float x, float y) const
 {
-    if (GridMap const* grid = const_cast<Map*>(this)->GetGrid(x, y))
-        return grid->getMinHeight(x, y);
+    //if (GridMap const* grid = const_cast<Map*>(this)->GetGrid(x, y))
+    //    return grid->getMinHeight(x, y); NOBLEGARDEN ÊÎÑÒÛËÜ ÄËß ÀËÜÒÅĞÀÊÀ ÏÎ ÂÛÑÎÒÀÌ
 
     return -500.0f;
 }
