@@ -111,6 +111,7 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
 	{ "GetGameObject", &LuaGlobalFunctions::GetGameObject },
 	{ "GetCreature", &LuaGlobalFunctions::GetCreature },	
+	//{ "GetAllCharacterTempMounts", &LuaGlobalFunctions::GetAllCharacterTempMounts },
 
     // Boolean
     { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
@@ -326,6 +327,7 @@ ElunaRegister<Unit> UnitMethods[] =
 #endif
     { "SetWaterWalk", &LuaUnit::SetWaterWalk },
     { "SetStandState", &LuaUnit::SetStandState },
+	{ "SetRoleStat", &LuaUnit::SetRoleStat },
 
     // Boolean
     { "IsAlive", &LuaUnit::IsAlive },
@@ -510,6 +512,7 @@ ElunaRegister<Player> PlayerMethods[] =
 	{ "GetTargetCreature", &LuaPlayer::GetTargetCreature },
 	{ "GetDmLevel", &LuaPlayer::GetDmLevel },	
 	{ "GetSelectedUnit", &LuaPlayer::GetSelectedUnit },
+	//{ "GetCharacterMountList", &LuaPlayer::GetCharacterMountList },
 #ifndef CATA
     { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
 #endif
@@ -560,7 +563,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SetAtLoginFlag", &LuaPlayer::SetAtLoginFlag },
     { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
     { "SetGender", &LuaPlayer::SetGender },
-    { "SetSheath", &LuaPlayer::SetSheath },
+    { "SetSheath", &LuaPlayer::SetSheath },	
 #ifndef TRINITY
     { "SetFFA", &LuaPlayer::SetFFA },
 #endif
@@ -743,6 +746,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GroupInvite", &LuaPlayer::GroupInvite },
     { "GroupCreate", &LuaPlayer::GroupCreate },
     { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
+	//{ "SpawnTempCharacterMount", &LuaPlayer::SpawnTempCharacterMount },		
 #if !defined(CLASSIC) && !defined(TBC)
     { "SendMovieStart", &LuaPlayer::SendMovieStart },
 #endif

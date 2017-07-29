@@ -122,7 +122,12 @@ void Eluna::_ReloadEluna()
     LOCK_ELUNA;
     ASSERT(IsInitialized());
 
-    eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
+	WorldPacket data(SMSG_SERVER_MESSAGE, 50);              // guess size
+	data << uint32(SERVER_MSG_STRING);
+	data << "Reloading Eluna...";
+
+    //eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");	
+	eWorld->SendGlobalGMMessage(&data);
 
     // Remove all timed events
     sEluna->eventMgr->SetStates(LUAEVENT_STATE_ERASE);

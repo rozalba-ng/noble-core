@@ -117,7 +117,7 @@ public:
         uint32 objectId = atoul(id);
         if (!objectId)
             return false;
-
+				
         char* spawntimeSecs = strtok(NULL, " ");
 
         const GameObjectTemplate* objectInfo = sObjectMgr->GetGameObjectTemplate(objectId);
@@ -139,6 +139,10 @@ public:
         }
 
         Player* player = handler->GetSession()->GetPlayer();
+
+		if (objectId >= 530000 && objectId <= 540000 && player->GetSession()->GetSecurity() < 2)
+			return false;
+
         float x = float(player->GetPositionX());
         float y = float(player->GetPositionY());
         float z = float(player->GetPositionZ());
@@ -193,7 +197,12 @@ public:
         if (!id)
             return false;
 
+		uint32 objectId = atoi(id);
+
         Player* player = handler->GetSession()->GetPlayer();
+
+		if (objectId >= 530000 && objectId <= 540000 && player->GetSession()->GetSecurity() < 2)
+			return false;
 
         char* spawntime = strtok(NULL, " ");
         uint32 spawntm = 300;
@@ -207,9 +216,7 @@ public:
         float ang = player->GetOrientation();
 
         float rot2 = std::sin(ang/2);
-        float rot3 = std::cos(ang/2);
-
-        uint32 objectId = atoi(id);
+        float rot3 = std::cos(ang/2);        
 
         if (!sObjectMgr->GetGameObjectTemplate(objectId))
         {
@@ -366,10 +373,14 @@ public:
             return false;
         }
 
+		Player* player = handler->GetSession()->GetPlayer();
+		if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
+			return false;
+
         ObjectGuid ownerGuid = object->GetOwnerGUID();
         if (ownerGuid)
         {
-            Unit* owner = ObjectAccessor::GetUnit(*handler->GetSession()->GetPlayer(), ownerGuid);
+            Unit* owner = ObjectAccessor::GetUnit(*player, ownerGuid);
             if (!owner || !ownerGuid.IsPlayer())
             {
                 handler->PSendSysMessage(LANG_COMMAND_DELOBJREFERCREATURE, ownerGuid.GetCounter(), object->GetGUID().GetCounter());
@@ -473,14 +484,18 @@ public:
             return false;
         }
 
+		Player* player = handler->GetSession()->GetPlayer();
+
+		if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
+			return false;
+
         char* toX = strtok(NULL, " ");
         char* toY = strtok(NULL, " ");
         char* toZ = strtok(NULL, " ");
 
         float x, y, z;
         if (!toX)
-        {
-            Player* player = handler->GetSession()->GetPlayer();
+        {            
             player->GetPosition(x, y, z);
         }
         else

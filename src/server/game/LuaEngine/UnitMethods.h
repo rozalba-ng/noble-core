@@ -1887,6 +1887,19 @@ namespace LuaUnit
         return 0;
     }
 
+	int SetRoleStat(Eluna* E, lua_State* L, Unit* unit) // ROLE STAT SYSTEM
+	{
+		uint32 stat = Eluna::CHECKVAL<uint32>(L, 2, 0);
+		uint32 value = Eluna::CHECKVAL<uint32>(L, 3, 0);
+		uint32 apply = Eluna::CHECKVAL<bool>(L, 4, true);
+		if (stat >= 0 && stat <= 5)
+		{
+			unit->SetRoleStat(stat, value, apply);
+			return 1;
+		}
+		return 0;
+	}
+
     /*int SetCanFly(Eluna* E, lua_State* L, Unit* unit)
     {
         bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
