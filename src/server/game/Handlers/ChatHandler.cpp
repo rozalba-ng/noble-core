@@ -231,8 +231,8 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recvData)
                 TC_LOG_ERROR("network", "Player %s (GUID: %u) sent a chatmessage with an invalid link: %s", GetPlayer()->GetName().c_str(),
                     GetPlayer()->GetGUID().GetCounter(), msg.c_str());
 
-				TC_LOG_ERROR("malfpacket", "Player %s (GUID: %u) sent a chatmessage with an invalid link: %s", GetPlayer()->GetName().c_str(),
-					GetPlayer()->GetGUID().GetCounter(), msg.c_str());
+				TC_LOG_ERROR("malfpacket", "Player %s (GUID: %u) (account: %u) (IP: %s) sent a chatmessage with an invalid link: %s", GetPlayer()->GetName().c_str(),
+					GetPlayer()->GetGUID().GetCounter(), GetPlayer()->GetSession()->GetAccountId(), GetPlayer()->GetSession()->GetRemoteAddress().c_str(), msg.c_str());
 
                 if (sWorld->getIntConfig(CONFIG_CHAT_STRICT_LINK_CHECKING_KICK))
                     KickPlayer();
