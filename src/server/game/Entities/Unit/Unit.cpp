@@ -284,10 +284,10 @@ Unit::Unit(bool isWorldObject) :
     _oldFactionId = 0;
     _isWalkingBeforeCharm = false;
 
-	for (uint8 i = 0; i < 6; ++i) // ROLE STAT SYSTEM
+	for (uint8 i = 0; i < 7; ++i) // ROLE STAT SYSTEM
 		role_stats[i] = 0;
 
-	for (uint8 i = 0; i < 6; ++i)
+	for (uint8 i = 0; i < 7; ++i)
 		role_stats_mods[i] = 0;
 }
 
@@ -13036,8 +13036,15 @@ void Unit::SetLevel(uint8 lvl)
 
 void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROLE STAT SYSTEM
 {
+	//if (HasAura(88009) && apply)
+	//	return;
+
 	//float oldRating = role_stats[stat];
 	role_stats[stat] += (apply ? value : -value);
+
+	if (role_stats[stat] > 10)
+		role_stats[stat] = 10;
+
 	if (Player* player = ToPlayer())
 	{
 #ifdef ELUNA

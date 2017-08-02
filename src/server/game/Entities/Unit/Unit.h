@@ -1367,7 +1367,7 @@ class TC_GAME_API Unit : public WorldObject
         uint32 CountPctFromCurHealth(int32 pct) const { return CalculatePct(GetHealth(), pct); }
 
 		void SetRoleStat(uint8 stat, uint32 val, bool apply, bool update = true); // ROLE STAT SYSTEM
-		uint32 GetRoleStat(uint8 stat) const { return stat < 6 ? role_stats[stat] : NULL; }
+		uint32 GetRoleStat(uint8 stat) const { return stat < 7 ? role_stats[stat] : NULL; }
 
         void SetHealth(uint32 val);
         void SetMaxHealth(uint32 val);
@@ -2258,8 +2258,8 @@ class TC_GAME_API Unit : public WorldObject
 
         void DisableSpline();
 
-		uint32 role_stats[6]; // ROLE STAT SYSTEM
-		uint32 role_stats_mods[6];
+		uint32 role_stats[7]; // ROLE STAT SYSTEM
+		uint32 role_stats_mods[7];
     private:
         bool IsTriggeredAtSpellProcEvent(Unit* victim, Aura* aura, SpellInfo const* procSpell, uint32 procFlag, uint32 procExtra, WeaponAttackType attType, bool isVictim, bool active, SpellProcEventEntry const*& spellProcEvent);
         bool RollProcResult(Unit* victim, Aura* aura, WeaponAttackType attType, bool isVictim, SpellProcEventEntry const* spellProcEvent);
