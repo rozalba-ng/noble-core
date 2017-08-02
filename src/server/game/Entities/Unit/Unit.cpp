@@ -13042,9 +13042,6 @@ void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROL
 	//float oldRating = role_stats[stat];
 	role_stats[stat] += (apply ? value : -value);
 
-	if (role_stats[stat] > 10)
-		role_stats[stat] = 10;
-
 	if (Player* player = ToPlayer())
 	{
 #ifdef ELUNA
@@ -13056,6 +13053,17 @@ void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROL
 	//float const multiplier = role_stats_mods[stat];
 	//float const oldVal = oldRating * multiplier;
 	//float const newVal = role_stats[stat] * multiplier;
+}
+
+uint32 GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
+{
+	if (stat < 7)
+		if (role_stats[stat] > 10)
+			return 10;
+		else
+			return role_stats[stat];
+	else
+		return NULL;
 }
 
 void Unit::SetHealth(uint32 val)
