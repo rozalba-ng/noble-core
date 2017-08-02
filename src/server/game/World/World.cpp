@@ -1589,8 +1589,8 @@ void World::SetInitialWorldSettings()
 	TC_LOG_INFO("server.loading", "Loading Gameobject Container Items...");
 	sObjectMgr->LoadGameobjectsContainerItem();
 
-	TC_LOG_INFO("server.loading", "Loading Character Mounts...");
-	sObjectMgr->LoadCharacterMounts();
+	//TC_LOG_INFO("server.loading", "Loading Character Mounts...");
+	//sObjectMgr->LoadCharacterMounts();
 
     TC_LOG_INFO("server.loading", "Loading GameObject Quest Items...");
     sObjectMgr->LoadGameObjectQuestItems();
