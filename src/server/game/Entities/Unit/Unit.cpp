@@ -13055,7 +13055,7 @@ void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROL
 	//float const newVal = role_stats[stat] * multiplier;
 }
 
-uint32 GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
+uint32 Unit::GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
 {
 	if (stat < 7)
 		if (role_stats[stat] > 10)
