@@ -388,8 +388,8 @@ namespace LuaItem
     {
         uint32 enchant_slot = Eluna::CHECKVAL<uint32>(L, 2);
 
-        if (enchant_slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
-            return luaL_argerror(L, 2, "valid EnchantmentSlot expected");
+        //if (enchant_slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
+        //    return luaL_argerror(L, 2, "valid EnchantmentSlot expected");
 
         Eluna::Push(L, item->GetEnchantmentId(EnchantmentSlot(enchant_slot)));
         return 1;
