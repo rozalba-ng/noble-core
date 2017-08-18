@@ -48,7 +48,7 @@ class TC_GAME_API Vehicle : public TransportBase
 		bool InstallGameObject(uint32 entry, float radius, float angle, float pos_z, float orientation, uint8 type, bool temp);
 		bool RemoveGameObject(uint32 entry);
 		void InstallAllGameObjects(bool evading);
-		void RemoveAllGameObjects(bool evading);
+		void RemoveAllVehiclesGameObjects(bool evading);
 
         Unit* GetBase() const { return _me; }
         VehicleEntry const* GetVehicleInfo() const { return _vehicleInfo; }

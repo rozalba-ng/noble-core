@@ -572,7 +572,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     return result;
 }
 
-void Eluna::OnRoleStatUpdate(Player* pPlayer, uint32 stat) // ROLE STAT SYSTEM
+void Eluna::OnRoleStatUpdate(Player* pPlayer, uint32 stat) // ROLE STAT SYSTEM 
 {
 	START_HOOK(PLAYER_EVENT_ON_ROLE_STAT_UPDATE);
 	Push(pPlayer);

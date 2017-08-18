@@ -60,6 +60,9 @@ Vehicle::~Vehicle()
     ASSERT(_status == STATUS_UNINSTALLING);
     for (SeatMap::const_iterator itr = Seats.begin(); itr != Seats.end(); ++itr)
         ASSERT(itr->second.IsEmpty());
+	
+	if(_me->GetTypeId() == TYPEID_PLAYER)
+		_me->SetSpeed(MOVE_TURN_RATE, baseMoveSpeed[MOVE_TURN_RATE]);
 }
 
 /**
@@ -140,7 +143,7 @@ void Vehicle::InstallAllGameObjects(bool evading)
 	//_me->AddObjectToRemoveList();
 }
 
-void Vehicle::RemoveAllGameObjects(bool evading)
+void Vehicle::RemoveAllVehiclesGameObjects(bool evading)
 {
 	CreatureGameObjectsList const* gameobjects = sObjectMgr->GetCreatureGameObjectsList(_me->ToCreature()->GetSpawnId());
 	if (!gameobjects)
@@ -576,10 +579,6 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
         unit->GetName().c_str(), _me->GetEntry(), _vehicleInfo->m_ID, _me->GetGUID().GetCounter(),
         (_me->GetTypeId() == TYPEID_UNIT ? _me->ToCreature()->GetSpawnId() : 0), (int32)seatId);
 
-	float pos_x = unit->GetPositionX();
-	float pos_y = unit->GetPositionY();
-	float pos_z = unit->GetPositionZ();
-
     // The seat selection code may kick other passengers off the vehicle.
     // While the validity of the following may be arguable, it is possible that when such a passenger
     // exits the vehicle will dismiss. That's why the actual adding the passenger to the vehicle is scheduled
@@ -660,13 +659,16 @@ Vehicle* Vehicle::RemovePassenger(Unit* unit)
 
 	if (_me->GetTypeId() == TYPEID_UNIT && unit->GetTypeId() == TYPEID_PLAYER && seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
 	{
-		if (_me->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_WATERWALKING)
-		{
-			unit->SetWaterWalking(false);
-		}
-		_me->RemoveCharmedBy(unit);
-		InstallAllGameObjects(true);
-		_me->ToCreature()->SaveToDB();
+        _me->RemoveCharmedBy(unit);
+        if(_me->ToCreature())
+            {
+            if (_me->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_WATERWALKING)
+            {
+                unit->SetWaterWalking(false);
+            }		
+            InstallAllGameObjects(true);
+            _me->ToCreature()->SaveToDB();
+        }
 	}
 
     if (_me->IsInWorld())
@@ -765,15 +767,16 @@ void Vehicle::InitMovementInfoForBase()
 		_me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_FULL_SPEED_TURNING);
 	else
 	{
-		_me->SetSpeed(MOVE_TURN_RATE, GetVehicleInfo()->m_turnSpeed / baseMoveSpeed[MOVE_TURN_RATE]);
+		_me->SetSpeed(MOVE_TURN_RATE, GetVehicleInfo()->m_turnSpeed);
 	}
     if (vehicleFlags & VEHICLE_FLAG_ALLOW_PITCHING)
         _me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING);
     if (vehicleFlags & VEHICLE_FLAG_FULLSPEEDPITCHING)
         _me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_FULL_SPEED_PITCHING);
-	if (_me->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_WATERWALKING)
+	if (_me->ToCreature())
 	{
-		_me->SetWaterWalking(true);
+		if(_me->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_WATERWALKING)
+			_me->SetWaterWalking(true);
 	}
 }
 

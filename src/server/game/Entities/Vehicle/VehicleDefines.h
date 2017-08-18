@@ -117,6 +117,7 @@ struct VehiclePassengers
 typedef std::vector<VehicleAccessory> VehicleAccessoryList;
 typedef std::vector<VehicleGameObject> VehicleGameObjectList;
 typedef std::vector<VehiclePassengers> VehiclePassengersList;
+
 typedef std::map<uint32, VehicleAccessoryList> VehicleAccessoryContainer;
 typedef std::map<uint32, VehicleGameObjectList> VehicleGameObjectContainer;
 typedef std::map<uint32, VehiclePassengersList> VehiclePassengersContainer;

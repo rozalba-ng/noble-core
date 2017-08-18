@@ -109,9 +109,9 @@ namespace LuaVehicle
         return 0;
     }
 
-	int RemoveAllGameObjects(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
+	int RemoveAllVehiclesGameObjects(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
 	{
-		vehicle->RemoveAllGameObjects(true);
+		vehicle->RemoveAllVehiclesGameObjects(true);
 		return 0;
 	}
 

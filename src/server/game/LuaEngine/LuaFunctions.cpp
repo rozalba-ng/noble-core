@@ -1148,7 +1148,7 @@ ElunaRegister<Vehicle> VehicleMethods[] =
     // Other
     { "AddPassenger", &LuaVehicle::AddPassenger },
     { "RemovePassenger", &LuaVehicle::RemovePassenger },
-	{ "RemoveAllGameObjects", &LuaVehicle::RemoveAllGameObjects },
+	{ "RemoveAllVehiclesGameObjects", &LuaVehicle::RemoveAllVehiclesGameObjects },
 	{ "AttachPassenger", &LuaVehicle::AttachPassenger },
 
     { NULL, NULL }
