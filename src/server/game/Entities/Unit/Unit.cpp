@@ -315,7 +315,7 @@ Unit::~Unit()
     ASSERT(m_attackers.empty());
     ASSERT(m_sharedVision.empty());
     ASSERT(m_Controlled.empty());
-	if (m_appliedAuras.empty())
+	if (!m_appliedAuras.empty())
 	{
 		TC_LOG_ERROR("entity.unit", "crush: %u", GetEntry());
 	}
