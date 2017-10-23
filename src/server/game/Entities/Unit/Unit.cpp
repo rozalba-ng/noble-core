@@ -317,7 +317,12 @@ Unit::~Unit()
     ASSERT(m_Controlled.empty());
 	if (!m_appliedAuras.empty())
 	{
-		TC_LOG_ERROR("entity.unit", "crush: %u", GetEntry());
+		TC_LOG_ERROR("entity.unit", "crush begin:");
+		for (AuraApplicationMap::iterator iter = m_appliedAuras.begin(); iter != m_appliedAuras.end(); ++iter)
+		{
+			TC_LOG_ERROR("entity.unit", "crush AURA ID: %u", iter->second->GetBase()->GetId());
+		}
+		TC_LOG_ERROR("entity.unit", "crush end");
 	}
     ASSERT(m_appliedAuras.empty());
     ASSERT(m_ownedAuras.empty());
