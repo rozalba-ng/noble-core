@@ -340,4 +340,12 @@ bool Eluna::OwnerAttacked(Creature* me, Unit* target)
     return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
 
+bool Eluna::OnVehicleLostControl(Creature* me, Unit* charmer)
+{
+	START_HOOK_WITH_RETVAL(CREATURE_EVENT_ON_VEHICLE_LOST_CONTROL, me, false);
+	Push(me);
+	Push(charmer);
+	return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
+}
+
 #endif // TRINITY

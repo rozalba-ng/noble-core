@@ -29,6 +29,10 @@
 #include "EventProcessor.h"
 #include "Player.h"
 #include "Battleground.h"
+#ifdef ELUNA
+#include "LuaEngine.h"
+#include "ElunaEventMgr.h"
+#endif
 
 Vehicle::Vehicle(Unit* unit, VehicleEntry const* vehInfo, uint32 creatureEntry) :
 UsableSeatNum(0), _me(unit), _vehicleInfo(vehInfo), _creatureEntry(creatureEntry), _status(STATUS_NONE), _lastShootPos()
@@ -657,18 +661,25 @@ Vehicle* Vehicle::RemovePassenger(Unit* unit)
 
     seat->second.Passenger.Reset();
 
-	if (_me->GetTypeId() == TYPEID_UNIT && unit->GetTypeId() == TYPEID_PLAYER && seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
+	if (_me->GetTypeId() == TYPEID_UNIT && seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
 	{
-        _me->RemoveCharmedBy(unit);
-        if(_me->ToCreature())
-            {
-            if (_me->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_WATERWALKING)
-            {
-                unit->SetWaterWalking(false);
-            }		
-            InstallAllGameObjects(true);
-            _me->ToCreature()->SaveToDB();
-        }
+		if (unit->GetTypeId() == TYPEID_PLAYER)
+		{
+			_me->RemoveCharmedBy(unit);
+			if (_me->ToCreature())
+			{
+				if (_me->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_WATERWALKING)
+				{
+					unit->SetWaterWalking(false);
+				}
+				InstallAllGameObjects(true);
+				_me->ToCreature()->SaveToDB();
+			}
+		}
+#ifdef ELUNA
+		if (_me->ToCreature())
+			sEluna->OnVehicleLostControl(_me->ToCreature(), unit);
+#endif
 	}
 
     if (_me->IsInWorld())

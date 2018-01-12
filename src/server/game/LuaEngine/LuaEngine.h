@@ -386,6 +386,7 @@ public:
     bool OwnerAttackedBy(Creature* me, Unit* attacker);
     bool OwnerAttacked(Creature* me, Unit* target);
     void On_Reset(Creature* me);
+	bool OnVehicleLostControl(Creature* me, Unit* charmer);
 
     /* GameObject */
     bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget);
