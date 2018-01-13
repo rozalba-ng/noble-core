@@ -1492,7 +1492,7 @@ namespace LuaGlobalFunctions
 			return 1;
 		}
 #endif
-
+		uint64 replacerGuid = Eluna::CHECKVAL<uint64>(L, 13, 0);
 #ifndef TRINITY
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
@@ -1699,6 +1699,8 @@ namespace LuaGlobalFunctions
                     Eluna::Push(L);
                     return 1;
                 }
+				if (replacerGuid > 0)
+					creature->SetCreatureReplacer(ObjectGuid(replacerGuid));
 
                 creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 
@@ -1727,6 +1729,8 @@ namespace LuaGlobalFunctions
                     Eluna::Push(L);
                     return 1;
                 }
+				if(replacerGuid > 0)
+					creature->SetCreatureReplacer(ObjectGuid(replacerGuid));
 
                 if (durorresptime)
                     creature->SetTempSummonType(TEMPSUMMON_TIMED_OR_DEAD_DESPAWN);
@@ -3048,5 +3052,30 @@ namespace LuaGlobalFunctions
 
         return 0;
     }
+
+	/*int GetAllCharacterTempMounts(Eluna* E, lua_State* L)
+	{
+		lua_newtable(L);
+		int tbl = lua_gettop(L);
+		uint32 i = 0;
+
+		CharacterMountsContainer const* mounts = sObjectMgr->GetCharacterMountsContainer();
+		if (!mounts)
+			return 0;
+		for (CharacterMountsContainer::const_iterator itr = mounts->begin(); itr != mounts->end(); ++itr)
+		{
+			CharacterMountsList const* mm = &itr->second;
+			for (CharacterMountsList::const_iterator mount = mm->begin(); mount != mm->end(); ++mount)
+			{
+				++i;
+				Eluna::Push(L, i);
+				Eluna::Push(L, mount->mount_temp);
+				lua_settable(L, tbl);
+			}			
+		}
+
+		lua_settop(L, tbl); // push table to top of stack
+		return 1;
+	}*/
 }
 #endif

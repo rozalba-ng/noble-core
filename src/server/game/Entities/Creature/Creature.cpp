@@ -595,7 +595,7 @@ void Creature::Update(uint32 diff)
                 if (!IsInEvadeMode() && LastCharmerGUID)
                     if (Unit* charmer = ObjectAccessor::GetUnit(*this, LastCharmerGUID))
                         if (CanStartAttack(charmer, true))
-                            i_AI->AttackStart(charmer);
+                            //i_AI->AttackStart(charmer);
 
                 LastCharmerGUID.Clear();
             }

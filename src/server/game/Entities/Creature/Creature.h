@@ -336,6 +336,27 @@ struct CreatureGameObjects
 typedef std::vector<CreatureGameObjects> CreatureGameObjectsList;
 typedef std::map<uint32, CreatureGameObjectsList> CreatureGameObjectsContainer;
 
+/*struct CharacterMounts
+{
+	CharacterMounts(uint32 creature_entry, uint32 item_1, uint32 item_2, uint32 item_3, Creature* mount_temp) :
+		creature_entry(creature_entry), item_1(item_1), item_2(item_2), item_3(item_3), mount_temp(mount_temp){ }
+	uint32 creature_entry;	
+	uint32 item_1;
+	uint32 item_2;
+	uint32 item_3;	
+	Creature* mount_temp;
+};
+typedef std::vector<CharacterMounts> CharacterMountsList;
+typedef std::unordered_map<uint32, CharacterMountsList> CharacterMountsContainer;
+
+struct CharacterMountsTemp
+{
+	CharacterMountsTemp(Creature* mount_temp) :
+		mount_temp(mount_temp) { }
+	Creature * mount_temp;
+};
+typedef std::vector<CharacterMountsTemp> CharacterMountsTempContainer;*/
+
 enum InhabitTypeValues
 {
     INHABIT_GROUND = 1,
@@ -494,6 +515,8 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
 
         ObjectGuid::LowType GetSpawnId() const { return m_spawnId; }
 
+		void SetSpawnId(uint32 spawn_id) {m_spawnId = spawn_id;}
+
         void Update(uint32 time) override;                         // overwrited Unit::Update
         void GetRespawnPosition(float &x, float &y, float &z, float* ori = nullptr, float* dist =nullptr) const;
 
@@ -602,6 +625,8 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         bool CanGeneratePickPocketLoot() const { return _pickpocketLootRestore <= time(NULL); }
         void SetSkinner(ObjectGuid guid) { _skinner = guid; }
         ObjectGuid GetSkinner() const { return _skinner; } // Returns the player who skinned this creature
+		void SetCreatureReplacer(ObjectGuid guid) { _creatureReplacer = guid; }
+		ObjectGuid GetCreatureReplacer() const { return _creatureReplacer; }
         Player* GetLootRecipient() const;
         Group* GetLootRecipientGroup() const;
         bool hasLootRecipient() const { return !m_lootRecipient.IsEmpty() || m_lootRecipientGroup; }
@@ -759,6 +784,8 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         ObjectGuid m_lootRecipient;
         uint32 m_lootRecipientGroup;
         ObjectGuid _skinner;
+
+		ObjectGuid _creatureReplacer;
 
         /// Timers
         time_t _pickpocketLootRestore;

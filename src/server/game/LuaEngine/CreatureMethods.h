@@ -1340,6 +1340,12 @@ namespace LuaCreature
 		return 1;
 	}
 
+	int GetCreatureReplacer(Eluna* /*E*/, lua_State* L, Creature* creature)
+	{
+		Eluna::Push(L, creature->GetCreatureReplacer());
+		return 1;
+	}
+
 	int Delete(Eluna* /*E*/, lua_State* L, Creature* creature)
 	{
 		if (!creature || creature->IsPet() || creature->IsTotem())
