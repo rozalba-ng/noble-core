@@ -772,6 +772,8 @@ class TC_GAME_API World
 
         void RemoveOldCorpses();
 
+		void SetMapDistance(uint32 mapid, float distance);
+		float GetMapDistance(uint32 mapid);
     protected:
         void _UpdateGameTime();
         // callback for UpdateRealmCharacters
@@ -875,6 +877,10 @@ class TC_GAME_API World
 
         void ProcessQueryCallbacks();
         std::deque<std::future<PreparedQueryResult>> m_realmCharCallbacks;
+
+
+		typedef std::map<uint32, float> MapDistance;
+		MapDistance _mapDistanceTable;
 };
 
 TC_GAME_API extern Realm realm;

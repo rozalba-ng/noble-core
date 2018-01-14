@@ -285,6 +285,7 @@ class TC_GAME_API Map : public GridRefManager<NGridType>
         virtual void Update(const uint32);
 
         float GetVisibilityRange() const { return m_VisibleDistance; }
+		void SetVisibilityRange(float distance) { m_VisibleDistance = distance; }
         //function for setting up visibility distance for maps on per-type/per-Id basis
         virtual void InitVisibilityDistance();
 

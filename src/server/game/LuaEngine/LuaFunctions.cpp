@@ -142,7 +142,8 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "SendMail", &LuaGlobalFunctions::SendMail },
     { "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
     { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
-    { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
+    { "CreateUint64", &LuaGlobalFunctions::CreateULongLong }, 
+	{ "SetMapVisibilityRange", &LuaGlobalFunctions::SetMapVisibilityRange },
 
     { NULL, NULL }
 };

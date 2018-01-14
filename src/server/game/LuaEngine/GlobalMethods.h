@@ -3053,6 +3053,21 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+	int SetMapVisibilityRange(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 mapID = Eluna::CHECKVAL<uint32>(L, 1);
+		uint32 instanceID = Eluna::CHECKVAL<uint32>(L, 2);
+		float distance = Eluna::CHECKVAL<float>(L, 3);
+		Map* map = eMapMgr->FindMap(mapID, instanceID);
+		if (!map)
+		{
+			return 1;
+		}
+		sWorld->SetMapDistance(mapID, distance);
+		map->SetVisibilityRange(distance);
+		return 0;
+	}
+
 	/*int GetAllCharacterTempMounts(Eluna* E, lua_State* L)
 	{
 		lua_newtable(L);

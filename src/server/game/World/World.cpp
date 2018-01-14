@@ -3287,6 +3287,17 @@ CharacterInfo const* World::GetCharacterInfo(ObjectGuid const& guid) const
     return nullptr;
 }
 
+void World::SetMapDistance(uint32 mapid, float distance)
+{
+	if (distance <= 533.0f)
+		_mapDistanceTable[mapid] = distance;
+}
+
+float World::GetMapDistance(uint32 mapid)
+{
+	return _mapDistanceTable[mapid] ? _mapDistanceTable[mapid] : GetMaxVisibleDistanceOnContinents();
+}
+
 /**
 * @brief Loads several pieces of information on server startup with the GUID
 * There is no further database query necessary.

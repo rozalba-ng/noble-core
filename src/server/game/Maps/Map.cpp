@@ -265,7 +265,8 @@ i_scriptLock(false), _defaultLight(GetDefaultMapLight(id))
 void Map::InitVisibilityDistance()
 {
     //init visibility for continents
-    m_VisibleDistance = World::GetMaxVisibleDistanceOnContinents();
+    //m_VisibleDistance = World::GetMaxVisibleDistanceOnContinents();
+	m_VisibleDistance = sWorld->GetMapDistance(GetId());
     m_VisibilityNotifyPeriod = World::GetVisibilityNotifyPeriodOnContinents();
 }
 
