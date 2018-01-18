@@ -910,5 +910,16 @@ namespace LuaWorldObject
             obj->PlayDistanceSound(soundId);
         return 0;
     }
+
+	int Relocate(Eluna* /*E*/, lua_State* L, WorldObject* obj)
+	{
+		float x = Eluna::CHECKVAL<float>(L, 2);
+		float y = Eluna::CHECKVAL<float>(L, 3);
+		float z = Eluna::CHECKVAL<float>(L, 4);
+		float o = Eluna::CHECKVAL<float>(L, 5);
+
+		obj->Relocate(x, y, z, o);
+		return 0;
+	}
 };
 #endif

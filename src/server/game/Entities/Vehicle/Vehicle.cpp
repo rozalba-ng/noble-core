@@ -673,7 +673,9 @@ Vehicle* Vehicle::RemovePassenger(Unit* unit)
 					unit->SetWaterWalking(false);
 				}
 				InstallAllGameObjects(true);
-				_me->ToCreature()->SaveToDB();
+				TempSummon* summon = _me->ToCreature()->ToTempSummon();
+				if (!summon)
+					_me->ToCreature()->SaveToDB();
 			}
 		}
 #ifdef ELUNA
