@@ -625,8 +625,10 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         bool CanGeneratePickPocketLoot() const { return _pickpocketLootRestore <= time(NULL); }
         void SetSkinner(ObjectGuid guid) { _skinner = guid; }
         ObjectGuid GetSkinner() const { return _skinner; } // Returns the player who skinned this creature
-		void SetCreatureReplacer(ObjectGuid guid) { _creatureReplacer = guid; }
-		ObjectGuid GetCreatureReplacer() const { return _creatureReplacer; }
+		//void SetCreatureReplacer(ObjectGuid guid) { _creatureReplacer = guid; }
+		void SetCreatureReplacer(uint32 guid) { _creatureReplacer = guid; }
+		//ObjectGuid GetCreatureReplacer() const { return _creatureReplacer; }
+		uint32 GetCreatureReplacer() const { return _creatureReplacer; }
         Player* GetLootRecipient() const;
         Group* GetLootRecipientGroup() const;
         bool hasLootRecipient() const { return !m_lootRecipient.IsEmpty() || m_lootRecipientGroup; }
@@ -785,7 +787,8 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         uint32 m_lootRecipientGroup;
         ObjectGuid _skinner;
 
-		ObjectGuid _creatureReplacer;
+		//ObjectGuid _creatureReplacer;
+		uint32 _creatureReplacer;
 
         /// Timers
         time_t _pickpocketLootRestore;

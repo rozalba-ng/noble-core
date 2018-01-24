@@ -1492,7 +1492,7 @@ namespace LuaGlobalFunctions
 			return 1;
 		}
 #endif
-		uint64 replacerGuid = Eluna::CHECKVAL<uint64>(L, 13, 0);
+		uint32 replacerGuid = Eluna::CHECKVAL<uint32>(L, 13, 0);
 #ifndef TRINITY
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
@@ -1700,7 +1700,8 @@ namespace LuaGlobalFunctions
                     return 1;
                 }
 				if (replacerGuid > 0)
-					creature->SetCreatureReplacer(ObjectGuid(replacerGuid));
+					creature->SetCreatureReplacer(replacerGuid);
+				//creature->SetCreatureReplacer(ObjectGuid(replacerGuid));
 
                 creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 
@@ -1730,7 +1731,8 @@ namespace LuaGlobalFunctions
                     return 1;
                 }
 				if(replacerGuid > 0)
-					creature->SetCreatureReplacer(ObjectGuid(replacerGuid));
+					creature->SetCreatureReplacer(replacerGuid);
+				//creature->SetCreatureReplacer(ObjectGuid(replacerGuid));
 
                 if (durorresptime)
                     creature->SetTempSummonType(TEMPSUMMON_TIMED_OR_DEAD_DESPAWN);
