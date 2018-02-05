@@ -3073,6 +3073,50 @@ namespace LuaGlobalFunctions
 		return 0;
 	}
 
+	int RelocateFarCreature(Eluna* /*E*/, lua_State* L)
+	{
+		uint32 spawnId = Eluna::CHECKVAL<uint32>(L, 1);
+		float posX = Eluna::CHECKVAL<float>(L, 2);
+		float posY = Eluna::CHECKVAL<float>(L, 3);
+		float posZ = Eluna::CHECKVAL<float>(L, 4);
+		float posO = Eluna::CHECKVAL<float>(L, 5);
+		CreatureData data = sObjectMgr->NewOrExistCreatureData(spawnId);
+		if (&data)
+		{
+			Map* map = eMapMgr->FindMap(data.mapid, 0);
+			if (!map)
+			{
+				return 0;
+			}
+			sObjectMgr->RemoveCreatureFromGrid(spawnId, &data);
+			data.posX = posX;
+			data.posY = posY;
+			data.posZ = posZ;
+			data.orientation = posO;
+			Creature* creature = new Creature(); 
+			if (!creature->Create(spawnId, map, data.phaseMask, data.id, posX, posY, posZ, posO, &data, 0, 0))
+			{
+				delete creature;
+				return 0;
+			}
+			creature->SaveToDB(data.mapid, 1, data.phaseMask);
+
+			creature->CleanupsBeforeDelete();
+			delete creature;
+			creature = new Creature();
+			if (!creature->LoadCreatureFromDB(spawnId, map))
+			{
+				delete creature;
+				return false;
+			}
+
+			sObjectMgr->AddCreatureToGrid(spawnId, &data);
+
+			Eluna::Push(L, creature);
+		}
+		return 1;
+	}
+
 	/*int GetAllCharacterTempMounts(Eluna* E, lua_State* L)
 	{
 		lua_newtable(L);

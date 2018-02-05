@@ -144,7 +144,8 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
     { "CreateUint64", &LuaGlobalFunctions::CreateULongLong }, 
 	{ "SetMapVisibilityRange", &LuaGlobalFunctions::SetMapVisibilityRange },
-
+	{ "RelocateFarCreature", &LuaGlobalFunctions::RelocateFarCreature },
+		
     { NULL, NULL }
 };
 
