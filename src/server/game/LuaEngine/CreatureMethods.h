@@ -1342,7 +1342,8 @@ namespace LuaCreature
 
 	int GetCreatureReplacer(Eluna* /*E*/, lua_State* L, Creature* creature)
 	{
-		Eluna::Push(L, creature->GetCreatureReplacer());
+		//Eluna::Push(L, creature->GetCreatureReplacer
+		Eluna::Push(L, creature->GetCreatureReplace());
 		return 1;
 	}
 
