@@ -3093,7 +3093,7 @@ namespace LuaGlobalFunctions
 			data.posY = posY;
 			data.posZ = posZ;
 			data.orientation = posO;
-			Creature* creature = new Creature(); 
+			/*Creature* creature = new Creature(); 
 			if (!creature->Create(spawnId, map, data.phaseMask, data.id, posX, posY, posZ, posO, &data, 0, 0))
 			{
 				delete creature;
@@ -3102,8 +3102,8 @@ namespace LuaGlobalFunctions
 			creature->SaveToDB(data.mapid, 1, data.phaseMask);
 
 			creature->CleanupsBeforeDelete();
-			delete creature;
-			creature = new Creature();
+			delete creature;*/
+			Creature* creature = new Creature();
 			if (!creature->LoadCreatureFromDB(spawnId, map))
 			{
 				delete creature;
