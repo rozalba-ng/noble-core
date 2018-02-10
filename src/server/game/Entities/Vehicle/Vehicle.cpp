@@ -644,9 +644,15 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
 Vehicle* Vehicle::RemovePassenger(Unit* unit)
 {
     if (unit->GetVehicle() != this)
-        return NULL;
+        return NULL;	
 
     SeatMap::iterator seat = GetSeatIteratorForPassenger(unit);
+	if (seat == Seats.end())
+	{
+		TC_LOG_ERROR("entities.vehicle", "VEHICLE Unit try to crush %s . VEHICLE entry = %u, VEHICLE ID = %u",
+			unit->GetName().c_str(), _me->GetEntry(), _vehicleInfo->m_ID);
+		return NULL;
+	}
     ASSERT(seat != Seats.end());
 
     TC_LOG_DEBUG("entities.vehicle", "Unit %s exit vehicle entry %u id %u dbguid %u seat %d",
