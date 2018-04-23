@@ -312,6 +312,25 @@ namespace LuaGuild
 #endif
         return 0;
     }
+
+	int SetEmblemInfo(Eluna* /*E*/, lua_State* L, Guild* guild)
+	{
+		EmblemInfo emblemInfo;
+		WorldPacket data;
+
+		uint8 style = Eluna::CHECKVAL<uint8>(L, 2);
+		uint8 color = Eluna::CHECKVAL<uint8>(L, 3);
+		uint8 borderStyle = Eluna::CHECKVAL<uint8>(L, 4);
+		uint8 borderColor = Eluna::CHECKVAL<uint8>(L, 5);
+		uint8 backgroundColor = Eluna::CHECKVAL<uint8>(L, 6);
+
+		data << style << color << borderStyle << borderColor << backgroundColor;
+		emblemInfo.ReadPacket(data);	
+		guild->SetEmblemInfo(emblemInfo);
+		emblemInfo.SaveToDB(guild->GetId());
+
+		return 0;
+	}
 #endif
 };
 #endif

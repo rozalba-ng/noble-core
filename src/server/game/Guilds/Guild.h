@@ -667,6 +667,7 @@ public:
 #endif
 
     bool SetName(std::string const& name);
+	void SetEmblemInfo(const EmblemInfo& emblemInfo) { m_emblemInfo = emblemInfo; };
 
     // Handle client commands
     void HandleRoster(WorldSession* session);

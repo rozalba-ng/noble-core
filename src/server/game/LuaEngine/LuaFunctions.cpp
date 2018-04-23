@@ -1121,6 +1121,7 @@ ElunaRegister<Guild> GuildMethods[] =
 #ifndef CATA
     { "SetLeader", &LuaGuild::SetLeader },
 #endif
+	{ "SetEmblemInfo", &LuaGuild::SetEmblemInfo },
 
     // Other
     { "SendPacket", &LuaGuild::SendPacket },
