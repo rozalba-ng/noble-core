@@ -315,26 +315,19 @@ namespace LuaGuild
 
 	int SetEmblemInfo(Eluna* /*E*/, lua_State* L, Guild* guild)
 	{
-		TC_LOG_ERROR("entities.vehicle", "1");
 		EmblemInfo emblemInfo;
-		TC_LOG_ERROR("entities.vehicle", "2");
 		WorldPacket data;
-		TC_LOG_ERROR("entities.vehicle", "3");
 
 		uint32 style = Eluna::CHECKVAL<uint32>(L, 2);
 		uint32 color = Eluna::CHECKVAL<uint32>(L, 3);
 		uint32 borderStyle = Eluna::CHECKVAL<uint32>(L, 4);
 		uint32 borderColor = Eluna::CHECKVAL<uint32>(L, 5);
 		uint32 backgroundColor = Eluna::CHECKVAL<uint32>(L, 6);
-		TC_LOG_ERROR("entities.vehicle", "4");
+
 		data << style << color << borderStyle << borderColor << backgroundColor;
-		TC_LOG_ERROR("entities.vehicle", "5");
 		emblemInfo.ReadPacket(data);	
-		TC_LOG_ERROR("entities.vehicle", "6");
 		guild->SetEmblemInfo(emblemInfo);
-		TC_LOG_ERROR("entities.vehicle", "7");
 		emblemInfo.SaveToDB(guild->GetId());
-		TC_LOG_ERROR("entities.vehicle", "8");
 		return 0;
 	}
 #endif
