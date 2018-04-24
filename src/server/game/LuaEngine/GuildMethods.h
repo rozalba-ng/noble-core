@@ -321,11 +321,11 @@ namespace LuaGuild
 		WorldPacket data;
 		TC_LOG_ERROR("entities.vehicle", "3");
 
-		uint8 style = Eluna::CHECKVAL<uint8>(L, 2);
-		uint8 color = Eluna::CHECKVAL<uint8>(L, 3);
-		uint8 borderStyle = Eluna::CHECKVAL<uint8>(L, 4);
-		uint8 borderColor = Eluna::CHECKVAL<uint8>(L, 5);
-		uint8 backgroundColor = Eluna::CHECKVAL<uint8>(L, 6);
+		uint32 style = Eluna::CHECKVAL<uint32>(L, 2);
+		uint32 color = Eluna::CHECKVAL<uint32>(L, 3);
+		uint32 borderStyle = Eluna::CHECKVAL<uint32>(L, 4);
+		uint32 borderColor = Eluna::CHECKVAL<uint32>(L, 5);
+		uint32 backgroundColor = Eluna::CHECKVAL<uint32>(L, 6);
 		TC_LOG_ERROR("entities.vehicle", "4");
 		data << style << color << borderStyle << borderColor << backgroundColor;
 		TC_LOG_ERROR("entities.vehicle", "5");
