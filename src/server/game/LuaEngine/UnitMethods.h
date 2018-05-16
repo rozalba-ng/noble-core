@@ -2733,6 +2733,28 @@ namespace LuaUnit
         return 0;
     }
 
+	int AddMovementFlag(Eluna* /*E*/, lua_State* L, Unit* unit)
+	{
+		uint32 flag = Eluna::CHECKVAL<uint32>(L, 2, 0);
+		if (!unit->m_movementInfo.HasMovementFlag(flag))
+		{
+			unit->m_movementInfo.AddMovementFlag(flag);
+
+		}
+		return 0;
+	}
+
+	int RemoveMovementFlag(Eluna* /*E*/, lua_State* L, Unit* unit)
+	{
+		uint32 flag = Eluna::CHECKVAL<uint32>(L, 2, 0);
+		if (unit->m_movementInfo.HasMovementFlag(flag))
+		{
+			unit->m_movementInfo.RemoveMovementFlag(flag);
+
+		}
+		return 0;
+	}	
+
     /*int RestoreDisplayId(Eluna* E, lua_State* L, Unit* unit)
     {
         unit->RestoreDisplayId();

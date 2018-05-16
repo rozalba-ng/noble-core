@@ -431,6 +431,8 @@ ElunaRegister<Unit> UnitMethods[] =
     { "AddThreat", &LuaUnit::AddThreat },
 	{ "ExitVehicle", &LuaUnit::ExitVehicle },
 	{ "ChangeSeat", &LuaUnit::ChangeSeat },
+	{ "AddMovementFlag", &LuaUnit::AddMovementFlag },
+	{ "RemoveMovementFlag", &LuaUnit::RemoveMovementFlag },
 
     { NULL, NULL }
 };
