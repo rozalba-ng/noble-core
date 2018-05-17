@@ -15767,8 +15767,8 @@ void Unit::RemoveCharmedBy(Unit* charmer)
             creature->AI()->OnCharmed(false);
 
         // Vehicle should not attack its passenger after he exists the seat
-        if (type != CHARM_TYPE_VEHICLE)
-            LastCharmerGUID = ASSERT_NOTNULL(charmer)->GetGUID();
+        //if (type != CHARM_TYPE_VEHICLE)
+        //    LastCharmerGUID = ASSERT_NOTNULL(charmer)->GetGUID();
     }
 
     // If charmer still exists

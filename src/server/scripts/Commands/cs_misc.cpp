@@ -408,7 +408,8 @@ public:
             target->GetContactPoint(_player, x, y, z);
 
             _player->TeleportTo(target->GetMapId(), x, y, z, _player->GetAngle(target), TELE_TO_GM_MODE);
-            _player->SetPhaseMask(target->GetPhaseMask(), true);
+			if(target->GetPhaseMask() != 4294967295)
+				_player->SetPhaseMask(target->GetPhaseMask(), true);
         }
         else
         {
@@ -532,7 +533,10 @@ public:
             float x, y, z;
             handler->GetSession()->GetPlayer()->GetClosePoint(x, y, z, target->GetObjectSize());
             target->TeleportTo(handler->GetSession()->GetPlayer()->GetMapId(), x, y, z, target->GetOrientation());
-            target->SetPhaseMask(handler->GetSession()->GetPlayer()->GetPhaseMask(), true);
+
+			uint32 phase = handler->GetSession()->GetPlayer()->GetPhaseMask();
+			if (phase != 4294967295)
+				target->SetPhaseMask(phase, true);
         }
         else
         {
