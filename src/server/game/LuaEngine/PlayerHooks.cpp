@@ -143,6 +143,17 @@ void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void Eluna::OnUnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
+{
+	START_HOOK(PLAYER_EVENT_ON_UNEQUIP);
+	Push(pPlayer);
+	Push(pItem);
+	Push(bag);
+	Push(slot);
+	CallAllFunctions(PlayerEventBindings, key);
+}
+
+
 InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_USE_ITEM, EQUIP_ERR_OK);
