@@ -12194,9 +12194,6 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update)
                 // remove item dependent auras and casts (only weapon and armor slots)
                 if (slot < EQUIPMENT_SLOT_END)
                 {
-#ifdef ELUNA
-					sEluna->OnUnEquip(this, pItem, bag, slot);
-#endif
                     RemoveItemDependentAurasAndCasts(pItem);
 
                     // remove held enchantments, update expertise
@@ -12233,8 +12230,12 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update)
             m_items[slot] = nullptr;
             SetGuidValue(PLAYER_FIELD_INV_SLOT_HEAD + (slot * 2), ObjectGuid::Empty);
 
-            if (slot < EQUIPMENT_SLOT_END)
-                SetVisibleItemSlot(slot, nullptr);
+			if (slot < EQUIPMENT_SLOT_END) {
+				SetVisibleItemSlot(slot, nullptr);
+#ifdef ELUNA
+				sEluna->OnUnEquip(this, pItem, bag, slot);
+#endif
+			}
         }
         else if (Bag* pBag = GetBagByPos(bag))
             pBag->RemoveItem(slot, update);
