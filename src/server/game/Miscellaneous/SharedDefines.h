@@ -1951,7 +1951,13 @@ enum Emote
     EMOTE_STATE_STRANGULATE             = 473,
     EMOTE_STATE_READY_SPELL_OMNI        = 474,
     EMOTE_STATE_HOLD_JOUST              = 475,
-    EMOTE_ONESHOT_CRY_JAINA             = 476
+    EMOTE_ONESHOT_CRY_JAINA             = 476,
+	EMOTE_ONESHOT_CUST1					= 477,
+	EMOTE_ONESHOT_CUST2					= 478,
+	EMOTE_ONESHOT_CUST3					= 479,
+	EMOTE_ONESHOT_CUST4					= 480,
+	EMOTE_ONESHOT_CUST5					= 481,
+	EMOTE_STATE_GUARD					= 482
 };
 
 // AnimationData.dbc
@@ -2462,7 +2468,8 @@ enum Anim
     ANIM_CARRY2H                           = 502,
     ANIM_CARRIED2H                         = 503,
     ANIM_FLY_CARRY2H                       = 504,
-    ANIM_FLY_CARRIED2H                     = 505
+    ANIM_FLY_CARRIED2H                     = 505,
+	ANIM_GUARD							   = 506
 };
 
 enum LockKeyType
