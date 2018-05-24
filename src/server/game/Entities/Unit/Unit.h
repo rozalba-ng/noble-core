@@ -28,10 +28,6 @@
 #include "Object.h"
 #include "SpellAuraDefines.h"
 #include "ThreatManager.h"
-#ifdef ELUNA
-#include "LuaEngine.h"
-#include "ElunaEventMgr.h"
-#endif
 
 #define WORLD_TRIGGER   12999
 
@@ -2053,22 +2049,8 @@ class TC_GAME_API Unit : public WorldObject
         bool IsStopped() const { return !(HasUnitState(UNIT_STATE_MOVING)); }
         void StopMoving();
 
-        void AddUnitMovementFlag(uint32 f) 
-		{ 
-			m_movementInfo.flags |= f; 
-#ifdef ELUNA
-			if (this->ToCreature())
-				sEluna->OnMovementFlagsSet(this->ToCreature(), m_movementInfo.flags, true);
-#endif
-		}
-        void RemoveUnitMovementFlag(uint32 f) 
-		{ 
-			m_movementInfo.flags &= ~f; 
-#ifdef ELUNA
-			if (this->ToCreature())
-				sEluna->OnMovementFlagsSet(this->ToCreature(), m_movementInfo.flags, false);
-#endif
-		}
+		void AddUnitMovementFlag(uint32 f);
+		void RemoveUnitMovementFlag(uint32 f);
         bool HasUnitMovementFlag(uint32 f) const { return (m_movementInfo.flags & f) == f; }
         uint32 GetUnitMovementFlags() const { return m_movementInfo.flags; }
         void SetUnitMovementFlags(uint32 f) { m_movementInfo.flags = f; }
