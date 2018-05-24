@@ -23,6 +23,10 @@
 #include "Transport.h"
 #include "WorldPacket.h"
 #include "Opcodes.h"
+#ifdef ELUNA
+#include "LuaEngine.h"
+#include "ElunaEventMgr.h"
+#endif
 
 namespace Movement
 {
@@ -57,8 +61,7 @@ namespace Movement
 
     int32 MoveSplineInit::Launch()
     {
-        MoveSpline& move_spline = *unit->movespline;
-
+        MoveSpline& move_spline = *unit->movespline;		
         // Elevators also use MOVEMENTFLAG_ONTRANSPORT but we do not keep track of their position changes (movementInfo.transport.guid is 0 in that case)
         bool transport = unit->HasUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT) && unit->GetTransGUID();
         Location real_position;
@@ -112,6 +115,7 @@ namespace Movement
         if (!args.Validate(unit))
             return 0;
 
+		sEluna->OnMovementFlagsSet(unit->ToCreature(), moveFlags, true);
         unit->m_movementInfo.SetMovementFlags(moveFlags);
         move_spline.Initialize(args);
 
