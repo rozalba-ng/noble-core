@@ -23,10 +23,6 @@
 #include "Transport.h"
 #include "WorldPacket.h"
 #include "Opcodes.h"
-#ifdef ELUNA
-#include "LuaEngine.h"
-#include "ElunaEventMgr.h"
-#endif
 
 namespace Movement
 {
@@ -117,10 +113,6 @@ namespace Movement
             return 0;
 
         unit->m_movementInfo.SetMovementFlags(moveFlags);
-#ifdef ELUNA
-		if (unit->ToCreature())
-			sEluna->OnMovementFlagsSet(unit->ToCreature(), moveFlags);
-#endif
         move_spline.Initialize(args);
 
         WorldPacket data(SMSG_MONSTER_MOVE, 64);

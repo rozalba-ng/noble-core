@@ -348,11 +348,12 @@ bool Eluna::OnVehicleLostControl(Creature* me, Unit* charmer)
 	return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
 
-bool Eluna::OnMovementFlagsSet(Creature* me, uint32 moveFlags)
+bool Eluna::OnMovementFlagsSet(Creature* me, uint32 moveFlags, bool add)
 {
 	START_HOOK_WITH_RETVAL(CREATURE_EVENT_ON_MOVEMENT_FLAGS_SET, me, false);
 	Push(me);
 	Push(moveFlags);
+	Push(add);
 	return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
 
