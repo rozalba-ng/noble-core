@@ -364,8 +364,8 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recvData)
 
     mover->m_movementInfo = movementInfo;
 
-	if (mover->ToPlayer())
-		sEluna->OnMovementFlagsSetPlayer(mover->ToPlayer(), movementInfo.flags, false);
+	//if (mover->ToPlayer())
+	//	sEluna->OnMovementFlagsSetPlayer(mover->ToPlayer(), movementInfo.flags, false);
 
     // Some vehicles allow the passenger to turn by himself
     if (Vehicle* vehicle = mover->GetVehicle())
