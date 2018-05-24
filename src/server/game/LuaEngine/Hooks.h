@@ -292,6 +292,7 @@ namespace Hooks
         CREATURE_EVENT_ON_ADD                             = 36, // (event, creature)
         CREATURE_EVENT_ON_REMOVE                          = 37, // (event, creature)
 		CREATURE_EVENT_ON_VEHICLE_LOST_CONTROL			  = 38, // (event, creature, unit)
+		CREATURE_EVENT_ON_MOVEMENT_FLAGS_SET			  = 39, // (event, creature, moveFlags)
         CREATURE_EVENT_COUNT
     };
 
