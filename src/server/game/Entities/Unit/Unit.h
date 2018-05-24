@@ -2053,7 +2053,7 @@ class TC_GAME_API Unit : public WorldObject
 		void RemoveUnitMovementFlag(uint32 f);
         bool HasUnitMovementFlag(uint32 f) const { return (m_movementInfo.flags & f) == f; }
         uint32 GetUnitMovementFlags() const { return m_movementInfo.flags; }
-        void SetUnitMovementFlags(uint32 f) { m_movementInfo.flags = f; }
+		void SetUnitMovementFlags(uint32 f);
 
         void AddExtraUnitMovementFlag(uint16 f) { m_movementInfo.flags2 |= f; }
         void RemoveExtraUnitMovementFlag(uint16 f) { m_movementInfo.flags2 &= ~f; }
