@@ -30,6 +30,10 @@
 #include "InstanceSaveMgr.h"
 #include "ObjectMgr.h"
 #include "Vehicle.h"
+#ifdef ELUNA
+#include "LuaEngine.h"
+#include "ElunaEventMgr.h"
+#endif
 
 #define MOVEMENT_PACKET_TIME_DELAY 0
 
@@ -359,6 +363,9 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recvData)
     mover->SendMessageToSet(&data, _player);
 
     mover->m_movementInfo = movementInfo;
+
+	if (mover->ToPlayer())
+		sEluna->OnMovementFlagsSetPlayer(mover->ToPlayer(), movementInfo.flags, false);
 
     // Some vehicles allow the passenger to turn by himself
     if (Vehicle* vehicle = mover->GetVehicle())
