@@ -461,7 +461,6 @@ public:
     void OnInstallAccessory(Vehicle* vehicle, Creature* accessory);
     void OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId);
     void OnRemovePassenger(Vehicle* vehicle, Unit* passenger);
-	void OnMovementFlagsSetVehicle(Vehicle* me, uint32 moveFlags, bool add);
 #endif
 #endif
 
