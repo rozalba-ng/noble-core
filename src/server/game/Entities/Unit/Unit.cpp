@@ -17794,7 +17794,7 @@ void Unit::AddUnitMovementFlag(uint32 f)
 {
 	m_movementInfo.flags |= f;
 #ifdef ELUNA
-	if (this->ToCreature())
+	//if (this->ToCreature())
 		sEluna->OnMovementFlagsSet(this->ToCreature(), m_movementInfo.flags, true);
 #endif
 }
@@ -17802,7 +17802,7 @@ void Unit::RemoveUnitMovementFlag(uint32 f)
 {
 	m_movementInfo.flags &= ~f;
 #ifdef ELUNA
-	if (this->ToCreature())
+	//if (this->ToCreature())
 		sEluna->OnMovementFlagsSet(this->ToCreature(), m_movementInfo.flags, false);
 #endif
 }
@@ -17811,7 +17811,7 @@ void Unit::SetUnitMovementFlags(uint32 f)
 {
 	m_movementInfo.flags = f; 
 #ifdef ELUNA
-	if (this->ToCreature())
+	//if (this->ToCreature())
 		sEluna->OnMovementFlagsSet(this->ToCreature(), m_movementInfo.flags, false);
 #endif
 }
