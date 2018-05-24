@@ -205,6 +205,7 @@ namespace Hooks
 		PLAYER_EVENT_ON_AURA_REMOVE				=	  44,       // (event, player, aura)
 		PLAYER_EVENT_ON_ROLE_STAT_UPDATE		=     45,       // (event, player, aura) // ROLE STAT SYSTEM
 		PLAYER_EVENT_ON_UNEQUIP					=     46,       // (event, player, item, bag, slot)
+		PLAYER_EVENT_ON_MOVEMENT_FLAGS_SET		=	  47,       // (event, player, item, bag, slot)
 
         PLAYER_EVENT_COUNT
     };
@@ -248,6 +249,7 @@ namespace Hooks
         VEHICLE_EVENT_ON_INSTALL_ACCESSORY      =     4,    // (event, vehicle, creature)
         VEHICLE_EVENT_ON_ADD_PASSENGER          =     5,    // (event, vehicle, unit, seatId)
         VEHICLE_EVENT_ON_REMOVE_PASSENGER       =     6,    // (event, vehicle, unit)
+		VEHICLE_EVENT_ON_MOVEMENT_FLAGS_SET		=	  7,    // (event, vehicle, unit)
 
         VEHICLE_EVENT_COUNT
     };

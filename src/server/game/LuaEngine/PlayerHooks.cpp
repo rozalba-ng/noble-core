@@ -590,3 +590,12 @@ void Eluna::OnRoleStatUpdate(Player* pPlayer, uint32 stat) // ROLE STAT SYSTEM
 	Push(stat);
 	CallAllFunctions(PlayerEventBindings, key);
 }
+
+void Eluna::OnMovementFlagsSetPlayer(Player* me, uint32 moveFlags, bool add)
+{
+	START_HOOK(PLAYER_EVENT_ON_MOVEMENT_FLAGS_SET);
+	Push(me);
+	Push(moveFlags);
+	Push(add);
+	CallAllFunctions(PlayerEventBindings, key);
+}

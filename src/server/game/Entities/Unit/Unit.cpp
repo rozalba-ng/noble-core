@@ -17794,16 +17794,24 @@ void Unit::AddUnitMovementFlag(uint32 f)
 {
 	m_movementInfo.flags |= f;
 #ifdef ELUNA
-	//if (this->ToCreature())
+	if (this->ToCreature())
 		sEluna->OnMovementFlagsSet(this->ToCreature(), m_movementInfo.flags, true);
+	if (this->IsVehicle())
+		sEluna->OnMovementFlagsSetVehicle(this->GetVehicleKit(), m_movementInfo.flags, false);
+	if (this->ToPlayer())
+		sEluna->OnMovementFlagsSetPlayer(this->ToPlayer(), m_movementInfo.flags, false);
 #endif
 }
 void Unit::RemoveUnitMovementFlag(uint32 f)
 {
 	m_movementInfo.flags &= ~f;
 #ifdef ELUNA
-	//if (this->ToCreature())
+	if (this->ToCreature())
 		sEluna->OnMovementFlagsSet(this->ToCreature(), m_movementInfo.flags, false);
+	if (this->IsVehicle())
+		sEluna->OnMovementFlagsSetVehicle(this->GetVehicleKit(), m_movementInfo.flags, false);
+	if (this->ToPlayer())
+		sEluna->OnMovementFlagsSetPlayer(this->ToPlayer(), m_movementInfo.flags, false);
 #endif
 }
 
@@ -17811,7 +17819,11 @@ void Unit::SetUnitMovementFlags(uint32 f)
 {
 	m_movementInfo.flags = f; 
 #ifdef ELUNA
-	//if (this->ToCreature())
+	if (this->ToCreature())
 		sEluna->OnMovementFlagsSet(this->ToCreature(), m_movementInfo.flags, false);
+	if (this->IsVehicle())
+		sEluna->OnMovementFlagsSetVehicle(this->GetVehicleKit(), m_movementInfo.flags, false);
+	if (this->ToPlayer())
+		sEluna->OnMovementFlagsSetPlayer(this->ToPlayer(), m_movementInfo.flags, false);
 #endif
 }

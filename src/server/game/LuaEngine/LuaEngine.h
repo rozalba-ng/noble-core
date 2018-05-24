@@ -451,6 +451,7 @@ public:
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
 	void OnRoleStatUpdate(Player* pPlayer, uint32 stat); // ROLE STAT SYSTEM 
+	void OnMovementFlagsSetPlayer(Player* me, uint32 moveFlags, bool add);
 
 #ifndef CLASSIC
 #ifndef TBC
@@ -460,6 +461,7 @@ public:
     void OnInstallAccessory(Vehicle* vehicle, Creature* accessory);
     void OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId);
     void OnRemovePassenger(Vehicle* vehicle, Unit* passenger);
+	void OnMovementFlagsSetVehicle(Vehicle* me, uint32 moveFlags, bool add);
 #endif
 #endif
 

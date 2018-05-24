@@ -62,5 +62,14 @@ void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
     CallAllFunctions(VehicleEventBindings, key);
 }
 
+void Eluna::OnMovementFlagsSetVehicle(Vehicle* me, uint32 moveFlags, bool add)
+{
+	START_HOOK(VEHICLE_EVENT_ON_MOVEMENT_FLAGS_SET);
+	Push(me);
+	Push(moveFlags);
+	Push(add);
+	CallAllFunctions(VehicleEventBindings, key);
+}
+
 #endif // CLASSIC
 #endif // TBC
