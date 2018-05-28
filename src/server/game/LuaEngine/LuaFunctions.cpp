@@ -913,6 +913,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
 	{ "MoveContainerItem", &LuaGameObject::MoveContainerItem },
 	{ "StoreContainerItem", &LuaGameObject::StoreContainerItem },	
 	{ "TakeContainerItem", &LuaGameObject::TakeContainerItem },
+	{ "TransportUpdatePosition", &LuaGameObject::TransportUpdatePosition },
 
     { NULL, NULL }
 };

@@ -6,6 +6,7 @@
 
 #ifndef GAMEOBJECTMETHODS_H
 #define GAMEOBJECTMETHODS_H
+#include "Transport.h"
 
 /***
  * Inherits all methods from: [Object], [WorldObject]
@@ -462,6 +463,23 @@ namespace LuaGameObject
 		uint8 slotIdSrc = Eluna::CHECKVAL<uint8>(L, 4, 0);
 		uint32 slotIdDest = Eluna::CHECKVAL<uint32>(L, 5, 0);
 		Eluna::Push(L, go->TakeContainerItem(player, slotIdDest, bagSlotIdSrc, slotIdSrc, 1));
+		return 1;
+	}
+
+	int TransportUpdatePosition(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		float x = Eluna::CHECKVAL<float>(L, 2);
+		float y = Eluna::CHECKVAL<float>(L, 3);
+		float z = Eluna::CHECKVAL<float>(L, 4);
+		float o = Eluna::CHECKVAL<float>(L, 5);
+
+		if (go->IsTransport())
+		{
+			Transport* trans = go->ToTransport();
+			trans->UpdatePosition(x, y, z, o);
+		}
+
+		Eluna::Push(L, go);
 		return 1;
 	}
 
