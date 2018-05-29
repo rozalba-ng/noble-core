@@ -16911,7 +16911,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     }
 }
 
-void Unit::BuildMovementPacket(ByteBuffer *data) const
+void Unit::BuildMovementPacket(ByteBuffer *data, GameObject* go)
 {
     *data << uint32(GetUnitMovementFlags());            // movement flags
     *data << uint16(GetExtraUnitMovementFlags());       // 2.3.0
@@ -16942,6 +16942,24 @@ void Unit::BuildMovementPacket(ByteBuffer *data) const
             *data << uint32(m_movementInfo.transport.time2);
     }
 
+	if (Transport* trans = go->ToTransport())
+	{
+		if(!(GetUnitMovementFlags() & MOVEMENTFLAG_ONTRANSPORT))
+			AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
+
+		SetTransport(trans);
+		*data << GetTransport()->GetPackGUID();
+		*data << float(GetTransOffsetX());
+		*data << float(GetTransOffsetY());
+		*data << float(GetTransOffsetZ());
+		*data << float(GetTransOffsetO());
+		*data << uint32(GetTransTime());
+		*data << uint8(GetTransSeat());
+
+		if (GetExtraUnitMovementFlags() & MOVEMENTFLAG2_INTERPOLATED_MOVEMENT)
+			*data << uint32(m_movementInfo.transport.time2);
+	}
+
     // 0x02200000
     if ((GetUnitMovementFlags() & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING))
         || (m_movementInfo.flags2 & MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING))
@@ -16971,18 +16989,18 @@ bool Unit::IsFalling() const
 void Unit::NearTeleportTo(float x, float y, float z, float orientation, bool casting /*= false*/)
 {
     DisableSpline();
-    //if (GetTypeId() == TYPEID_PLAYER)
-    //    ToPlayer()->TeleportTo(GetMapId(), x, y, z, orientation, TELE_TO_NOT_LEAVE_TRANSPORT | TELE_TO_NOT_LEAVE_COMBAT | TELE_TO_NOT_UNSUMMON_PET | (casting ? TELE_TO_SPELL : 0));
-    //else
-    //{
+    if (GetTypeId() == TYPEID_PLAYER)
+        ToPlayer()->TeleportTo(GetMapId(), x, y, z, orientation, TELE_TO_NOT_LEAVE_TRANSPORT | TELE_TO_NOT_LEAVE_COMBAT | TELE_TO_NOT_UNSUMMON_PET | (casting ? TELE_TO_SPELL : 0));
+    else
+    {
         Position pos = {x, y, z, orientation};
         SendTeleportPacket(pos);
         UpdatePosition(x, y, z, orientation, true);
         UpdateObjectVisibility();
-    //}
+    }
 }
 
-void Unit::SendTeleportPacket(Position& pos)
+void Unit::SendTeleportPacket(Position& pos, GameObject* go)
 {
     Position oldPos = { GetPositionX(), GetPositionY(), GetPositionZMinusOffset(), GetOrientation() };
     if (GetTypeId() == TYPEID_UNIT)
@@ -16990,7 +17008,7 @@ void Unit::SendTeleportPacket(Position& pos)
 
     WorldPacket data2(MSG_MOVE_TELEPORT, 38);
     data2 << GetPackGUID();
-    BuildMovementPacket(&data2);
+    BuildMovementPacket(&data2, go);
     if (GetTypeId() == TYPEID_UNIT)
         Relocate(&oldPos);
     if (GetTypeId() == TYPEID_PLAYER)
