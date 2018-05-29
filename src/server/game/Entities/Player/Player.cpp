@@ -1863,8 +1863,8 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
         ExitVehicle();
 
     // reset movement flags at teleport, because player will continue move with these flags after teleport
-    //SetUnitMovementFlags(GetUnitMovementFlags() & MOVEMENTFLAG_MASK_HAS_PLAYER_STATUS_OPCODE);
-    //DisableSpline();
+    SetUnitMovementFlags(GetUnitMovementFlags() & MOVEMENTFLAG_MASK_HAS_PLAYER_STATUS_OPCODE);
+    DisableSpline();
 
     if (Transport* transport = GetTransport())
     {
@@ -1904,8 +1904,8 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
                 UnsummonPetTemporaryIfAny();
         }
 
-        //if (!(options & TELE_TO_NOT_LEAVE_COMBAT))
-        //    CombatStop();
+        if (!(options & TELE_TO_NOT_LEAVE_COMBAT))
+            CombatStop();
 
         // this will be used instead of the current location in SaveToDB
         m_teleport_dest = WorldLocation(mapid, x, y, z, orientation);
