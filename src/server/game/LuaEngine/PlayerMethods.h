@@ -4049,6 +4049,18 @@ namespace LuaPlayer
 		return 1;
 	}
 
+	int BuildHeartBeatMsg(Eluna* /*E*/, lua_State* L, Player* player)
+	{
+		float x = Eluna::CHECKVAL<float>(L, 2);
+		float y = Eluna::CHECKVAL<float>(L, 3);
+		float z = Eluna::CHECKVAL<float>(L, 4);
+		float o = Eluna::CHECKVAL<float>(L, 5);
+		WorldPacket data;
+		player->Relocate(x, y, z, o);
+		player->BuildHeartBeatMsg(&data);
+		player->SendMessageToSet(&data, player);
+	}
+
     /*int BindToInstance(Eluna* E, lua_State* L, Player* player)
     {
     player->BindToInstance();
