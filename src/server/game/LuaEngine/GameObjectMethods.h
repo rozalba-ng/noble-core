@@ -476,38 +476,32 @@ namespace LuaGameObject
 
 		if (go->IsTransport())
 		{
-			//Transport* trans = go->ToTransport();
-			Map* map = go->GetMap();
-			map->PlayerRelocation(player, x, y, z, o);
-			uint32 guidLow = go->GetSpawnId();
-
-			if (!guidLow)
-				return 0;
-
-			if (!MapManager::IsValidMapCoord(go->GetMapId(), x, y, z))
-			{
-				return 0;
-			}
-
-			go->Relocate(x, y, z, o);
-			go->SaveToDB();
-
-			// Generate a completely new spawn with new guid
-			// 3.3.5a client caches recently deleted objects and brings them back to life
-			// when CreateObject block for this guid is received again
-			// however it entirely skips parsing that block and only uses already known location
-			go->Delete();
-
-			go = new GameObject();
-			if (!go->LoadGameObjectFromDB(guidLow, map))
-			{
-				delete go;
-				return 0;
-			}
-			//trans->UpdatePosition(x, y, z, o);
+			Transport* trans = go->ToTransport();
+			trans->UpdatePosition(x, y, z, o);
 		}
 
 		Eluna::Push(L, go);
+		return 1;
+	}
+
+	int TransportAddGOPassenger(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		float x = Eluna::CHECKVAL<float>(L, 2);
+		float y = Eluna::CHECKVAL<float>(L, 3);
+		float z = Eluna::CHECKVAL<float>(L, 4);
+		float o = Eluna::CHECKVAL<float>(L, 5);
+		GameObject* obj = Eluna::CHECKOBJ<GameObject>(L, 6);
+
+		if (go->IsTransport())
+		{
+			Transport* trans = go->ToTransport();
+			GameObjectData const* data = obj->GetGOData();
+			trans->CreateGOPassenger(obj->GetSpawnId(), data);
+			Eluna::Push(L, 1);
+			return 0;
+		}
+
+		Eluna::Push(L, 0);
 		return 1;
 	}
 
