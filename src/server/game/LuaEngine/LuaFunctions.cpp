@@ -521,7 +521,7 @@ ElunaRegister<Player> PlayerMethods[] =
 	{ "GetTransport", &LuaPlayer::GetTransport },
 	{ "GetTransportOffsetX", &LuaPlayer::GetTransportOffsetX },
 #ifndef CATA
-    { "SetTransport", &LuaPlayer::SetTransport },
+    { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
 #endif
 #ifdef CLASSIC
     { "GetHonorStoredKills", &LuaPlayer::GetHonorStoredKills },
@@ -571,6 +571,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
     { "SetGender", &LuaPlayer::SetGender },
     { "SetSheath", &LuaPlayer::SetSheath },	
+	{ "SetTransport", &LuaPlayer::SetTransport },
+	{ "BuildHeartBeatMsg", &LuaPlayer::BuildHeartBeatMsg },
 #ifndef TRINITY
     { "SetFFA", &LuaPlayer::SetFFA },
 #endif
