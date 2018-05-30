@@ -4025,7 +4025,8 @@ namespace LuaPlayer
 
 	int GetTransport(Eluna* /*E*/, lua_State* L, Player* player)
 	{
-		Eluna::Push(L, player->GetTransport()->GetEntry());
+		Transport* trans = player->GetTransport();
+		Eluna::Push(L, trans->ToGameObject()->GetEntry());
 		return 1;
 	}
 
