@@ -3938,6 +3938,73 @@ namespace LuaPlayer
     }
 #endif
 
+	/*int SpawnTempCharacterMount(Eluna* /*E*//*, lua_State* L, Player* player)
+	{
+		uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+		TC_LOG_ERROR("entity.player", "TESTETSTEEST entry: %u playerguid: %u", entry, player->GetGUID().GetCounter());
+		CharacterMountsList * mounts = sObjectMgr->GetCharacterMountsList(player->GetGUID().GetCounter());
+		if (!mounts)
+			return 0;
+
+		TC_LOG_ERROR("entity.player", "TESTETSTEEST FOUND");
+		for (CharacterMountsList::iterator itr = mounts->begin(); itr != mounts->end(); ++itr)
+		{
+			TC_LOG_ERROR("entity.player", "ITR");
+			if (itr->creature_entry == entry)
+			{
+				TC_LOG_ERROR("entity.player", "TESTETSTEEST ITR FOUND");
+				if (itr->mount_temp)
+				{
+					if (itr->mount_temp->GetGUID())
+					{
+						TC_LOG_ERROR("entity.player", "TESTETSTEEST Bool: %b", itr->mount_temp->IsInWorld());
+						continue;
+					}
+				}	
+				//if (!itr->mount_temp)
+				//{
+					TC_LOG_ERROR("entity.player", "TESTETSTEEST NO TEMP");
+					Map* map = player->GetMap();
+					TempSummon* creature = map->SummonCreature(entry, player->GetPosition(), NULL, 0, NULL, 0, 0, player->GetGUID().GetCounter());
+					if (!creature)
+					{
+						return 0;
+					}
+					creature->SetTempSummonType(TEMPSUMMON_MANUAL_DESPAWN);
+					TC_LOG_ERROR("entity.player", "TESTETSTEEST CREATED");
+					itr->mount_temp = creature;
+					Eluna::Push(L, creature);
+					return 1;
+					break;
+				//}
+			}
+		}
+		return 0;
+	}
+
+	int GetCharacterMountList(Eluna* /*E*//*, lua_State* L, Player* player)
+	{
+		lua_newtable(L);
+		int tbl = lua_gettop(L);
+		uint32 i = 0;
+
+		{
+			CharacterMountsList const* mounts = sObjectMgr->GetCharacterMountsList(player->GetGUID().GetCounter());
+			if (!mounts)
+				return 0;
+			for (CharacterMountsList::const_iterator itr = mounts->begin(); itr != mounts->end(); ++itr) 
+			{
+				++i;
+				Eluna::Push(L, i);
+				Eluna::Push(L, itr->creature_entry);
+				lua_settable(L, tbl);
+			}
+		}
+
+		lua_settop(L, tbl); // push table to top of stack
+		return 1;
+	}*/
+
 	int GetTargetCreature(Eluna* /*E*/, lua_State* L, Player* player)
 	{		
 		Eluna::Push(L, ObjectAccessor::GetCreatureOrPetOrVehicle(*player, player->GetTarget()));
@@ -3955,6 +4022,29 @@ namespace LuaPlayer
 		Eluna::Push(L, player->GetSelectedUnit());
 		return 1;
 	}	
+
+	int GetTransport(Eluna* /*E*/, lua_State* L, Player* player)
+	{
+		Eluna::Push(L, player->GetTransport()->GetEntry());
+		return 1;
+	}
+
+	int GetTransportOffsetX(Eluna* /*E*/, lua_State* L, Player* player)
+	{
+		Eluna::Push(L, player->GetTransOffsetX());
+		return 1;
+	}
+
+	int SetTransport(Eluna* /*E*/, lua_State* L, Player* player)
+	{
+		GameObject* go = Eluna::CHECKOBJ<GameObject>(L, 2);
+		if (Transport* trans = go->ToTransport())
+		{
+			player->SetTransport(trans);
+			return 0;
+		}
+		return 1;
+	}
 
     /*int BindToInstance(Eluna* E, lua_State* L, Player* player)
     {

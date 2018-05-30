@@ -518,8 +518,10 @@ ElunaRegister<Player> PlayerMethods[] =
 	{ "GetDmLevel", &LuaPlayer::GetDmLevel },	
 	{ "GetSelectedUnit", &LuaPlayer::GetSelectedUnit },
 	//{ "GetCharacterMountList", &LuaPlayer::GetCharacterMountList },
+	{ "GetTransport", &LuaPlayer::GetTransport },
+	{ "GetTransportOffsetX", &LuaPlayer::GetTransportOffsetX },
 #ifndef CATA
-    { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
+    { "SetTransport", &LuaPlayer::SetTransport },
 #endif
 #ifdef CLASSIC
     { "GetHonorStoredKills", &LuaPlayer::GetHonorStoredKills },

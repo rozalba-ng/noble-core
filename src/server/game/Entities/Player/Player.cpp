@@ -1922,7 +1922,7 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
                 z += GetFloatValue(UNIT_FIELD_HOVERHEIGHT);
             Relocate(x, y, z, orientation);
             SendTeleportAckPacket();
-            SendTeleportPacket(oldPos, go); // this automatically relocates to oldPos in order to broadcast the packet in the right place
+            SendTeleportPacket(oldPos); // this automatically relocates to oldPos in order to broadcast the packet in the right place
         }
     }
     else

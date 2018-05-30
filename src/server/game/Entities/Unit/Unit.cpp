@@ -16911,7 +16911,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     }
 }
 
-void Unit::BuildMovementPacket(ByteBuffer *data, GameObject* go)
+void Unit::BuildMovementPacket(ByteBuffer *data) const
 {
     *data << uint32(GetUnitMovementFlags());            // movement flags
     *data << uint16(GetExtraUnitMovementFlags());       // 2.3.0
@@ -16941,24 +16941,6 @@ void Unit::BuildMovementPacket(ByteBuffer *data, GameObject* go)
         if (GetExtraUnitMovementFlags() & MOVEMENTFLAG2_INTERPOLATED_MOVEMENT)
             *data << uint32(m_movementInfo.transport.time2);
     }
-
-	if (Transport* trans = go->ToTransport())
-	{
-		if(!(GetUnitMovementFlags() & MOVEMENTFLAG_ONTRANSPORT))
-			AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
-
-		SetTransport(trans);
-		*data << GetTransport()->GetPackGUID();
-		*data << float(GetTransOffsetX());
-		*data << float(GetTransOffsetY());
-		*data << float(GetTransOffsetZ());
-		*data << float(GetTransOffsetO());
-		*data << uint32(GetTransTime());
-		*data << uint8(GetTransSeat());
-
-		if (GetExtraUnitMovementFlags() & MOVEMENTFLAG2_INTERPOLATED_MOVEMENT)
-			*data << uint32(m_movementInfo.transport.time2);
-	}
 
     // 0x02200000
     if ((GetUnitMovementFlags() & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING))
@@ -17000,7 +16982,7 @@ void Unit::NearTeleportTo(float x, float y, float z, float orientation, bool cas
     }
 }
 
-void Unit::SendTeleportPacket(Position& pos, GameObject* go)
+void Unit::SendTeleportPacket(Position& pos)
 {
     Position oldPos = { GetPositionX(), GetPositionY(), GetPositionZMinusOffset(), GetOrientation() };
     if (GetTypeId() == TYPEID_UNIT)
@@ -17008,7 +16990,7 @@ void Unit::SendTeleportPacket(Position& pos, GameObject* go)
 
     WorldPacket data2(MSG_MOVE_TELEPORT, 38);
     data2 << GetPackGUID();
-    BuildMovementPacket(&data2, go);
+    BuildMovementPacket(&data2);
     if (GetTypeId() == TYPEID_UNIT)
         Relocate(&oldPos);
     if (GetTypeId() == TYPEID_PLAYER)
