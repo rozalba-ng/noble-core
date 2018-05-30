@@ -4058,8 +4058,7 @@ namespace LuaPlayer
 		WorldPacket data;
 		player->Relocate(x, y, z, o);
 		player->BuildHeartBeatMsg(&data);
-		player->SendMessageToSet(&data, player);
-		player->GetSession()->SendPacket(&data);
+		player->SendMessageToSet(&data, true);
 	}
 
     /*int BindToInstance(Eluna* E, lua_State* L, Player* player)
