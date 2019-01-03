@@ -282,6 +282,7 @@ bool SpellChatLink::Initialize(std::istringstream& iss)
 
 bool SpellChatLink::ValidateName(char* buffer, const char* context)
 {
+    return false;
     ChatLink::ValidateName(buffer, context);
 
     // spells with that flag have a prefix of "$PROFESSION: "
