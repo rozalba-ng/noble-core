@@ -3116,6 +3116,11 @@ namespace LuaGlobalFunctions
 		}
 		return 1;
 	}
+	int ReloadNPCOutfits(Eluna* /*E*/, lua_State* L)
+	{
+		sObjectMgr->LoadCreatureOutfits();
+		return 1;
+	}
 
 	/*int GetAllCharacterTempMounts(Eluna* E, lua_State* L)
 	{
