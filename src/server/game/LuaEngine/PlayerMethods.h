@@ -6,7 +6,7 @@
 
 #ifndef PLAYERMETHODS_H
 #define PLAYERMETHODS_H
-
+#include "Opcodes.h"
 /***
  * Inherits all methods from: [Object], [WorldObject], [Unit]
  */
@@ -4059,6 +4059,19 @@ namespace LuaPlayer
 		player->Relocate(x, y, z, o);
 		player->BuildHeartBeatMsg(&data);
 		player->SendMessageToSet(&data, true);
+		return 1;
+	}
+	int CustomChar(Eluna* /*E*/, lua_State* L, Player* player)
+	{
+		uint8 hairStyle = Eluna::CHECKVAL<uint8>(L, 2);
+		uint8 hairColor = Eluna::CHECKVAL<uint8>(L, 3);
+		uint8 facialStyle = Eluna::CHECKVAL<uint8>(L, 4);
+		uint8 skin = Eluna::CHECKVAL<uint8>(L, 5);
+		player->SetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_HAIR_STYLE_ID, uint8(hairStyle));
+		player->SetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_HAIR_COLOR_ID, uint8(hairColor));
+		player->SetByteValue(PLAYER_BYTES_2, PLAYER_BYTES_2_OFFSET_FACIAL_STYLE, uint8(facialStyle));
+        player->SetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_SKIN_ID, uint8(skin));
+		return 1;
 	}
 
     /*int BindToInstance(Eluna* E, lua_State* L, Player* player)

@@ -504,6 +504,27 @@ namespace LuaGameObject
 		Eluna::Push(L, 0);
 		return 1;
 	}
+	int GoRotate(Eluna* /*E*/, lua_State* L, GameObject* go)
+	{
+		float rotate2 = Eluna::CHECKVAL<float>(L, 2);
+		float rotate3 = Eluna::CHECKVAL<float>(L, 3);
+		go->UpdateRotationFields(rotate2,rotate3);
+		go->SaveToDB();
+		go->Delete();
+		uint32 guidLow = go->GetSpawnId();
+
+		if (!guidLow)
+			return 0;
+		Map* map = go->GetMap();
+		go = new GameObject();
+		if (!go->LoadGameObjectFromDB(guidLow, map))
+		{
+			delete go;
+			return 0;
+		}
+		Eluna::Push(L, 0);
+		return 1;
+	}
 
 };
 #endif

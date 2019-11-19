@@ -574,6 +574,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SetSheath", &LuaPlayer::SetSheath },	
 	{ "SetTransport", &LuaPlayer::SetTransport },
 	{ "BuildHeartBeatMsg", &LuaPlayer::BuildHeartBeatMsg },
+	{ "CustomChar", &LuaPlayer::CustomChar },
 #ifndef TRINITY
     { "SetFFA", &LuaPlayer::SetFFA },
 #endif
@@ -920,6 +921,8 @@ ElunaRegister<GameObject> GameObjectMethods[] =
 	{ "TakeContainerItem", &LuaGameObject::TakeContainerItem },
 	{ "TransportUpdatePosition", &LuaGameObject::TransportUpdatePosition },
 	{ "TransportAddGOPassenger", &LuaGameObject::TransportAddGOPassenger },
+	{ "GoRotate", &LuaGameObject::GoRotate },
+
 
     { NULL, NULL }
 };
