@@ -648,7 +648,17 @@ class GameObjectModel;
 
 // 5 sec for bobber catch
 #define FISHING_BOBBER_READY_TIME 5
+struct TC_GAME_API QuaternionData
+{
+    float x, y, z, w;
 
+    QuaternionData() : x(0.0f), y(0.0f), z(0.0f), w(1.0f) { }
+    QuaternionData(float X, float Y, float Z, float W) : x(X), y(Y), z(Z), w(W) { }
+
+    bool isUnit() const;
+    void toEulerAnglesZYX(float& Z, float& Y, float& X) const;
+    static QuaternionData fromEulerAnglesZYX(float Z, float Y, float X);
+};
 class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>, public MapObject
 {
     public:
@@ -666,7 +676,15 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         GameObjectTemplate const* GetGOInfo() const { return m_goInfo; }
         GameObjectData const* GetGOData() const { return m_goData; }
         GameObjectValue const* GetGOValue() const { return &m_goValue; }
-
+		
+		// z_rot, y_rot, x_rot - rotation angles around z, y and x axes
+        void SetLocalRotationAngles(float z_rot, float y_rot, float x_rot);
+        void SetLocalRotation(float qx, float qy, float qz, float qw);
+        void SetParentRotation(QuaternionData const& rotation);      // transforms(rotates) transport's path
+		
+        QuaternionData const& GetLocalRotation() const { return m_localRotation; }
+        int64 GetPackedLocalRotation() const { return m_packedRotation; }
+		QuaternionData GetWorldRotation() const;	
         bool IsTransport() const;
         bool IsDynTransport() const;
         bool IsDestructibleBuilding() const;
@@ -910,6 +928,9 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
 		uint32 m_creatureAttach;
 
         uint64 m_rotation;
+		int64 m_packedRotation;
+        QuaternionData m_localRotation;
+		
         Position m_stationaryPosition;
 
         ObjectGuid m_lootRecipient;
@@ -921,7 +942,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
     private:
         void RemoveFromOwner();
         void SwitchDoorOrButton(bool activate, bool alternative = false);
-
+		void UpdatePackedRotation();
         //! Object distance/size - overridden from Object::_IsWithinDist. Needs to take in account proper GO size.
         bool _IsWithinDist(WorldObject const* obj, float dist2compare, bool /*is3D*/) const override
         {
