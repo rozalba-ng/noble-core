@@ -6,7 +6,7 @@
 
 #ifndef UNITMETHODS_H
 #define UNITMETHODS_H
-
+#include "Unit.h"
 /***
  * Inherits all methods from: [Object], [WorldObject]
  */
@@ -1421,7 +1421,7 @@ namespace LuaUnit
         if (sheathed >= MAX_SHEATH_STATE)
             return luaL_argerror(L, 2, "valid SheathState expected");
 
-        unit->SetSheath((SheathState)sheathed);
+        unit->SetSheath(SheathState(sheathed));
         return 0;
     }
 

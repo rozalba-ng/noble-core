@@ -599,3 +599,11 @@ void Eluna::OnMovementFlagsSetPlayer(Player* me, uint32 moveFlags, bool add)
 	Push(add);
 	CallAllFunctions(PlayerEventBindings, key);
 }
+
+void Eluna::OnApplySpellEffects(Unit* me, Spell* pSpell)
+{
+	START_HOOK(PLAYER_EVENT_ON_APPLY_SPELL_EFFECTS);
+	Push(me);
+	Push(pSpell);
+	CallAllFunctions(PlayerEventBindings, key);
+}

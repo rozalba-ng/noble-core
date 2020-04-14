@@ -7,6 +7,7 @@
 #ifndef PLAYERMETHODS_H
 #define PLAYERMETHODS_H
 #include "Opcodes.h"
+#include "Unit.h"
 /***
  * Inherits all methods from: [Object], [WorldObject], [Unit]
  */
@@ -1649,7 +1650,7 @@ namespace LuaPlayer
         if (sheathed >= MAX_SHEATH_STATE)
             return 0;
 
-        player->SetSheath((SheathState)sheathed);
+        player->SetSheath(SheathState(sheathed));
         return 0;
     }
 

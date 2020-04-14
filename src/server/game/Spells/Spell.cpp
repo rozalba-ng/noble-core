@@ -54,7 +54,10 @@
 #include "Battlefield.h"
 #include "BattlefieldMgr.h"
 #include "TradeData.h"
-
+#ifdef ELUNA
+#include "LuaEngine.h"
+#include "ElunaEventMgr.h"
+#endif
 extern pEffect SpellEffects[TOTAL_SPELL_EFFECTS];
 
 SpellDestination::SpellDestination()
@@ -2310,7 +2313,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo* target)
     // Need init unitTarget by default unit (can changed in code on reflect)
     // Or on missInfo != SPELL_MISS_NONE unitTarget undefined (but need in trigger subsystem)
     unitTarget = unit;
-
+	sEluna->OnApplySpellEffects(unitTarget, this);
     // Reset damage/healing counter
     m_damage = target->damage;
     m_healing = -target->damage;
