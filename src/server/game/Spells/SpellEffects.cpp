@@ -3175,7 +3175,7 @@ void Spell::EffectWeaponDmg(SpellEffIndex effIndex)
                     fixed_bonus += (aur->GetStackAmount() - 1) * CalculateDamage(2, unitTarget);
                 }
             }
-			if (m_spellInfo->SpellFamilyFlags[2] & 0x80) //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+			if (m_spellInfo->SpellFamilyFlags[2] & 0x80) //Удар правый, при наличии второго оружия.
 			{
 				Item* mainhand = m_caster->ToPlayer()->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND);
 				Item* offhand = m_caster->ToPlayer()->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND);
@@ -3184,7 +3184,7 @@ void Spell::EffectWeaponDmg(SpellEffIndex effIndex)
 					int32 mainhanddmg = m_caster->CalculateDamage(BASE_ATTACK, true, true);
 					int32 offhanddmg = m_caster->CalculateDamage(OFF_ATTACK, true, true);
 					totalDamageForced = offhanddmg + mainhanddmg;
-				}
+				}				
 			}
             if (m_spellInfo->SpellFamilyFlags[0] & 0x8000000) // Mocking Blow
             {
@@ -4706,7 +4706,7 @@ void Spell::EffectCharge(SpellEffIndex /*effIndex*/)
     {
         float speed = G3D::fuzzyGt(m_spellInfo->Speed, 0.0f) ? m_spellInfo->Speed : SPEED_CHARGE;
         // Spell is not using explicit target - no generated path
-        if (!m_preGeneratedPath)
+        if (m_preGeneratedPath.GetPathType() == PATHFIND_BLANK)
         {
             //unitTarget->GetContactPoint(m_caster, pos.m_positionX, pos.m_positionY, pos.m_positionZ);
             Position pos = unitTarget->GetFirstCollisionPosition(unitTarget->GetObjectSize(), unitTarget->GetRelativeAngle(m_caster));
