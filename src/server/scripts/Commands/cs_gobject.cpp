@@ -427,29 +427,19 @@ public:
 
         char* orientation = strtok(NULL, " ");
         float o;
-		float oz = 0.f, oy = 0.f, ox = 0.f;
 
         if (orientation)
-            oz = float(atof(orientation));
-
-            orientation = strtok(nullptr, " ");
-            if (orientation)
-            {
-                oy = float(atof(orientation));
-                orientation = strtok(nullptr, " ");
-                if (orientation)
-                    ox = float(atof(orientation));
-            }
+            o = (float)atof(orientation);
         else
         {
             Player* player = handler->GetSession()->GetPlayer();
-             oz = player->GetOrientation();
+            o = player->GetOrientation();
         }
 
         Map* map = object->GetMap();
 
-        object->Relocate(object->GetPositionX(), object->GetPositionY(), object->GetPositionZ(), oz);
-        object->SetLocalRotationAngles(oz, oy, ox);
+        object->Relocate(object->GetPositionX(), object->GetPositionY(), object->GetPositionZ(), o);
+        object->UpdateRotationFields();
         object->SaveToDB();
 
         // Generate a completely new spawn with new guid
