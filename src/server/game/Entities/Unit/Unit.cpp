@@ -16853,7 +16853,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 	else
 	{
 		main_vehicle = vehicle;
-		TC_LOG_ERROR("entities.vehicle", "No_parent_found");
+		//TC_LOG_ERROR("entities.vehicle", "No_parent_found");
 	}
 	if ((!main_vehicle->GetBase()->IsCharmed()) && (main_vehicle->isHaveGameobject))
 	{
@@ -16886,7 +16886,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 	}
 	else
 	{
-		TC_LOG_ERROR("entities.vehicle", "WITHout");
+		//TC_LOG_ERROR("entities.vehicle", "WITHout");
 	}
 
 	init.MoveTo(pos_x, pos_y, pos_z, false);
