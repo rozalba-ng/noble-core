@@ -64,7 +64,7 @@ Vehicle::~Vehicle()
     ASSERT(_status == STATUS_UNINSTALLING);
     for (SeatMap::const_iterator itr = Seats.begin(); itr != Seats.end(); ++itr)
         ASSERT(itr->second.IsEmpty());
-	
+
 	if(_me->GetTypeId() == TYPEID_PLAYER)
 		_me->SetSpeed(MOVE_TURN_RATE, baseMoveSpeed[MOVE_TURN_RATE]);
 }
@@ -111,11 +111,11 @@ void Vehicle::InstallAllGameObjects(bool evading)
 {
 	CreatureGameObjectsList const* gameobjects = sObjectMgr->GetCreatureGameObjectsList(_me->ToCreature()->GetSpawnId());
 	if (!gameobjects) {
-		// Нет контейнера закрепленного за этим существом, пытаемся найти тэмлейты с гошками.
+		// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		VehicleGameObjectList const* gameobjects = sObjectMgr->GetVehicleGameObjectList(GetCreatureEntry());
 		if (!gameobjects)
 			return;
-		// Тэмлейты найдены, устанавливаем по их подобию гошки, их сохраняем в базу и заполняем закрепляемый за существом контейнер.
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		for (VehicleGameObjectList::const_iterator itr = gameobjects->begin(); itr != gameobjects->end(); ++itr) {
 			if (itr->GameObjectEntry == 0)
 			{
@@ -129,7 +129,7 @@ void Vehicle::InstallAllGameObjects(bool evading)
 		}
 	}
 	else {
-		// Берём данные о ГОшках из хранимого контейнера.
+		// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		for (CreatureGameObjectsList::const_iterator itr = gameobjects->begin(); itr != gameobjects->end(); ++itr) {
 			if (itr->gameobject_guid == 0)
 			{
@@ -484,7 +484,7 @@ bool Vehicle::InstallGameObject(uint32 entry, float radius, float angle, float p
 		{
 			delete object;
 			return false;
-		}		
+		}
 		// fill the gameobject data and save to the db
 		object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 		guidLow = object->GetSpawnId();
@@ -644,7 +644,7 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
 Vehicle* Vehicle::RemovePassenger(Unit* unit)
 {
     if (unit->GetVehicle() != this)
-        return NULL;	
+        return NULL;
 
     SeatMap::iterator seat = GetSeatIteratorForPassenger(unit);
 	if (seat == Seats.end())
@@ -728,6 +728,9 @@ void Vehicle::RelocatePassengers()
 {
     ASSERT(_me->GetMap());
 
+    std::vector<std::pair<Unit*, Position>> seatRelocation;
+    seatRelocation.reserve(Seats.size());
+
     // not sure that absolute position calculation is correct, it must depend on vehicle pitch angle
     for (SeatMap::const_iterator itr = Seats.begin(); itr != Seats.end(); ++itr)
     {
@@ -738,11 +741,14 @@ void Vehicle::RelocatePassengers()
             float px, py, pz, po;
             passenger->m_movementInfo.transport.pos.GetPosition(px, py, pz, po);
             CalculatePassengerPosition(px, py, pz, &po);
-            passenger->UpdatePosition(px, py, pz, po);
-			if (itr->second.SeatInfo->m_flagsB & VEHICLE_SEAT_FLAG_B_MOVE_ANIM)
-				passenger->CastSpell(passenger, itr->second.SeatInfo->m_vehicleRideAnimLoop, true);
+            seatRelocation.emplace_back(passenger, Position(px, py, pz, po));
+            if (itr->second.SeatInfo->m_flagsB & VEHICLE_SEAT_FLAG_B_MOVE_ANIM)
+                passenger->CastSpell(passenger, itr->second.SeatInfo->m_vehicleRideAnimLoop, true);
         }
     }
+
+    for (auto const& pair : seatRelocation)
+        pair.first->UpdatePosition(pair.second);
 }
 
 /**
@@ -941,12 +947,6 @@ void Vehicle::RemovePendingEventsForPassenger(Unit* passenger)
     }
 }
 
-VehicleJoinEvent::~VehicleJoinEvent()
-{
-    if (Target)
-        Target->RemovePendingEvent(this);
-}
-
 /**
  * @fn bool VehicleJoinEvent::Execute(uint64, uint32)
  *
@@ -1063,6 +1063,9 @@ void VehicleJoinEvent::Abort(uint64)
     {
         TC_LOG_DEBUG("entities.vehicle", "Passenger GuidLow: %u, Entry: %u, board on vehicle GuidLow: %u, Entry: %u SeatId: %d cancelled",
             Passenger->GetGUID().GetCounter(), Passenger->GetEntry(), Target->GetBase()->GetGUID().GetCounter(), Target->GetBase()->GetEntry(), (int32)Seat->first);
+
+        /// Remove the pending event when Abort was called on the event directly
+        Target->RemovePendingEvent(this);
 
         /// @SPELL_AURA_CONTROL_VEHICLE auras can be applied even when the passenger is not (yet) on the vehicle.
         /// When this code is triggered it means that something went wrong in @Vehicle::AddPassenger, and we should remove

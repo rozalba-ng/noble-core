@@ -306,7 +306,7 @@ void WorldSession::HandleItemQuerySingleOpcode(WorldPacket& recvData)
     uint32 item;
     recvData >> item;
 
-    TC_LOG_INFO("network", "STORAGE: Item Query = %u", item);
+    //TC_LOG_INFO("network", "STORAGE: Item Query = %u", item);
 
     ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(item);
     if (pProto)
