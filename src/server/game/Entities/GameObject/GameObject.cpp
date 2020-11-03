@@ -61,6 +61,8 @@ GameObject::GameObject() : WorldObject(false), MapObject(),
     m_rotation = 0;
 	m_ownerId = 0;
 
+    m_custom_scale = 0;
+
     m_lootRecipientGroup = 0;
     m_groupLootTimer = 0;
     lootingGroupLowGUID = 0;
