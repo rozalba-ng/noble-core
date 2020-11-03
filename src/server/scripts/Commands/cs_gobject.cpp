@@ -519,9 +519,10 @@ public:
 
         object->Relocate(x, y, z, object->GetOrientation());
         object->SaveToDB();
+        C_LOG_ERROR("sql.sql", "1: (scale: %u ).", customScale);
+        float scale = object->GetObjectScale();
 
-        float customScale = object->GetCustomScale();
-
+        C_LOG_ERROR("sql.sql", "2: (scale: %u ).", customScale);
         // Generate a completely new spawn with new guid
         // 3.3.5a client caches recently deleted objects and brings them back to life
         // when CreateObject block for this guid is received again
@@ -529,15 +530,22 @@ public:
         object->Delete();
 
         object = new GameObject();
-        if (customScale>0) {
-            object->SetObjectScale(customScale);
+
+        if (scale > 0) {
+            object->SetObjectScale(scale);
         }
 
+        C_LOG_ERROR("sql.sql", "3: (scale: %u ).", customScale);
         if (!object->LoadGameObjectFromDB(guidLow, map))
         {
+            C_LOG_ERROR("sql.sql", "4: (scale: %u ).", customScale);
+            if (scale > 0) {
+                object->SetObjectScale(scale);
+            }
             delete object;
             return false;
         }
+        C_LOG_ERROR("sql.sql", "5: (scale: %u ).", customScale);
 
         handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
         return true;
