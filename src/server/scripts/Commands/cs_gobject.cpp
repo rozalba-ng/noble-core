@@ -533,7 +533,6 @@ public:
             delete object;
             return false;
         }
-        object->SetObjectScale(0.5);
 
         handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
         return true;
