@@ -528,8 +528,6 @@ public:
 
         object = new GameObject();
 
-        object->SetObjectScale(2);
-
         if (!object->LoadGameObjectFromDB(guidLow, map))
         {
             delete object;
