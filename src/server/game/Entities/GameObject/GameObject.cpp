@@ -60,7 +60,7 @@ GameObject::GameObject() : WorldObject(false), MapObject(),
     m_spawnId = 0;
     m_rotation = 0;
 	m_ownerId = 0;
-    m_custom_scale = 0;
+    m_custom_scale = 0.0f;
 
     m_lootRecipientGroup = 0;
     m_groupLootTimer = 0;
@@ -1104,7 +1104,7 @@ bool GameObject::LoadGameObjectFromDB(ObjectGuid::LowType spawnId, Map* map, boo
     GOState go_state = data->go_state;
     uint32 artKit = data->artKit;
 	m_ownerId = data->owner_id;
-    m_custom_scale = data->custom_scale;
+    float m_custom_scale = data->custom_scale;
 	m_creatureAttach = data->creature_attach;
 
     m_spawnId = spawnId;
