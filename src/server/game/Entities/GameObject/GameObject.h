@@ -702,6 +702,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         Unit* GetOwner() const;
 
 		uint64 GetOwnerId() const { return m_ownerId; }
+        float GetCustomScale() const { return m_custom_scale; }
 		uint32 GetContainerSize() const { return m_containerSize; }
 
 		inline Item* GetContainerItem(uint32 slotId) const { return slotId < m_containerSize ? m_items[slotId] : NULL; }
@@ -906,6 +907,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         GameObjectValue m_goValue;
 
 		uint32 m_ownerId;
+        float m_custom_scale;
 
 		uint32 m_creatureAttach;
 
