@@ -1106,8 +1106,6 @@ bool GameObject::LoadGameObjectFromDB(ObjectGuid::LowType spawnId, Map* map, boo
 	m_ownerId = data->owner_id;
     float m_custom_scale = data->custom_scale;
 
-    printf("m_custom_scale is set to %.1lf  \n", m_custom_scale);
-
 	m_creatureAttach = data->creature_attach;
 
     m_spawnId = spawnId;
