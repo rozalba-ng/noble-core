@@ -546,6 +546,9 @@ public:
         object->SetCustomScale(size)
         object->SaveToDB();
 
+        float sizew = object->GetObjectScale();
+        handler->PSendSysMessage("GOB SIZE AFTER SAVE:  %.1lf", sizew);
+
         handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
         return true;
     }
