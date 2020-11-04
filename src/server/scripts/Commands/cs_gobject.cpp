@@ -489,6 +489,9 @@ public:
 		if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
 			return false;
 
+		float size = object->GetObjectScale();
+        handler->PSendSysMessage("GOB CURRENT SIZE:");
+        handler->PSendSysMessage(size);
         char* toX = strtok(NULL, " ");
         char* toY = strtok(NULL, " ");
         char* toZ = strtok(NULL, " ");
