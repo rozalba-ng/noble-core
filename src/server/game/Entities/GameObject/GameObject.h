@@ -606,7 +606,7 @@ struct GameObjectData
 {
     explicit GameObjectData() : id(0), mapid(0), phaseMask(0), posX(0.0f), posY(0.0f), posZ(0.0f), orientation(0.0f),
                                 rotation0(0.0f), rotation1(0.0f), rotation2(0.0f), rotation3(0.0f), spawntimesecs(0),
-                                owner_id(0), animprogress(0), go_state(GO_STATE_ACTIVE), spawnMask(0), artKit(0), dbData(true), creature_attach(0) { }
+                                owner_id(0), animprogress(0), go_state(GO_STATE_ACTIVE), spawnMask(0), artKit(0), dbData(true), creature_attach(0),  custom_scale(0.0f) { }
     uint32 id;                                              // entry in gamobject_template
     uint16 mapid;
     uint32 phaseMask;
@@ -626,6 +626,7 @@ struct GameObjectData
     uint8 artKit;
     bool dbData;
 	uint32 creature_attach;
+    float custom_scale;
 };
 
 typedef std::vector<uint32> GameObjectQuestItemList;
@@ -661,7 +662,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         void RemoveFromWorld() override;
         void CleanupsBeforeDelete(bool finalCleanup = true) override;
 
-        bool Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit = 0, uint32 owner_id = 0);
+        bool Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit = 0, uint32 owner_id = 0, float custom_scale = 0.0f);
         void Update(uint32 p_time) override;
         GameObjectTemplate const* GetGOInfo() const { return m_goInfo; }
         GameObjectData const* GetGOData() const { return m_goData; }
@@ -701,6 +702,9 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         Unit* GetOwner() const;
 
 		uint64 GetOwnerId() const { return m_ownerId; }
+
+        float GetCustomScale() const { return m_custom_scale; }
+        void SetCustomScale(float scale) { m_custom_scale = scale; }
 
 		uint32 GetContainerSize() const { return m_containerSize; }
 
@@ -906,6 +910,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         GameObjectValue m_goValue;
 
 		uint32 m_ownerId;
+        float m_custom_scale;
 
 		uint32 m_creatureAttach;
 

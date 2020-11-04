@@ -60,6 +60,7 @@ GameObject::GameObject() : WorldObject(false), MapObject(),
     m_spawnId = 0;
     m_rotation = 0;
 	m_ownerId = 0;
+    m_custom_scale = 0.0f;
 
     m_lootRecipientGroup = 0;
     m_groupLootTimer = 0;
@@ -186,7 +187,7 @@ void GameObject::RemoveFromWorld()
     }
 }
 
-bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit, uint32 owner_id)
+bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit, uint32 owner_id, float custom_scale)
 {
     ASSERT(map);
     SetMap(map);
@@ -240,13 +241,18 @@ bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, u
 
     UpdateRotationFields(rotation2, rotation3);              // GAMEOBJECT_FACING, GAMEOBJECT_ROTATION, GAMEOBJECT_PARENTROTATION+2/3
 
-    SetObjectScale(goinfo->size);
+    if (custom_scale) {
+        SetObjectScale(custom_scale);
+    } else {
+        SetObjectScale(goinfo->size);
+    }
 
     SetUInt32Value(GAMEOBJECT_FACTION, goinfo->faction);
     SetUInt32Value(GAMEOBJECT_FLAGS, goinfo->flags);
 
     SetEntry(goinfo->entry);
 	m_ownerId = owner_id;
+	m_custom_scale = custom_scale;
 
     // set name for logs usage, doesn't affect anything ingame
     SetName(goinfo->name);
@@ -1014,6 +1020,7 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     data.spawnMask = spawnMask;
     data.artKit = GetGoArtKit();
 	data.owner_id = m_ownerId;
+    data.custom_scale = m_custom_scale;
 	data.creature_attach = m_creatureAttach;
 
     // Update in DB
@@ -1043,6 +1050,7 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     stmt->setUInt8(index++, GetGoAnimProgress());
     stmt->setUInt8(index++, uint8(GetGoState()));
 	stmt->setUInt32(index++, m_ownerId);
+    stmt->setFloat(index++, m_custom_scale);
     trans->Append(stmt);
 
     WorldDatabase.CommitTransaction(trans);
@@ -1096,10 +1104,12 @@ bool GameObject::LoadGameObjectFromDB(ObjectGuid::LowType spawnId, Map* map, boo
     GOState go_state = data->go_state;
     uint32 artKit = data->artKit;
 	m_ownerId = data->owner_id;
+    float m_custom_scale = data->custom_scale;
+
 	m_creatureAttach = data->creature_attach;
 
     m_spawnId = spawnId;
-    if (!Create(map->GenerateLowGuid<HighGuid::GameObject>(), entry, map, phaseMask, x, y, z, ang, rotation0, rotation1, rotation2, rotation3, animprogress, go_state, artKit, m_ownerId))
+    if (!Create(map->GenerateLowGuid<HighGuid::GameObject>(), entry, map, phaseMask, x, y, z, ang, rotation0, rotation1, rotation2, rotation3, animprogress, go_state, artKit, m_ownerId, m_custom_scale))
         return false;
 
     if (data->spawntimesecs >= 0)

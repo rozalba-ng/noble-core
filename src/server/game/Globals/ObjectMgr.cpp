@@ -1934,7 +1934,7 @@ void ObjectMgr::AddVehiclePassenger(uint32 spawnid, uint32 guid, float radius, f
 	_vehiclePassengersStore[spawnid].push_back(VehiclePassengers(guid, type, radius, angle, pos_z, orientation));
 }
 
-bool ObjectMgr::RemoveVehiclePassengers(uint32 spawnid, VehiclePassengersList::const_iterator passenger) //Пока что он чистит сохраненных пассажиров за транспортом, на котором можно ставить gameobjects.
+bool ObjectMgr::RemoveVehiclePassengers(uint32 spawnid, VehiclePassengersList::const_iterator passenger) //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ gameobjects.
 {
 	VehiclePassengersContainer::const_iterator container = _vehiclePassengersStore.find(spawnid);
 	if (container != _vehiclePassengersStore.end()) {
@@ -2142,8 +2142,8 @@ void ObjectMgr::LoadGameobjects()
 
     //                                                0                1   2    3           4           5           6
     QueryResult result = WorldDatabase.Query("SELECT gameobject.guid, id, map, position_x, position_y, position_z, gameobject.orientation, "
-    //   7          8          9          10         11             12            13     14         15         16          17			18			19
-        "rotation0, rotation1, rotation2, rotation3, spawntimesecs, animprogress, state, spawnMask, phaseMask, eventEntry, pool_entry, owner_id, creature_guid "
+    //   7          8          9          10         11             12            13     14         15         16          17			18			19             20
+        "rotation0, rotation1, rotation2, rotation3, spawntimesecs, animprogress, state, spawnMask, phaseMask, eventEntry, pool_entry, owner_id, creature_guid, custom_scale "
         "FROM gameobject LEFT OUTER JOIN game_event_gameobject ON gameobject.guid = game_event_gameobject.guid "
         "LEFT OUTER JOIN pool_gameobject ON gameobject.guid = pool_gameobject.guid "
         "LEFT OUTER JOIN creature_gameobjects ON gameobject.guid = creature_gameobjects.gameobject_guid");
@@ -2212,6 +2212,7 @@ void ObjectMgr::LoadGameobjects()
         data.spawntimesecs  = fields[11].GetInt32();
 		data.owner_id = fields[18].GetInt32();
 		data.creature_attach = fields[19].GetUInt32();
+        data.custom_scale = fields[20].GetFloat();
 
         MapEntry const* mapEntry = sMapStore.LookupEntry(data.mapid);
         if (!mapEntry)
