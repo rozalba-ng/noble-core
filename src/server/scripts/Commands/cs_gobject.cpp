@@ -490,15 +490,12 @@ public:
 			return false;
 
 		float oldname = 1.345;
-        printf("На каждую букву вашего имени приходится %.1lf", oldname);
-        TC_LOG_INFO("commands", "GTEST FLOAT: %.1lf", oldname);
-        handler->PSendSysMessage("TEST OUTPUTS:");
-        handler->PSendSysMessage(oldname);
-        handler->PSendSysMessage("TEST FLOAT IN CHAT: %.1lf", oldname);
+        printf("test log message %.1lf  \n", oldname);
+        TC_LOG_INFO("commands", "GTEST FLOAT IN LOG: %.1lf  \n", oldname);
+        //handler->PSendSysMessage("TEST FLOAT IN CHAT: %.1lf", oldname); //work
 
 		float size = object->GetObjectScale();
-        handler->PSendSysMessage("GOB CURRENT SIZE:");
-        handler->PSendSysMessage(size);
+        handler->PSendSysMessage("GOB CURRENT SIZE:  %.1lf", size);
 
         char* toX = strtok(NULL, " ");
         char* toY = strtok(NULL, " ");
