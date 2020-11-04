@@ -543,6 +543,7 @@ public:
         }
 
         object->SetObjectScale(size);
+        object->SetCustomScale(size)
         object->SaveToDB();
 
         handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
