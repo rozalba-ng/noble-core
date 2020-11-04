@@ -489,16 +489,15 @@ public:
 		if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
 			return false;
 
-		float oldname = 1.345;
-        printf("test log message %.1lf  \n", oldname);
-        TC_LOG_INFO("commands", "GTEST FLOAT IN LOG: %.1lf  \n", oldname);
-        //handler->PSendSysMessage("TEST FLOAT IN CHAT: %.1lf", oldname); //work
+//		float oldname = 1.345;
+//        printf("test log message %.1lf  \n", oldname);
+//        TC_LOG_INFO("commands", "GTEST FLOAT IN LOG: %.1lf  \n", oldname);
+//        handler->PSendSysMessage("TEST FLOAT IN CHAT: %.1lf", oldname); //work
 
-		float size = object->GetObjectScale();
-        handler->PSendSysMessage("GOB CURRENT SIZE:  %.1lf", size);
-
-        float sizeCustom = object->GetCustomScale();
-        handler->PSendSysMessage("GOB CURRENT CUSTOM SIZE:  %.1lf", sizeCustom);
+//		float size = object->GetObjectScale();
+//        handler->PSendSysMessage("GOB CURRENT SIZE:  %.1lf", size);
+//        float sizeCustom = object->GetCustomScale();
+//        handler->PSendSysMessage("GOB CURRENT CUSTOM SIZE:  %.1lf", sizeCustom);
 
         char* toX = strtok(NULL, " ");
         char* toY = strtok(NULL, " ");
@@ -545,15 +544,15 @@ public:
             return false;
         }
 
-        object->SetObjectScale(size);
-        object->SetCustomScale(size);
-        object->SaveToDB();
-
-        float sizew = object->GetObjectScale();
-        handler->PSendSysMessage("GOB SIZE AFTER SAVE:  %.1lf", sizew);
-
-        float sizeCustomW = object->GetCustomScale();
-        handler->PSendSysMessage("GOB CUSTOM SIZE AFTER SAVE:  %.1lf", sizeCustomW);
+//        object->SetObjectScale(size);
+//        object->SetCustomScale(size);
+//        object->SaveToDB();
+//
+//        float sizew = object->GetObjectScale();
+//        handler->PSendSysMessage("GOB SIZE AFTER SAVE:  %.1lf", sizew);
+//
+//        float sizeCustomW = object->GetCustomScale();
+//        handler->PSendSysMessage("GOB CUSTOM SIZE AFTER SAVE:  %.1lf", sizeCustomW);
 
         handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
         return true;
