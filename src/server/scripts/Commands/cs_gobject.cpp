@@ -543,7 +543,7 @@ public:
         }
 
         object->SetObjectScale(size);
-        object->SetCustomScale(size)
+        object->SetCustomScale(size);
         object->SaveToDB();
 
         float sizew = object->GetObjectScale();
