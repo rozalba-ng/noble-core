@@ -529,21 +529,20 @@ public:
 
         object->Relocate(x, y, z, object->GetOrientation());
         object->SaveToDB();
-        object->UpdateObjectVisibility();
 
         // Generate a completely new spawn with new guid
         // 3.3.5a client caches recently deleted objects and brings them back to life
         // when CreateObject block for this guid is received again
         // however it entirely skips parsing that block and only uses already known location
-//        object->Delete();
-//
-//        object = new GameObject();
-//
-//        if (!object->LoadGameObjectFromDB(guidLow, map))
-//        {
-//            delete object;
-//            return false;
-//        }
+        object->Delete();
+
+        object = new GameObject();
+
+        if (!object->LoadGameObjectFromDB(guidLow, map))
+        {
+            delete object;
+            return false;
+        }
 
 //        object->SetObjectScale(size);
 //        object->SetCustomScale(size);
