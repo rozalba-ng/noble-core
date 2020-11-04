@@ -542,6 +542,9 @@ public:
             return false;
         }
 
+        object->SetObjectScale(size);
+        object->SaveToDB();
+
         handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
         return true;
     }
