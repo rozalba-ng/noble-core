@@ -328,6 +328,17 @@ namespace LuaGameObject
 		return 0;
 	}
 
+    int SetGoScale(Eluna* /*E*/, lua_State* L, GameObject* go)
+    {
+        float size = Eluna::CHECKVAL<float>(L, 2);
+
+        go->SetObjectScale(size);
+        go->SetCustomScale(size);
+        go->SaveToDB();
+
+        return 0;
+    }
+
 	int GetOwner(Eluna* /*E*/, lua_State* L, GameObject* go)
 	{
 		Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(go->GetOwnerId())));

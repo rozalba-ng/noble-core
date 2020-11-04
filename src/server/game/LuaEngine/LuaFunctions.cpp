@@ -901,7 +901,8 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "SetGoState", &LuaGameObject::SetGoState },
     { "SetLootState", &LuaGameObject::SetLootState },
     { "SetRespawnTime", &LuaGameObject::SetRespawnTime },
-	{ "SetPhaseMask", &LuaGameObject::SetPhaseMask },	
+	{ "SetPhaseMask", &LuaGameObject::SetPhaseMask },
+    { "SetGoScale", &LuaGameObject::SetGoScale },
 
     // Boolean
     { "IsTransport", &LuaGameObject::IsTransport },
