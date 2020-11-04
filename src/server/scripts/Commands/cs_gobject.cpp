@@ -497,6 +497,9 @@ public:
 		float size = object->GetObjectScale();
         handler->PSendSysMessage("GOB CURRENT SIZE:  %.1lf", size);
 
+        float sizeCustom = object->GetCustomScale();
+        handler->PSendSysMessage("GOB CURRENT CUSTOM SIZE:  %.1lf", sizeCustom);
+
         char* toX = strtok(NULL, " ");
         char* toY = strtok(NULL, " ");
         char* toZ = strtok(NULL, " ");
@@ -548,6 +551,9 @@ public:
 
         float sizew = object->GetObjectScale();
         handler->PSendSysMessage("GOB SIZE AFTER SAVE:  %.1lf", sizew);
+
+        float sizeCustomW = object->GetCustomScale();
+        handler->PSendSysMessage("GOB CUSTOM SIZE AFTER SAVE:  %.1lf", sizeCustomW);
 
         handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
         return true;
