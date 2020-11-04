@@ -489,9 +489,17 @@ public:
 		if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
 			return false;
 
+		float oldname = 1.345;
+        printf("На каждую букву вашего имени приходится %.1lf", oldname);
+        TC_LOG_INFO("commands", "GTEST FLOAT: %.1lf", oldname);
+        handler->PSendSysMessage("TEST OUTPUTS:");
+        handler->PSendSysMessage(oldname);
+        handler->PSendSysMessage("TEST FLOAT IN CHAT: %.1lf", oldname);
+
 		float size = object->GetObjectScale();
         handler->PSendSysMessage("GOB CURRENT SIZE:");
         handler->PSendSysMessage(size);
+
         char* toX = strtok(NULL, " ");
         char* toY = strtok(NULL, " ");
         char* toZ = strtok(NULL, " ");
