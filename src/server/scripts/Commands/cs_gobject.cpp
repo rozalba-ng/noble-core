@@ -46,8 +46,9 @@ public:
         };
         static std::vector<ChatCommand> gobjectSetCommandTable =
         {
-            { "phase", rbac::RBAC_PERM_COMMAND_GOBJECT_SET_PHASE, false, &HandleGameObjectSetPhaseCommand,  "" },
-            { "state", rbac::RBAC_PERM_COMMAND_GOBJECT_SET_STATE, false, &HandleGameObjectSetStateCommand,  "" },
+            {"phase", rbac::RBAC_PERM_COMMAND_GOBJECT_SET_PHASE, false, &HandleGameObjectSetPhaseCommand, ""},
+            {"state", rbac::RBAC_PERM_COMMAND_GOBJECT_SET_STATE, false, &HandleGameObjectSetStateCommand, ""},
+            {"size",  rbac::RBAC_PERM_COMMAND_SET_SIZE,          false, &HandleSetSizeCommand,            ""},
         };
         static std::vector<ChatCommand> gobjectCommandTable =
         {
@@ -459,6 +460,77 @@ public:
         return true;
     }
 
+    static bool HandleSetSizeCommand(ChatHandler* handler, char const* args)
+    {
+        char* id = handler->extractKeyFromLink((char*)args, "Hgameobject");
+        if (!id)
+            return false;
+
+        ObjectGuid::LowType guidLow = atoi(id);
+        if (!guidLow)
+            return false;
+
+        GameObject* object = NULL;
+
+        // by DB guid
+        if (GameObjectData const* gameObjectData = sObjectMgr->GetGOData(guidLow))
+            object = handler->GetObjectGlobalyWithGuidOrNearWithDbGuid(guidLow, gameObjectData->id);
+
+        if (!object)
+        {
+            handler->PSendSysMessage(LANG_COMMAND_OBJNOTFOUND, guidLow);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        Player* player = handler->GetSession()->GetPlayer();
+
+        if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
+            return false;
+
+        if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() ) {
+            handler->PSendSysMessage("|cffff0000FORBIDDEN: it's not your object");
+            return false;
+        }
+
+        char* toScale = strtok(NULL, " ");
+        if (!toScale)
+        {
+            return false;
+        }
+        float scale = (float)atof(toScale);
+
+        if ((scale > 3 || scale < 0.05) && player->GetSession()->GetSecurity() < 1) {
+            handler->PSendSysMessage("|cffff0000FORBIDDEN: allowed size from 0.05 to 3");
+            return false;
+        }
+
+        Map* map = object->GetMap();
+
+        object->SetObjectScale(scale);
+        object->SetCustomScale(scale);
+        object->SaveToDB();
+
+        // Generate a completely new spawn with new guid
+        // 3.3.5a client caches recently deleted objects and brings them back to life
+        // when CreateObject block for this guid is received again
+        // however it entirely skips parsing that block and only uses already known location
+        object->Delete();
+
+        object = new GameObject();
+
+        if (!object->LoadGameObjectFromDB(guidLow, map))
+        {
+            delete object;
+            return false;
+        }
+
+        handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
+        handler->PSendSysMessage("Done! Set scale: %.2lf, object: %s", scale, object->GetGOInfo()->name.c_str()); //work
+        return true;
+
+    }
+
     //move selected object
     static bool HandleGameObjectMoveCommand(ChatHandler* handler, char const* args)
     {
@@ -486,8 +558,13 @@ public:
 
 		Player* player = handler->GetSession()->GetPlayer();
 
-		if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
+        if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
 			return false;
+
+        if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() ) {
+            handler->PSendSysMessage("|cffff0000FORBIDDEN: it's not your object");
+            return false;
+        }
 
 //		float oldname = 1.345;
 //        printf("test log message %.1lf  \n", oldname);
