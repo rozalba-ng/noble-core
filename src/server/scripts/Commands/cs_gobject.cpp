@@ -426,6 +426,16 @@ public:
             return false;
         }
 
+        Player* player = handler->GetSession()->GetPlayer();
+
+        if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
+            return false;
+
+        if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() ) {
+            handler->PSendSysMessage("|cffff0000FORBIDDEN: it's not your object");
+            return false;
+        }
+
         char* orientation = strtok(NULL, " ");
         float o;
 		float oz = 0.f, oy = 0.f, ox = 0.f;
@@ -443,8 +453,7 @@ public:
             }
         else
         {
-            Player* player = handler->GetSession()->GetPlayer();
-             oz = player->GetOrientation();
+            oz = player->GetOrientation();
         }
 
         Map* map = object->GetMap();
