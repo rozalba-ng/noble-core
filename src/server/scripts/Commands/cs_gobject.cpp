@@ -155,15 +155,19 @@ public:
 
         if (!object->Create(guidLow, objectInfo->entry, map, player->GetPhaseMaskForSpawn(), x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY, 0, player->GetGUID().GetCounter()))
         {
+            handler->PSendSysMessage('NOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
             delete object;
             return false;
         }
 
+        handler->PSendSysMessage('NOOOO11111111');
         if (spawntimeSecs)
         {
             uint32 value = atoi((char*)spawntimeSecs);
             object->SetRespawnTime(value);
         }
+
+        handler->PSendSysMessage('NOOOO2222222');
 
         // fill the gameobject data and save to the db
         object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), player->GetPhaseMaskForSpawn());
@@ -177,6 +181,7 @@ public:
         // this will generate a new guid if the object is in an instance
         if (!object->LoadGameObjectFromDB(guidLow, map))
         {
+            handler->PSendSysMessage('NOOO33333333');
             delete object;
             return false;
         }
