@@ -672,7 +672,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         void RemoveFromWorld() override;
         void CleanupsBeforeDelete(bool finalCleanup = true) override;
 
-        bool Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit = 0, uint32 owner_id = 0, float custom_scale = 0.0f);
+        bool Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit = 0, uint32 owner_id = 0, float custom_scale = 0.0f, bool create = false);
         void Update(uint32 p_time) override;
         GameObjectTemplate const* GetGOInfo() const { return m_goInfo; }
         GameObjectData const* GetGOData() const { return m_goData; }
@@ -700,8 +700,8 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         // overwrite WorldObject function for proper name localization
         std::string const& GetNameForLocaleIdx(LocaleConstant locale_idx) const override;
 
-        void SaveToDB(bool create = false);
-        void SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask, bool create = false);
+        void SaveToDB(bool create);
+        void SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask, bool create);
         bool LoadFromDB(ObjectGuid::LowType spawnId, Map* map) { return LoadGameObjectFromDB(spawnId, map, false); }
         bool LoadGameObjectFromDB(ObjectGuid::LowType spawnId, Map* map, bool addToMap = true);
         void DeleteFromDB();
