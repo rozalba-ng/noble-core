@@ -488,13 +488,13 @@ public:
         if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
             return false;
 
-        uint64 own_id = object->GetOwnerId();
-        uint64 pla_id = player->GetGUID();
-
-        handler->PSendSysMessage("owner: %d, player: %d", own_id, pla_id); //work
-
         if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() )
             return false;
+
+        if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() ) {
+            handler->PSendSysMessage("|cffff0000FORBIDDEN: it's not your object");
+            return false;
+        }
 
         char* toScale = strtok(NULL, " ");
         if (!toScale)
@@ -556,22 +556,13 @@ public:
 
 		Player* player = handler->GetSession()->GetPlayer();
 
-        uint64 own_id = object->GetOwnerId();
-        ObjectGuid pla_id = player->GetGUID();
-        uint64 own_guid = object->GetOwnerGUID();
-        ObjectGuid::LowType low_guid = pla_id.GetCounter();
-        Player* playChar = ObjectAccessor::FindPlayer(object->GetOwnerGUID());
-
-        handler->PSendSysMessage("owner_id: %d, player_guid: %d, owner guid:", own_id, pla_id, own_guid ); //work
-
-        if (playChar == player) {
-            handler->PSendSysMessage("owner correspondes"); //work
-        } else {
-            handler->PSendSysMessage("owner not correspondes"); //work
-        }
-
         if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
 			return false;
+
+        if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() ) {
+            handler->PSendSysMessage("|cffff0000FORBIDDEN: it's not your object");
+            return false;
+        }
 
 //		float oldname = 1.345;
 //        printf("test log message %.1lf  \n", oldname);
