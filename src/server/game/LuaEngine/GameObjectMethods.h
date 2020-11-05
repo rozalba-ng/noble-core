@@ -237,6 +237,16 @@ namespace LuaGameObject
     }
 
     /**
+     * Saves [GameObject] to the database
+     *
+     */
+    int SaveGobjectToDB(GameObject* go, bool create = false)
+    {
+        go->SaveToDB(create);
+        return 0;
+    }
+
+    /**
      * Removes [GameObject] from the world
      *
      * The object is no longer reachable after this and it is not respawned.

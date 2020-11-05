@@ -153,7 +153,7 @@ public:
         GameObject* object = new GameObject;
         ObjectGuid::LowType guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
 
-        if (!object->Create(guidLow, objectInfo->entry, map, player->GetPhaseMaskForSpawn(), x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY, 0, player->GetGUID().GetCounter()))
+        if (!object->Create(guidLow, objectInfo->entry, map, player->GetPhaseMaskForSpawn(), x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY, 0, player->GetGUID().GetCounter(), 0, true))
         {
             delete object;
             return false;
@@ -166,7 +166,7 @@ public:
         }
 
         // fill the gameobject data and save to the db
-        object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), player->GetPhaseMaskForSpawn());
+        object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), player->GetPhaseMaskForSpawn(), true);
         guidLow = object->GetSpawnId();
 
         // delete the old object and do a clean load from DB with a fresh new GameObject instance.
@@ -426,21 +426,40 @@ public:
             return false;
         }
 
+        Player* player = handler->GetSession()->GetPlayer();
+
+        if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
+            return false;
+
+        if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() ) {
+            handler->PSendSysMessage("|cffff0000FORBIDDEN: it's not your object");
+            return false;
+        }
+
         char* orientation = strtok(NULL, " ");
         float o;
+		float oz = 0.f, oy = 0.f, ox = 0.f;
 
         if (orientation)
-            o = (float)atof(orientation);
+            oz = float(atof(orientation));
+
+            orientation = strtok(nullptr, " ");
+            if (orientation)
+            {
+                oy = float(atof(orientation));
+                orientation = strtok(nullptr, " ");
+                if (orientation)
+                    ox = float(atof(orientation));
+            }
         else
         {
-            Player* player = handler->GetSession()->GetPlayer();
-            o = player->GetOrientation();
+            oz = player->GetOrientation();
         }
 
         Map* map = object->GetMap();
 
-        object->Relocate(object->GetPositionX(), object->GetPositionY(), object->GetPositionZ(), o);
-        object->UpdateRotationFields();
+        object->Relocate(object->GetPositionX(), object->GetPositionY(), object->GetPositionZ(), oz);
+        object->SetLocalRotationAngles(oz, oy, ox);
         object->SaveToDB();
 
         // Generate a completely new spawn with new guid
