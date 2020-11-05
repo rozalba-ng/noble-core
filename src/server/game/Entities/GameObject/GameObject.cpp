@@ -2210,6 +2210,64 @@ void GameObject::UpdateRotationFields(float rotation2 /*=0.0f*/, float rotation3
     SetFloatValue(GAMEOBJECT_PARENTROTATION+3, rotation3);
 }
 
+void GameObject::UpdatePackedRotation()
+{
+    static const int32 PACK_YZ = 1 << 20;
+    static const int32 PACK_X = PACK_YZ << 1;
+
+    static const int32 PACK_YZ_MASK = (PACK_YZ << 1) - 1;
+    static const int32 PACK_X_MASK = (PACK_X << 1) - 1;
+
+    int8 w_sign = (m_localRotation.w >= 0.f ? 1 : -1);
+    int64 x = int32(m_localRotation.x * PACK_X)  * w_sign & PACK_X_MASK;
+    int64 y = int32(m_localRotation.y * PACK_YZ) * w_sign & PACK_YZ_MASK;
+    int64 z = int32(m_localRotation.z * PACK_YZ) * w_sign & PACK_YZ_MASK;
+    m_packedRotation = z | (y << 21) | (x << 42);
+}
+
+void GameObject::SetLocalRotation(float qx, float qy, float qz, float qw)
+{
+    G3D::Quat rotation(qx, qy, qz, qw);
+    rotation.unitize();
+    m_localRotation.x = rotation.x;
+    m_localRotation.y = rotation.y;
+    m_localRotation.z = rotation.z;
+    m_localRotation.w = rotation.w;
+    UpdatePackedRotation();
+}
+
+void GameObject::SetParentRotation(QuaternionData const& rotation)
+{
+    SetFloatValue(GAMEOBJECT_PARENTROTATION + 0, rotation.x);
+    SetFloatValue(GAMEOBJECT_PARENTROTATION + 1, rotation.y);
+    SetFloatValue(GAMEOBJECT_PARENTROTATION + 2, rotation.z);
+    SetFloatValue(GAMEOBJECT_PARENTROTATION + 3, rotation.w);
+}
+
+void GameObject::SetLocalRotationAngles(float z_rot, float y_rot, float x_rot)
+{
+    G3D::Quat quat(G3D::Matrix3::fromEulerAnglesZYX(z_rot, y_rot, x_rot));
+    SetLocalRotation(quat.x, quat.y, quat.z, quat.w);
+}
+
+QuaternionData GameObject::GetWorldRotation() const
+{
+    QuaternionData localRotation = GetLocalRotation();
+    if (Transport* transport = GetTransport())
+    {
+        QuaternionData worldRotation = transport->GetWorldRotation();
+
+        G3D::Quat worldRotationQuat(worldRotation.x, worldRotation.y, worldRotation.z, worldRotation.w);
+        G3D::Quat localRotationQuat(localRotation.x, localRotation.y, localRotation.z, localRotation.w);
+
+        G3D::Quat resultRotation = localRotationQuat * worldRotationQuat;
+
+        return QuaternionData(resultRotation.x, resultRotation.y, resultRotation.z, resultRotation.w);
+    }
+    return localRotation;
+}
+
+
 void GameObject::ModifyHealth(int32 change, Unit* attackerOrHealer /*= nullptr*/, uint32 spellId /*= 0*/)
 {
     if (!m_goValue.Building.MaxHealth || !change)
