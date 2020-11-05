@@ -212,13 +212,11 @@ GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map *map, uint32
     ASSERT(map);
     SetMap(map);
 
-    if (create) {
-        QuaternionData rotation;
-        rotation.x = rotation0;
-        rotation.y = rotation1;
-        rotation.z = rotation2;
-        rotation.w = rotation3;
-    }
+    QuaternionData rotation;
+    rotation.x = rotation0;
+    rotation.y = rotation1;
+    rotation.z = rotation2;
+    rotation.w = rotation3;
 
     Relocate(x, y, z, ang);
     m_stationaryPosition.Relocate(x, y, z, ang);
