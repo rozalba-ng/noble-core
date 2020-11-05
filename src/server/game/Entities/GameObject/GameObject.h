@@ -700,8 +700,8 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         // overwrite WorldObject function for proper name localization
         std::string const& GetNameForLocaleIdx(LocaleConstant locale_idx) const override;
 
-        void SaveToDB(bool create);
-        void SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask, bool create);
+        void SaveToDB(bool create = false);
+        void SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask, bool create = false);
         bool LoadFromDB(ObjectGuid::LowType spawnId, Map* map) { return LoadGameObjectFromDB(spawnId, map, false); }
         bool LoadGameObjectFromDB(ObjectGuid::LowType spawnId, Map* map, bool addToMap = true);
         void DeleteFromDB();

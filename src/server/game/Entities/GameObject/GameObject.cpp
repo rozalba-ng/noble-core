@@ -1009,7 +1009,7 @@ bool GameObject::TakeContainerItem(Player* player, uint32 slotId, uint8 playerBa
 	return false;
 }
 
-void GameObject::SaveToDB(bool create = false)
+void GameObject::SaveToDB(bool create)
 {
     // this should only be used when the gameobject has already been loaded
     // preferably after adding to map, because mapid may not be valid otherwise
@@ -1023,7 +1023,7 @@ void GameObject::SaveToDB(bool create = false)
     SaveToDB(GetMapId(), data->spawnMask, data->phaseMask, create);
 }
 
-void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask, bool create = false)
+void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask, bool create)
 {
     const GameObjectTemplate* goI = GetGOInfo();
 
