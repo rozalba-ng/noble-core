@@ -205,15 +205,21 @@ void GameObject::RemoveFromWorld()
     }
 }
 
-bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit, uint32 owner_id, float custom_scale)
-{
+bool
+GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map *map, uint32 phaseMask, float x, float y, float z,
+                   float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress,
+                   GOState go_state, uint32 artKit, uint32 owner_id, float custom_scale, bool create = false) {
     ASSERT(map);
     SetMap(map);
-	QuaternionData rotation;
-	rotation.x = rotation0;
-	rotation.y = rotation1;
-	rotation.z = rotation2;
-	rotation.w = rotation3;
+
+    if (create) {
+        QuaternionData rotation;
+        rotation.x = rotation0;
+        rotation.y = rotation1;
+        rotation.z = rotation2;
+        rotation.w = rotation3;
+    }
+
     Relocate(x, y, z, ang);
     m_stationaryPosition.Relocate(x, y, z, ang);
     if (!IsPositionValid())
@@ -258,9 +264,16 @@ bool GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map* map, u
         return false;
     }
 
-    SetLocalRotation(rotation.x, rotation.y, rotation.z, rotation.w);
-	QuaternionData parentRotation;
-	SetParentRotation(parentRotation);
+    if (create) {
+        SetFloatValue(GAMEOBJECT_PARENTROTATION+0, rotation0);
+        SetFloatValue(GAMEOBJECT_PARENTROTATION+1, rotation1);
+
+        UpdateRotationFields(rotation2, rotation3);
+    } else {
+        SetLocalRotation(rotation.x, rotation.y, rotation.z, rotation.w);
+        QuaternionData parentRotation;
+        SetParentRotation(parentRotation);
+    }
 
     if (custom_scale) {
         SetObjectScale(custom_scale);
@@ -996,7 +1009,7 @@ bool GameObject::TakeContainerItem(Player* player, uint32 slotId, uint8 playerBa
 	return false;
 }
 
-void GameObject::SaveToDB()
+void GameObject::SaveToDB(bool create = false)
 {
     // this should only be used when the gameobject has already been loaded
     // preferably after adding to map, because mapid may not be valid otherwise
@@ -1007,10 +1020,10 @@ void GameObject::SaveToDB()
         return;
     }
 
-    SaveToDB(GetMapId(), data->spawnMask, data->phaseMask);
+    SaveToDB(GetMapId(), data->spawnMask, data->phaseMask, create);
 }
 
-void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
+void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask, bool create = false)
 {
     const GameObjectTemplate* goI = GetGOInfo();
 
@@ -1031,10 +1044,19 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     data.posY = GetPositionY();
     data.posZ = GetPositionZ();
     data.orientation = GetOrientation();
-    data.rotation0 = m_localRotation.x;
-    data.rotation1 = m_localRotation.y;
-    data.rotation2 = m_localRotation.z;
-    data.rotation3 = m_localRotation.w;
+
+    if (create) {
+        data.rotation0 = GetFloatValue(GAMEOBJECT_PARENTROTATION+0);
+        data.rotation1 = GetFloatValue(GAMEOBJECT_PARENTROTATION+1);
+        data.rotation2 = GetFloatValue(GAMEOBJECT_PARENTROTATION+2);
+        data.rotation3 = GetFloatValue(GAMEOBJECT_PARENTROTATION+3);
+    } else {
+        data.rotation0 = m_localRotation.x;
+        data.rotation1 = m_localRotation.y;
+        data.rotation2 = m_localRotation.z;
+        data.rotation3 = m_localRotation.w;
+    }
+
     data.spawntimesecs = m_spawnedByDefault ? m_respawnDelayTime : -(int32)m_respawnDelayTime;
     data.animprogress = GetGoAnimProgress();
     data.go_state = GetGoState();
@@ -1063,10 +1085,19 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     stmt->setFloat(index++, GetPositionY());
     stmt->setFloat(index++, GetPositionZ());
     stmt->setFloat(index++, GetOrientation());
-    stmt->setFloat(index++, m_localRotation.x);
-    stmt->setFloat(index++, m_localRotation.y);
-    stmt->setFloat(index++, m_localRotation.z);
-    stmt->setFloat(index++, m_localRotation.w);
+
+    if (create) {
+        stmt->setFloat(index++, GetFloatValue(GAMEOBJECT_PARENTROTATION));
+        stmt->setFloat(index++, GetFloatValue(GAMEOBJECT_PARENTROTATION+1));
+        stmt->setFloat(index++, GetFloatValue(GAMEOBJECT_PARENTROTATION+2));
+        stmt->setFloat(index++, GetFloatValue(GAMEOBJECT_PARENTROTATION+3));
+    } else {
+        stmt->setFloat(index++, m_localRotation.x);
+        stmt->setFloat(index++, m_localRotation.y);
+        stmt->setFloat(index++, m_localRotation.z);
+        stmt->setFloat(index++, m_localRotation.w);
+    }
+
     stmt->setInt32(index++, int32(m_respawnDelayTime));
     stmt->setUInt8(index++, GetGoAnimProgress());
     stmt->setUInt8(index++, uint8(GetGoState()));
