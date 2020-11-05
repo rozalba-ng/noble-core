@@ -560,7 +560,7 @@ public:
         ObjectGuid pla_id = player->GetGUID();
         uint64 own_guid = object->GetOwnerGUID();
         ObjectGuid::LowType low_guid = pla_id.GetCounter();
-        Player* playChar = object->getOwner();
+        Player* playChar = object->GetOwner();
 
         handler->PSendSysMessage("owner_id: %d, player_guid: %d, owner guid:", own_id, pla_id, own_guid ); //work
 
