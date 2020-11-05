@@ -1637,7 +1637,7 @@ namespace LuaGlobalFunctions
 #elif defined(CLASSIC)
                 pGameObj->SaveToDB(map->GetId());
 #else
-                pGameObj->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+                pGameObj->SaveGobjectToDB((1 << map->GetSpawnMode()), true);
 #endif
 
                 // this will generate a new guid if the object is in an instance
@@ -1776,7 +1776,7 @@ namespace LuaGlobalFunctions
             if (durorresptime)
                 object->SetRespawnTime(durorresptime);
 
-			//ÍÀÄÎ ÂÑÒÀÂÈÒÜ Â ÊÎÄ ÀÍÄÐÅß íà÷àëî Ñàøà
+			//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			if (save)
 			{
 				// fill the gameobject data and save to the db
@@ -1796,7 +1796,7 @@ namespace LuaGlobalFunctions
 
 				eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGOData(guidLow));
 			}
-			//ÍÀÄÎ ÂÑÒÀÂÈÒÜ Â ÊÎÄ ÀÍÄÐÅß êîíåö Ñàøà
+			//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             else
                 map->AddToMap(object);
