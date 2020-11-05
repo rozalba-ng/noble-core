@@ -55,6 +55,7 @@ public:
             { "delete",   rbac::RBAC_PERM_COMMAND_GOBJECT_DELETE,   false, &HandleGameObjectDeleteCommand,    ""       },
             { "info",     rbac::RBAC_PERM_COMMAND_GOBJECT_INFO,     false, &HandleGameObjectInfoCommand,      ""       },
             { "move",     rbac::RBAC_PERM_COMMAND_GOBJECT_MOVE,     false, &HandleGameObjectMoveCommand,      ""       },
+            { "size",     rbac::RBAC_PERM_COMMAND_SET_SIZE,         false, &HandleSetSizeCommand,             ""       },
             { "near",     rbac::RBAC_PERM_COMMAND_GOBJECT_NEAR,     false, &HandleGameObjectNearCommand,      ""       },
             { "target",   rbac::RBAC_PERM_COMMAND_GOBJECT_TARGET,   false, &HandleGameObjectTargetCommand,    ""       },
             { "turn",     rbac::RBAC_PERM_COMMAND_GOBJECT_TURN,     false, &HandleGameObjectTurnCommand,      ""       },
@@ -457,6 +458,75 @@ public:
 
         handler->PSendSysMessage(LANG_COMMAND_TURNOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
         return true;
+    }
+
+    static bool HandleSetSizeCommand(ChatHandler* handler, char const* args)
+    {
+        char* id = handler->extractKeyFromLink((char*)args, "Hgameobject");
+        if (!id)
+            return false;
+
+        ObjectGuid::LowType guidLow = atoi(id);
+        if (!guidLow)
+            return false;
+
+        GameObject* object = NULL;
+
+        // by DB guid
+        if (GameObjectData const* gameObjectData = sObjectMgr->GetGOData(guidLow))
+            object = handler->GetObjectGlobalyWithGuidOrNearWithDbGuid(guidLow, gameObjectData->id);
+
+        if (!object)
+        {
+            handler->PSendSysMessage(LANG_COMMAND_OBJNOTFOUND, guidLow);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        Player* player = handler->GetSession()->GetPlayer();
+
+        if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
+            return false;
+
+        uint64 own_id = object->GetOwnerId();
+        uint64 pla_id = player->GetGUID();
+
+        handler->PSendSysMessage("owner: %d, player: %d", own_id, pla_id); //work
+
+        if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() )
+            return false;
+
+        char* toScale = strtok(NULL, " ");
+        if (!toScale)
+        {
+            return false;
+        }
+        float scale = (float)atof(toScale);
+
+        Map* map = object->GetMap();
+
+        object->SetObjectScale(scale);
+        object->SetCustomScale(scale);
+        object->SaveToDB();
+
+        // Generate a completely new spawn with new guid
+        // 3.3.5a client caches recently deleted objects and brings them back to life
+        // when CreateObject block for this guid is received again
+        // however it entirely skips parsing that block and only uses already known location
+        object->Delete();
+
+        object = new GameObject();
+
+        if (!object->LoadGameObjectFromDB(guidLow, map))
+        {
+            delete object;
+            return false;
+        }
+
+        handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetSpawnId(), object->GetGOInfo()->name.c_str(), object->GetSpawnId());
+        handler->PSendSysMessage("Done! Set scale: %.2lf, object: %s", scale, object->GetGOInfo()->name.c_str()); //work
+        return true;
+
     }
 
     //move selected object
