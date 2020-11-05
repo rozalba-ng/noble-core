@@ -488,9 +488,6 @@ public:
         if (object->GetEntry() >= 530000 && object->GetEntry() <= 540000 && player->GetSession()->GetSecurity() < 2)
             return false;
 
-        if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() )
-            return false;
-
         if (player->GetSession()->GetSecurity() < 1 && object->GetOwnerId() != player->GetGUID() ) {
             handler->PSendSysMessage("|cffff0000FORBIDDEN: it's not your object");
             return false;
@@ -502,6 +499,11 @@ public:
             return false;
         }
         float scale = (float)atof(toScale);
+
+        if ((scale > 3 || scale < 0.05) && player->GetSession()->GetSecurity() < 1) {
+            handler->PSendSysMessage("|cffff0000FORBIDDEN: allowed size from 0.05 to 3");
+            return false;
+        }
 
         Map* map = object->GetMap();
 
