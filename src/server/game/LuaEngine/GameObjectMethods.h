@@ -404,7 +404,7 @@ namespace LuaGameObject
 
 		Map* map = go->GetMap();
 
-		go->Relocate(x, y, z, o);
+		go->RelocateGameObject(x, y, z, o);
 		go->SaveToDB();
 
 		// Generate a completely new spawn with new guid
