@@ -2223,7 +2223,6 @@ std::string const & GameObject::GetNameForLocaleIdx(LocaleConstant loc_idx) cons
 
 void GameObject::UpdateRotationFields(float rotation2 /*=0.0f*/, float rotation3 /*=0.0f*/)
 {
-    printf("entered %.1lf and %.1lf \n", rotation2, rotation3);
     static double const atan_pow = atan(pow(2.0f, -20.0f));
 
     double f_rot1 = std::sin(GetOrientation() / 2.0f);
@@ -2247,8 +2246,6 @@ void GameObject::UpdateRotationFields(float rotation2 /*=0.0f*/, float rotation3
         rotation2 = (float)f_rot1;
         rotation3 = (float)f_rot2;
     }
-
-    printf("entered %.1lf and %.1lf \n", rotation2, rotation3);
 
     SetFloatValue(GAMEOBJECT_PARENTROTATION+2, rotation2);
     SetFloatValue(GAMEOBJECT_PARENTROTATION+3, rotation3);
