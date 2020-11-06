@@ -405,7 +405,7 @@ namespace LuaGameObject
 		Map* map = go->GetMap();
 
 		go->Relocate(x, y, z, o);
-        go->UpdateRotationFields(0.0f,0.0f);
+        go->UpdateRotationFields(std::sin(o / 2.0f), std::cos(o / 2.0f));
 		go->SaveToDB();
 
 		// Generate a completely new spawn with new guid
