@@ -205,6 +205,17 @@ void GameObject::RemoveFromWorld()
     }
 }
 
+void GameObject::RelocateGameObject(float x, float y, float z, float ang)
+{
+    Relocate(x, y, z, ang);
+
+    double f_rot2 = std::sin(GetOrientation() / 2.0f);
+    double f_rot3 = std::cos(GetOrientation() / 2.0f);
+
+    SetRotation2((float)f_rot2);
+    SetRotation3((float)f_rot3);
+}
+
 bool
 GameObject::Create(ObjectGuid::LowType guidlow, uint32 name_id, Map *map, uint32 phaseMask, float x, float y, float z,
                    float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress,
@@ -1013,8 +1024,6 @@ void GameObject::SaveToDB(bool create)
     // preferably after adding to map, because mapid may not be valid otherwise
     GameObjectData const* data = sObjectMgr->GetGOData(m_spawnId);
 
-    printf("SaveToDB  entered \n");
-
     if (!data)
     {
         TC_LOG_ERROR("misc", "GameObject::SaveToDB failed, cannot get gameobject data!");
@@ -1030,8 +1039,6 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask, bool 
 
     if (!goI)
         return;
-
-    printf("SaveToDB 2 entered \n");
 
     if (!m_spawnId)
         m_spawnId = sObjectMgr->GenerateGameObjectSpawnId();
@@ -1049,13 +1056,11 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask, bool 
     data.orientation = GetOrientation();
 
     if (create) {
-        printf("SaveToDB 3  entered \n");
         data.rotation0 = GetFloatValue(GAMEOBJECT_PARENTROTATION+0);
         data.rotation1 = GetFloatValue(GAMEOBJECT_PARENTROTATION+1);
         data.rotation2 = GetFloatValue(GAMEOBJECT_PARENTROTATION+2);
         data.rotation3 = GetFloatValue(GAMEOBJECT_PARENTROTATION+3);
     } else {
-        printf("SaveToDB 4 entered \n");
         data.rotation0 = m_localRotation.x;
         data.rotation1 = m_localRotation.y;
         data.rotation2 = m_localRotation.z;

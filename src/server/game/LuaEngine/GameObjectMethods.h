@@ -404,9 +404,8 @@ namespace LuaGameObject
 
 		Map* map = go->GetMap();
 
-		go->Relocate(x, y, z, o);
-        go->UpdateRotationFields(std::sin(o / 2.0f), std::cos(o / 2.0f));
-		go->SaveToDB(true);
+		go->RelocateGameObject(x, y, z, o);
+		go->SaveToDB();
 
 		// Generate a completely new spawn with new guid
 		// 3.3.5a client caches recently deleted objects and brings them back to life

@@ -682,6 +682,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         void SetLocalRotationAngles(float z_rot, float y_rot, float x_rot);
         void SetLocalRotation(float qx, float qy, float qz, float qw);
         void SetParentRotation(QuaternionData const& rotation);      // transforms(rotates) transport's path
+        void RelocateGameObject(float x, float y, float z, float orientation);
 		
         QuaternionData const& GetLocalRotation() const { return m_localRotation; }
         int64 GetPackedLocalRotation() const { return m_packedRotation; }
@@ -723,6 +724,8 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
 
         float GetCustomScale() const { return m_custom_scale; }
         void SetCustomScale(float scale) { m_custom_scale = scale; }
+        void SetRotation2(float val) { m_localRotation.z = val; }
+        void SetRotation3(float val) { m_localRotation.w = val; }
 
 		uint32 GetContainerSize() const { return m_containerSize; }
 
