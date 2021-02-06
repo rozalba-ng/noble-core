@@ -16818,6 +16818,12 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     // This should be done before dismiss, because there may be some aura removal
     Vehicle* vehicle = m_vehicle->RemovePassenger(this);
 
+    if (!vehicle)
+    {
+        TC_LOG_ERROR("entities.vehicle", "RemovePassenger() couldn't remove current unit from vehicle. Debug info: %s", GetDebugInfo().c_str());
+        return;
+    }
+
     Player* player = ToPlayer();
 
     // If the player is on mounted duel and exits the mount, he should immediatly lose the duel
