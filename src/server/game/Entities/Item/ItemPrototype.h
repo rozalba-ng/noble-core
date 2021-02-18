@@ -74,10 +74,14 @@ enum ItemModType
 	ITEM_MOD_ROLE_VIT				  = 53,
 	ITEM_MOD_ROLE_DEX				  = 54,
 	ITEM_MOD_ROLE_WILL				  = 55,
-	ITEM_MOD_ROLE_SPI		          = 56
+	ITEM_MOD_ROLE_SPI		          = 56,
+    ITEM_MOD_ROLE_CHARISM		      = 57,
+    ITEM_MOD_ROLE_AVOID		          = 58,
+    ITEM_MOD_ROLE_LUCK		          = 59,
+    ITEM_MOD_ROLE_HIDDEN		      = 60,
 };
 
-#define MAX_ITEM_MOD                    57
+#define MAX_ITEM_MOD                    61
 
 enum ItemSpelltriggerType
 {

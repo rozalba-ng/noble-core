@@ -284,10 +284,10 @@ Unit::Unit(bool isWorldObject) :
     _oldFactionId = 0;
     _isWalkingBeforeCharm = false;
 
-	for (uint8 i = 0; i < 7; ++i) // ROLE STAT SYSTEM
+	for (uint8 i = 0; i < 11; ++i) // ROLE STAT SYSTEM
 		role_stats[i] = 0;
 
-	for (uint8 i = 0; i < 7; ++i)
+	for (uint8 i = 0; i < 11; ++i)
 		role_stats_mods[i] = 0;
 }
 
@@ -12864,7 +12864,7 @@ bool Unit::HandleStatModifier(UnitMods unitMod, UnitModifierType modifierType, f
         case UNIT_MOD_STAT_SPIRIT:         UpdateStats(GetStatByAuraGroup(unitMod));  break;
 
         case UNIT_MOD_ARMOR:               UpdateArmor();           break;
-        case UNIT_MOD_HEALTH:              UpdateMaxHealth();       break;
+        case UNIT_MOD_HEALTH:              UpdateMaxHealth();       break; // sasha here stat bunus health
 
         case UNIT_MOD_MANA:
         case UNIT_MOD_RAGE:
@@ -13067,8 +13067,8 @@ void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROL
 
 uint32 Unit::GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
 {
-	if (stat < 7)
-		if (role_stats[stat] > 10)
+	if (stat <= 10) // 10 это характеристики с 0 по 10
+		if (role_stats[stat] > 10) //а тут это максимальное значение характеристики, больше не вкачать
 			return 10;
 		else
 			return role_stats[stat];
