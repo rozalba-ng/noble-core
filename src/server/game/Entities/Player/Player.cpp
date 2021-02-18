@@ -17978,10 +17978,10 @@ void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
 			SetRoleStat(4, fields[4].GetUInt32(), true, false);
 			SetRoleStat(5, fields[5].GetUInt32(), true, false);
 			SetRoleStat(6, fields[6].GetUInt32(), true, false);
-            SetRoleStat(6, fields[7].GetUInt32(), true, false);
-            SetRoleStat(6, fields[8].GetUInt32(), true, false);
-            SetRoleStat(6, fields[9].GetUInt32(), true, false);
-            SetRoleStat(6, fields[10].GetUInt32(), true, false);
+            SetRoleStat(7, fields[7].GetUInt32(), true, false);
+            SetRoleStat(8, fields[8].GetUInt32(), true, false);
+            SetRoleStat(9, fields[9].GetUInt32(), true, false);
+            SetRoleStat(10, fields[10].GetUInt32(), true, false);
 			sEluna->OnRoleStatUpdate(this, 0);
 		} while (result->NextRow());
 	}
