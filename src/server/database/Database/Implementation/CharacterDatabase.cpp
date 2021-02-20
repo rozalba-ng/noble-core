@@ -621,7 +621,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 	PrepareStatement(CHAR_DEL_CONTAINER_ITEMS, "DELETE FROM container_item WHERE ContainerID = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_INS_CONTAINER_ITEM, "INSERT INTO container_item (ContainerID, SlotID, item_guid) VALUES (?, ?, ?)", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_SEL_CHARACTER_ROLE_STATS, "SELECT STR, AGI, INTEL, VIT, DEX, WILL, SPI, CHA, AVOID, LUCK, HID   FROM character_role_stats WHERE guid = ?", CONNECTION_ASYNC); // ROLE STAT SYSTEM
+	PrepareStatement(CHAR_SEL_CHARACTER_ROLE_STATS, "SELECT STR, AGI, INTEL, VIT, DEX, WILL, SPI, CHA, AVOID, LUCK, HID, INIT, PER   FROM character_role_stats WHERE guid = ?", CONNECTION_ASYNC); // ROLE STAT SYSTEM
 	//PrepareStatement(CHAR_DEL_CHARACTER_MOUNT, "DELETE FROM character_mount WHERE owner_id = ? AND creature_entry = ?", CONNECTION_ASYNC);
 	//PrepareStatement(CHAR_INS_CHARACTER_MOUNT, "INSERT INTO character_mount (owner_id, creature_entry, item_1, item_2, item_3) VALUES (?, ?, ?, ?, ?)", CONNECTION_ASYNC);
 }

@@ -79,9 +79,11 @@ enum ItemModType
     ITEM_MOD_ROLE_AVOID		          = 58,
     ITEM_MOD_ROLE_LUCK		          = 59,
     ITEM_MOD_ROLE_HIDDEN		      = 60,
+    ITEM_MOD_ROLE_INIT	              = 61,
+    ITEM_MOD_ROLE_PER	              = 62, // perception
 };
 
-#define MAX_ITEM_MOD                    61
+#define MAX_ITEM_MOD                    63
 
 enum ItemSpelltriggerType
 {

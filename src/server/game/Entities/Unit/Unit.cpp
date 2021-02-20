@@ -284,10 +284,10 @@ Unit::Unit(bool isWorldObject) :
     _oldFactionId = 0;
     _isWalkingBeforeCharm = false;
 
-	for (uint8 i = 0; i < 11; ++i) // ROLE STAT SYSTEM
+	for (uint8 i = 0; i < 13; ++i) // ROLE STAT SYSTEM
 		role_stats[i] = 0;
 
-	for (uint8 i = 0; i < 11; ++i)
+	for (uint8 i = 0; i < 13; ++i)
 		role_stats_mods[i] = 0;
 }
 
@@ -13067,7 +13067,7 @@ void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROL
 
 uint32 Unit::GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
 {
-	if (stat <= 10) // 10 это характеристики с 0 по 10
+	if (stat <= 12) // 12 это характеристики с 0 по 12
 		if (role_stats[stat] > 10) //а тут это максимальное значение характеристики, больше не вкачать
 			return 10;
 		else
