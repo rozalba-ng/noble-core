@@ -17972,7 +17972,7 @@ void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
 				TC_LOG_ERROR("entities.player", "Player::_LoadRoleStats: Player '%s' try to load more than 8 stats.", GetName().c_str());
 				return;
 			}
-            if ((fields[7].GetUInt32() + fields[8].GetUInt32() + fields[9].GetUInt32() + fields[10].GetUInt32()) > 15)
+            if ((fields[7].GetUInt32() + fields[8].GetUInt32() + fields[9].GetUInt32() + fields[10].GetUInt32() + fields[11].GetUInt32() + fields[12].GetUInt32()) > 15)
             {
                 TC_LOG_ERROR("entities.player", "Player::_LoadRoleStats: Player '%s' try to load more than 10 additional stats.", GetName().c_str());
                 return;
