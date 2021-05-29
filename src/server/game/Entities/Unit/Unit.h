@@ -2258,8 +2258,8 @@ class TC_GAME_API Unit : public WorldObject
 
         void DisableSpline();
 
-		uint32 role_stats[7]; // ROLE STAT SYSTEM
-		uint32 role_stats_mods[7];
+		uint32 role_stats[13]; // ROLE STAT SYSTEM
+		uint32 role_stats_mods[13];
     private:
         bool IsTriggeredAtSpellProcEvent(Unit* victim, Aura* aura, SpellInfo const* procSpell, uint32 procFlag, uint32 procExtra, WeaponAttackType attType, bool isVictim, bool active, SpellProcEventEntry const*& spellProcEvent);
         bool RollProcResult(Unit* victim, Aura* aura, WeaponAttackType attType, bool isVictim, SpellProcEventEntry const* spellProcEvent);

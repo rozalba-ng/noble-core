@@ -13851,6 +13851,24 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
 						case ITEM_MOD_ROLE_SPI:
 							SetRoleStat(6, enchant_amount, apply);
 							break;
+                        case ITEM_MOD_ROLE_CHARISM:
+                            SetRoleStat(7, enchant_amount, apply);
+                        break;
+                        case ITEM_MOD_ROLE_AVOID:
+                            SetRoleStat(8, enchant_amount, apply);
+                        break;
+                        case ITEM_MOD_ROLE_LUCK:
+                            SetRoleStat(9, enchant_amount, apply);
+                        break;
+                        case ITEM_MOD_ROLE_HIDDEN:
+                            SetRoleStat(10, enchant_amount, apply);
+                        break;
+                        case ITEM_MOD_ROLE_INIT:
+                            SetRoleStat(11, enchant_amount, apply);
+                        break;
+                        case ITEM_MOD_ROLE_PER:
+                            SetRoleStat(12, enchant_amount, apply);
+                        break;
                         case ITEM_MOD_SPELL_HEALING_DONE:   // deprecated
                         case ITEM_MOD_SPELL_DAMAGE_DONE:    // deprecated
                         default:
@@ -17941,6 +17959,7 @@ void Player::_LoadInventory(PreparedQueryResult result, uint32 timeDiff)
     _ApplyAllItemMods();
 }
 
+// SITE ROLE STAT AMOUNT
 void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
 {
 	if (result)
@@ -17948,11 +17967,16 @@ void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
 		do
 		{
 			Field* fields = result->Fetch();
-			if ((fields[0].GetUInt32() + fields[1].GetUInt32() + fields[2].GetUInt32() + fields[3].GetUInt32() + fields[4].GetUInt32() + fields[5].GetUInt32() + fields[6].GetUInt32()) > 8)
+			if ((fields[0].GetUInt32() + fields[1].GetUInt32() + fields[2].GetUInt32() + fields[3].GetUInt32() + fields[4].GetUInt32() + fields[5].GetUInt32() + fields[6].GetUInt32()) > 15) // меняю с 8 на 15 НО НАДО КОНТРОЛИРОВАТЬ НА СТОРОНЕ БАЗ И САЙТА ОЧЕНЬ СЕРЬЕЗНО, на сайте ограничение на 8 основных статов! (это запас на будущее распределение)
 			{
 				TC_LOG_ERROR("entities.player", "Player::_LoadRoleStats: Player '%s' try to load more than 8 stats.", GetName().c_str());
 				return;
 			}
+            if ((fields[7].GetUInt32() + fields[8].GetUInt32() + fields[9].GetUInt32() + fields[10].GetUInt32() + fields[11].GetUInt32() + fields[12].GetUInt32()) > 15)
+            {
+                TC_LOG_ERROR("entities.player", "Player::_LoadRoleStats: Player '%s' try to load more than 10 additional stats.", GetName().c_str());
+                return;
+            }
 			SetRoleStat(0, fields[0].GetUInt32(), true, false);
 			SetRoleStat(1, fields[1].GetUInt32(), true, false);
 			SetRoleStat(2, fields[2].GetUInt32(), true, false);
@@ -17960,6 +17984,12 @@ void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
 			SetRoleStat(4, fields[4].GetUInt32(), true, false);
 			SetRoleStat(5, fields[5].GetUInt32(), true, false);
 			SetRoleStat(6, fields[6].GetUInt32(), true, false);
+            SetRoleStat(7, fields[7].GetUInt32(), true, false);
+            SetRoleStat(8, fields[8].GetUInt32(), true, false);
+            SetRoleStat(9, fields[9].GetUInt32(), true, false);
+            SetRoleStat(10, fields[10].GetUInt32(), true, false);
+            SetRoleStat(11, fields[11].GetUInt32(), true, false);
+            SetRoleStat(12, fields[12].GetUInt32(), true, false);
 			sEluna->OnRoleStatUpdate(this, 0);
 		} while (result->NextRow());
 	}
