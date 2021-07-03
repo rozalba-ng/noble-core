@@ -3557,33 +3557,109 @@ void AuraEffect::HandleAuraModStat(AuraApplication const* aurApp, uint8 mode, bo
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    if (GetMiscValue() < -2 || GetMiscValue() > 4)
-    {
-        TC_LOG_ERROR("spells", "WARNING: Spell %u effect %u has an unsupported misc value (%i) for SPELL_AURA_MOD_STAT ", GetId(), GetEffIndex(), GetMiscValue());
-        return;
-    }
+    // 7 - all role stats attak, 8 - all defs, 9 - all additional, 10 - ROLE_STAT_STR, 22 - ROLE_STAT_PER
+    if (GetMiscValue() >= 7 && GetMiscValue() <= 22) {
+        Unit* target = aurApp->GetTarget();
+        if (target->GetTypeId() != TYPEID_PLAYER) {
+            return;
+        }
 
-    Unit* target = aurApp->GetTarget();
-    int32 spellGroupVal = target->GetHighestExclusiveSameEffectSpellGroupValue(this, SPELL_AURA_MOD_STAT, true, GetMiscValue());
-    if (abs(spellGroupVal) >= abs(GetAmount()))
-        return;
-
-    for (int32 i = STAT_STRENGTH; i < MAX_STATS; i++)
-    {
-        // -1 or -2 is all stats (misc < -2 checked in function beginning)
-        if (GetMiscValue() < 0 || GetMiscValue() == i)
+        uint32 enchant_amount = (uint32)GetAmount();
+        if (enchant_amount == 0) {
+            return;
+        }
+        switch (GetMiscValue()) // хардкожу, отнимая 10, чтоб тупо заюзать SPELL_AURA_MOD_STAT, а ролевые статы у нас от 0 до 12, и мне почти не стыдно
         {
-            if (spellGroupVal)
-            {
-                target->HandleStatModifier(UnitMods(UNIT_MOD_STAT_START + i), TOTAL_VALUE, float(spellGroupVal), !apply);
-                if (target->GetTypeId() == TYPEID_PLAYER || target->IsPet())
-                    target->ApplyStatBuffMod(Stats(i), float(spellGroupVal), !apply);
-            }
+            case 7:
+                target->SetRoleStat(0, enchant_amount, apply);
+                target->SetRoleStat(1, enchant_amount, apply);
+                target->SetRoleStat(2, enchant_amount, apply);
+                break;
+            case 8:
+                target->SetRoleStat(3, enchant_amount, apply);
+                target->SetRoleStat(4, enchant_amount, apply);
+                target->SetRoleStat(5, enchant_amount, apply);
+                target->SetRoleStat(6, enchant_amount, apply);
+                break;
+            case 9:
+                target->SetRoleStat(7, enchant_amount, apply);
+                target->SetRoleStat(8, enchant_amount, apply);
+                target->SetRoleStat(9, enchant_amount, apply);
+                target->SetRoleStat(10, enchant_amount, apply);
+                target->SetRoleStat(11, enchant_amount, apply);
+                target->SetRoleStat(12, enchant_amount, apply);
+                break;
+            case 10: //ITEM_MOD_ROLE_STR: // ROLE STAT SYSTEM
+                target->SetRoleStat(0, enchant_amount, apply);
+                break;
+            case 11: //ITEM_MOD_ROLE_AGI:
+                target->SetRoleStat(1, enchant_amount, apply);
+                break;
+            case 12: //ITEM_MOD_ROLE_INT:
+                target->SetRoleStat(2, enchant_amount, apply);
+                break;
+            case 13: //ITEM_MOD_ROLE_VIT:
+                target->SetRoleStat(3, enchant_amount, apply);
+                break;
+            case 14: //ITEM_MOD_ROLE_DEX:
+                target->SetRoleStat(4, enchant_amount, apply);
+                break;
+            case 15: //ITEM_MOD_ROLE_WILL:
+                target->SetRoleStat(5, enchant_amount, apply);
+                break;
+            case 16: //ITEM_MOD_ROLE_SPI:
+                target->SetRoleStat(6, enchant_amount, apply);
+                break;
+            case 17: //ITEM_MOD_ROLE_CHARISM:
+                target->SetRoleStat(7, enchant_amount, apply);
+                break;
+            case 18: //ITEM_MOD_ROLE_AVOID:
+                target->SetRoleStat(8, enchant_amount, apply);
+                break;
+            case 19: //ITEM_MOD_ROLE_LUCK:
+                target->SetRoleStat(9, enchant_amount, apply);
+                break;
+            case 20: //ITEM_MOD_ROLE_HIDDEN:
+                target->SetRoleStat(10, enchant_amount, apply);
+                break;
+            case 21: //ITEM_MOD_ROLE_INIT:
+                target->SetRoleStat(11, enchant_amount, apply);
+                break;
+            case 22: //ITEM_MOD_ROLE_PER:
+                target->SetRoleStat(12, enchant_amount, apply);
+                break;
+            default:
+                break;
+        }
+    } else {
+        if (GetMiscValue() < -2 || GetMiscValue() > 4)
+        {
+            TC_LOG_ERROR("spells", "WARNING: Spell %u effect %u has an unsupported misc value (%i) for SPELL_AURA_MOD_STAT ", GetId(), GetEffIndex(), GetMiscValue());
+            return;
+        }
 
-            //target->ApplyStatMod(Stats(i), m_amount, apply);
-            target->HandleStatModifier(UnitMods(UNIT_MOD_STAT_START + i), TOTAL_VALUE, float(GetAmount()), apply);
-            if (target->GetTypeId() == TYPEID_PLAYER || target->IsPet())
-                target->ApplyStatBuffMod(Stats(i), (float)GetAmount(), apply);
+        Unit* target = aurApp->GetTarget();
+        int32 spellGroupVal = target->GetHighestExclusiveSameEffectSpellGroupValue(this, SPELL_AURA_MOD_STAT, true, GetMiscValue());
+        if (abs(spellGroupVal) >= abs(GetAmount()))
+            return;
+
+        for (int32 i = STAT_STRENGTH; i < MAX_STATS; i++)
+        {
+            // -1 or -2 is all stats (misc < -2 checked in function beginning)
+            if (GetMiscValue() < 0 || GetMiscValue() == i)
+            {
+                if (spellGroupVal)
+                {
+                    target->HandleStatModifier(UnitMods(UNIT_MOD_STAT_START + i), TOTAL_VALUE, float(spellGroupVal), !apply);
+                    if (target->GetTypeId() == TYPEID_PLAYER || target->IsPet())
+                        target->ApplyStatBuffMod(Stats(i), float(spellGroupVal), !apply);
+                }
+
+                //target->ApplyStatMod(Stats(i), m_amount, apply);
+                target->HandleStatModifier(UnitMods(UNIT_MOD_STAT_START + i), TOTAL_VALUE, float(GetAmount()), apply);
+                if (target->GetTypeId() == TYPEID_PLAYER || target->IsPet())
+                    target->ApplyStatBuffMod(Stats(i), (float)GetAmount(), apply);
+            }
         }
     }
 }
@@ -4012,7 +4088,7 @@ void AuraEffect::HandleAuraModWeaponCritPercent(AuraApplication const* aurApp, u
     {
 		/*target->ToPlayer()->HandleBaseModValue(CRIT_PERCENTAGE,         FLAT_MOD, float (GetAmount()), apply);
 		target->ToPlayer()->HandleBaseModValue(OFFHAND_CRIT_PERCENTAGE, FLAT_MOD, float (GetAmount()), apply);
-		target->ToPlayer()->HandleBaseModValue(RANGED_CRIT_PERCENTAGE,  FLAT_MOD, float (GetAmount()), apply); ������*/
+		target->ToPlayer()->HandleBaseModValue(RANGED_CRIT_PERCENTAGE,  FLAT_MOD, float (GetAmount()), apply); ������*/
 		target->ToPlayer()->HandleBaseModValue(CRIT_PERCENTAGE, FLAT_MOD, 0.0f, apply);
 		target->ToPlayer()->HandleBaseModValue(OFFHAND_CRIT_PERCENTAGE, FLAT_MOD, 0.0f, apply);
 		target->ToPlayer()->HandleBaseModValue(RANGED_CRIT_PERCENTAGE, FLAT_MOD, 0.0f, apply);
