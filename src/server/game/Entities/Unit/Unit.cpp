@@ -13051,6 +13051,18 @@ void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROL
 
 	//float oldRating = role_stats[stat];
 	role_stats[stat] += (apply ? value : -value);
+	if (apply) {
+         role_stats[stat] += value;
+         if (role_stats[stat]) > MAX_ROLE_STAT_VAL {
+             role_stats[stat] = MAX_ROLE_STAT_VAL;
+         }
+	} else {
+	    if (role_stats[stat] - value < 0) {
+            role_stats[stat] = 0;
+	    } else {
+            role_stats[stat] -= value;
+	    }
+	}
 
 	if (Player* player = ToPlayer())
 	{

@@ -25,6 +25,26 @@ class Aura;
 
 #include "SpellAuras.h"
 
+enum RoleStatsMod
+{
+    ROLE_STAT_MOD_ATTACK              = 7,
+    ROLE_STAT_MOD_DEF                 = 8,
+    ROLE_STAT_MOD_ADDITIONAL          = 9,
+    ROLE_STAT_MOD_STR				  = 10, // ROLE STAT SYSTEM
+    ROLE_STAT_MOD_AGI                 = 11,
+    ROLE_STAT_MOD_INT				  = 12,
+    ROLE_STAT_MOD_VIT				  = 13,
+    ROLE_STAT_MOD_DEX				  = 14,
+    ROLE_STAT_MOD_WILL				  = 15,
+    ROLE_STAT_MOD_SPI		          = 16,
+    ROLE_STAT_MOD_CHARISM		      = 17,
+    ROLE_STAT_MOD_AVOID		          = 18,
+    ROLE_STAT_MOD_LUCK		          = 19,
+    ROLE_STAT_MOD_HIDDEN		      = 20,
+    ROLE_STAT_MOD_INIT	              = 21,
+    ROLE_STAT_MOD_PER	              = 22
+};
+
 typedef void(AuraEffect::*pAuraEffectHandler)(AuraApplication const* aurApp, uint8 mode, bool apply) const;
 
 class TC_GAME_API AuraEffect

@@ -3570,63 +3570,63 @@ void AuraEffect::HandleAuraModStat(AuraApplication const* aurApp, uint8 mode, bo
         }
         switch (GetMiscValue()) // хардкожу, отнимая 10, чтоб тупо заюзать SPELL_AURA_MOD_STAT, а ролевые статы у нас от 0 до 12, и мне почти не стыдно
         {
-            case 7:
-                target->SetRoleStat(0, enchant_amount, apply);
-                target->SetRoleStat(1, enchant_amount, apply);
-                target->SetRoleStat(2, enchant_amount, apply);
+            case ROLE_STAT_MOD_ATTACK:
+                target->SetRoleStat(ROLE_STAT_STR, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_AGI, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_INT, enchant_amount, apply);
                 break;
-            case 8:
-                target->SetRoleStat(3, enchant_amount, apply);
-                target->SetRoleStat(4, enchant_amount, apply);
-                target->SetRoleStat(5, enchant_amount, apply);
-                target->SetRoleStat(6, enchant_amount, apply);
+            case ROLE_STAT_MOD_DEF:
+                target->SetRoleStat(ROLE_STAT_VIT, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_DEX, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_WILL, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_SPI, enchant_amount, apply);
                 break;
-            case 9:
-                target->SetRoleStat(7, enchant_amount, apply);
-                target->SetRoleStat(8, enchant_amount, apply);
-                target->SetRoleStat(9, enchant_amount, apply);
-                target->SetRoleStat(10, enchant_amount, apply);
-                target->SetRoleStat(11, enchant_amount, apply);
-                target->SetRoleStat(12, enchant_amount, apply);
+            case ROLE_STAT_MOD_ADDITIONAL:
+                target->SetRoleStat(ROLE_STAT_CHARISM, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_AVOID, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_LUCK, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_HIDDEN, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_INIT, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_PER, enchant_amount, apply);
                 break;
-            case 10: //ITEM_MOD_ROLE_STR: // ROLE STAT SYSTEM
-                target->SetRoleStat(0, enchant_amount, apply);
+            case ROLE_STAT_MOD_STR: //ITEM_MOD_ROLE_STR: // ROLE STAT SYSTEM
+                target->SetRoleStat(ROLE_STAT_STR, enchant_amount, apply);
                 break;
-            case 11: //ITEM_MOD_ROLE_AGI:
-                target->SetRoleStat(1, enchant_amount, apply);
+            case ROLE_STAT_MOD_AGI: //ITEM_MOD_ROLE_AGI:
+                target->SetRoleStat(ROLE_STAT_AGI, enchant_amount, apply);
                 break;
-            case 12: //ITEM_MOD_ROLE_INT:
-                target->SetRoleStat(2, enchant_amount, apply);
+            case ROLE_STAT_MOD_INT: //ITEM_MOD_ROLE_INT:
+                target->SetRoleStat(ROLE_STAT_INT, enchant_amount, apply);
                 break;
-            case 13: //ITEM_MOD_ROLE_VIT:
-                target->SetRoleStat(3, enchant_amount, apply);
+            case ROLE_STAT_MOD_VIT: //ITEM_MOD_ROLE_VIT:
+                target->SetRoleStat(ROLE_STAT_VIT, enchant_amount, apply);
                 break;
-            case 14: //ITEM_MOD_ROLE_DEX:
-                target->SetRoleStat(4, enchant_amount, apply);
+            case ROLE_STAT_MOD_DEX: //ITEM_MOD_ROLE_DEX:
+                target->SetRoleStat(ROLE_STAT_DEX, enchant_amount, apply);
                 break;
-            case 15: //ITEM_MOD_ROLE_WILL:
-                target->SetRoleStat(5, enchant_amount, apply);
+            case ROLE_STAT_MOD_WILL: //ITEM_MOD_ROLE_WILL:
+                target->SetRoleStat(ROLE_STAT_WILL, enchant_amount, apply);
                 break;
-            case 16: //ITEM_MOD_ROLE_SPI:
-                target->SetRoleStat(6, enchant_amount, apply);
+            case ROLE_STAT_MOD_SPI: //ITEM_MOD_ROLE_SPI:
+                target->SetRoleStat(ROLE_STAT_SPI, enchant_amount, apply);
                 break;
-            case 17: //ITEM_MOD_ROLE_CHARISM:
-                target->SetRoleStat(7, enchant_amount, apply);
+            case ROLE_STAT_MOD_CHARISM: //ITEM_MOD_ROLE_CHARISM:
+                target->SetRoleStat(ROLE_STAT_CHARISM, enchant_amount, apply);
                 break;
-            case 18: //ITEM_MOD_ROLE_AVOID:
-                target->SetRoleStat(8, enchant_amount, apply);
+            case ROLE_STAT_MOD_AVOID: //ITEM_MOD_ROLE_AVOID:
+                target->SetRoleStat(ROLE_STAT_AVOID, enchant_amount, apply);
                 break;
-            case 19: //ITEM_MOD_ROLE_LUCK:
-                target->SetRoleStat(9, enchant_amount, apply);
+            case ROLE_STAT_MOD_LUCK: //ITEM_MOD_ROLE_LUCK:
+                target->SetRoleStat(ROLE_STAT_LUCK, enchant_amount, apply);
                 break;
-            case 20: //ITEM_MOD_ROLE_HIDDEN:
-                target->SetRoleStat(10, enchant_amount, apply);
+            case ROLE_STAT_MOD_HIDDEN: //ITEM_MOD_ROLE_HIDDEN:
+                target->SetRoleStat(ROLE_STAT_HIDDEN, enchant_amount, apply);
                 break;
-            case 21: //ITEM_MOD_ROLE_INIT:
-                target->SetRoleStat(11, enchant_amount, apply);
+            case ROLE_STAT_MOD_INIT: //ITEM_MOD_ROLE_INIT:
+                target->SetRoleStat(ROLE_STAT_INIT, enchant_amount, apply);
                 break;
-            case 22: //ITEM_MOD_ROLE_PER:
-                target->SetRoleStat(12, enchant_amount, apply);
+            case ROLE_STAT_MOD_PER: //ITEM_MOD_ROLE_PER:
+                target->SetRoleStat(ROLE_STAT_PER, enchant_amount, apply);
                 break;
             default:
                 break;
