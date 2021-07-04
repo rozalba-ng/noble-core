@@ -1051,6 +1051,26 @@ enum CurrentSpellTypes
 #define CURRENT_FIRST_NON_MELEE_SPELL 1
 #define CURRENT_MAX_SPELL             4
 
+enum RoleStats
+{
+    ROLE_STAT_STR				  = 0, // ROLE STAT SYSTEM
+    ROLE_STAT_AGI                 = 1,
+    ROLE_STAT_INT				  = 2,
+    ROLE_STAT_VIT				  = 3,
+    ROLE_STAT_DEX				  = 4,
+    ROLE_STAT_WILL				  = 5,
+    ROLE_STAT_SPI		          = 6,
+    ROLE_STAT_CHARISM		      = 7,
+    ROLE_STAT_AVOID		          = 8,
+    ROLE_STAT_LUCK		          = 9,
+    ROLE_STAT_HIDDEN		      = 10,
+    ROLE_STAT_INIT	              = 11,
+    ROLE_STAT_PER	              = 12
+};
+
+#define MAX_ROLE_STATS 13
+#define MAX_ROLE_STAT_VAL 10 // порог, выше которого нельзя поднимать характеристику
+
 enum ActiveStates
 {
     ACT_PASSIVE  = 0x01,                                    // 0x01 - passive
@@ -1366,8 +1386,8 @@ class TC_GAME_API Unit : public WorldObject
         uint32 CountPctFromMaxHealth(int32 pct) const { return CalculatePct(GetMaxHealth(), pct); }
         uint32 CountPctFromCurHealth(int32 pct) const { return CalculatePct(GetHealth(), pct); }
 
-		void SetRoleStat(uint8 stat, uint32 val, bool apply, bool update = true); // ROLE STAT SYSTEM
-		uint32 GetRoleStat(uint8 stat) const;
+		void SetRoleStat(uint8 stat, int32 val, bool apply, bool update = true); // ROLE STAT SYSTEM
+		int32 GetRoleStat(uint8 stat) const;
 
         void SetHealth(uint32 val);
         void SetMaxHealth(uint32 val);
@@ -2258,8 +2278,8 @@ class TC_GAME_API Unit : public WorldObject
 
         void DisableSpline();
 
-		uint32 role_stats[13]; // ROLE STAT SYSTEM
-		uint32 role_stats_mods[13];
+		int32 role_stats[MAX_ROLE_STATS]; // ROLE STAT SYSTEM
+		uint32 role_stats_mods[MAX_ROLE_STATS];
     private:
         bool IsTriggeredAtSpellProcEvent(Unit* victim, Aura* aura, SpellInfo const* procSpell, uint32 procFlag, uint32 procExtra, WeaponAttackType attType, bool isVictim, bool active, SpellProcEventEntry const*& spellProcEvent);
         bool RollProcResult(Unit* victim, Aura* aura, WeaponAttackType attType, bool isVictim, SpellProcEventEntry const* spellProcEvent);
