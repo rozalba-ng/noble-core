@@ -13046,20 +13046,20 @@ void Unit::SetLevel(uint8 lvl)
 
 void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROLE STAT SYSTEM
 {
-    TC_LOG_DEBUG("VALUE IN FUNC", "[ %u ] ENCHANT_VALUE AND %u APPLY", value,apply);
+    TC_LOG_DEBUG("VALUE IN FUNC", "[ %u ] ENCHANT_VALUE", value);
 	//if (HasAura(88009) && apply)
 	//	return;
 
 	//float oldRating = role_stats[stat];
 	if (apply) {
-        TC_LOG_DEBUG("ENTERED APPLY TRUE", "[ %u ] ENCHANT_VALUE AND %u APPLY", value,apply);
+        TC_LOG_DEBUG("ENTERED APPLY TRUE", "[ %u ] ENCHANT_VALUE", value);
 
         role_stats[stat] += value;
         if (role_stats[stat] > MAX_ROLE_STAT_VAL) {
             role_stats[stat] = MAX_ROLE_STAT_VAL;
         }
 	} else {
-        TC_LOG_DEBUG("ENTERED APPLY FALSE", "[ %u ] ENCHANT_VALUE AND %u APPLY", value,apply);
+        TC_LOG_DEBUG("ENTERED APPLY FALSE", "[ %u ] ENCHANT_VALUE", value);
 
 	    if (role_stats[stat] - value < 0) {
             TC_LOG_DEBUG("role_stats[stat] - value < 0", "[ %u ] ROLE_STAT", role_stats[stat]);
