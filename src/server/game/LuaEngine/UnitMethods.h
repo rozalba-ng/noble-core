@@ -1894,7 +1894,7 @@ namespace LuaUnit
 		uint32 apply = Eluna::CHECKVAL<bool>(L, 4, true);
 		if (stat >= 0 && stat <= 12)
 		{
-			unit->SetRoleStat(stat, value, apply);
+			unit->SetRoleStat(stat, (int32)value, apply);
 			return 1;
 		}
 		return 0;

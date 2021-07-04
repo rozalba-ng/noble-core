@@ -13044,33 +13044,14 @@ void Unit::SetLevel(uint8 lvl)
     }
 }
 
-void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROLE STAT SYSTEM
+void Unit::SetRoleStat(uint8 stat, int32 value, bool apply, bool update) // ROLE STAT SYSTEM
 {
-    TC_LOG_DEBUG("entities.player.items", "[ %u ] entered func ENCHANT_VALUE", value);
 	//if (HasAura(88009) && apply)
 	//	return;
 
-	//float oldRating = role_stats[stat];
-	if (apply) {
-        TC_LOG_ERROR("entities.player.items", "[ %u ]  apply = true ENCHANT_VALUE", value);
+    role_stats[stat] += (apply ? value : -value);
 
-        role_stats[stat] += value;
-        if (role_stats[stat] > MAX_ROLE_STAT_VAL) {
-            role_stats[stat] = MAX_ROLE_STAT_VAL;
-        }
-	} else {
-        TC_LOG_ERROR("entities.player.items", "[ %u ] apply = false ENCHANT_VALUE", value);
-
-	    if (role_stats[stat] - value < 0) {
-            TC_LOG_ERROR("entities.player.items", "[ %u ] role_stats[stat] - value < 0 ROLE_STAT", role_stats[stat]);
-            role_stats[stat] = 0;
-	    } else {
-            TC_LOG_ERROR("entities.player.items", "[ %u ] role_stats[stat] - value > 0 ROLE_STAT", role_stats[stat]);
-            role_stats[stat] -= value;
-	    }
-        TC_LOG_ERROR("entities.player.items", "[ %u ] final ROLE_STAT", role_stats[stat]);
-	}
-
+    TC_LOG_ERROR("entities.player.items", "[ %u ] final ROLE_STAT", role_stats[stat]);
 	if (Player* player = ToPlayer())
 	{
 #ifdef ELUNA
@@ -13084,11 +13065,13 @@ void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROL
 	//float const newVal = role_stats[stat] * multiplier;
 }
 
-uint32 Unit::GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
+int32 Unit::GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
 {
 	if (stat <= 12) // 12 это характеристики с 0 по 12
-		if (role_stats[stat] > 10) //а тут это максимальное значение характеристики, больше не вкачать
+		if (role_stats[stat] > MAX_ROLE_STAT_VAL) //а тут это максимальное значение характеристики, больше не вкачать
 			return 10;
+		else if (role_stats[stat] < 0)
+		    return 0;
 		else
 			return role_stats[stat];
 	else

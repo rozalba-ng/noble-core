@@ -3563,15 +3563,8 @@ void AuraEffect::HandleAuraModStat(AuraApplication const* aurApp, uint8 mode, bo
         if (target->GetTypeId() != TYPEID_PLAYER) {
             return;
         }
-        TC_LOG_ERROR("entities.player.items", "[ %d ] before uint ENCHANT_VALUE", GetAmount());
-        uint32 enchant_amount = (uint32)GetAmount();
-        TC_LOG_ERROR("entities.player.items", "[ %u ] after uint ENCHANT_VALUE", enchant_amount);
-        if (apply) {
-            TC_LOG_ERROR("entities.player.items", "apply true");
-        } else {
-            TC_LOG_ERROR("entities.player.items", "apply false");
-        }
-        switch (GetMiscValue()) // хардкожу, отнимая 10, чтоб тупо заюзать SPELL_AURA_MOD_STAT, а ролевые статы у нас от 0 до 12, и мне почти не стыдно
+        int32 enchant_amount = GetAmount();
+        switch (GetMiscValue())
         {
             case ROLE_STAT_MOD_ATTACK:
                 target->SetRoleStat(ROLE_STAT_STR, enchant_amount, apply);

@@ -13831,43 +13831,43 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
                             TC_LOG_DEBUG("entities.player.items", "+ %u BLOCK_VALUE", enchant_amount);
                             break;
 						case ITEM_MOD_ROLE_STR: // ROLE STAT SYSTEM
-							SetRoleStat(ROLE_STAT_STR, enchant_amount, apply);
+							SetRoleStat(ROLE_STAT_STR, (int32)enchant_amount, apply);
 							break;
 						case ITEM_MOD_ROLE_AGI:
-							SetRoleStat(ROLE_STAT_AGI, enchant_amount, apply);
+							SetRoleStat(ROLE_STAT_AGI, (int32)enchant_amount, apply);
 							break;
 						case ITEM_MOD_ROLE_INT:
-							SetRoleStat(ROLE_STAT_INT, enchant_amount, apply);
+							SetRoleStat(ROLE_STAT_INT, (int32)enchant_amount, apply);
 							break;
 						case ITEM_MOD_ROLE_VIT:
-							SetRoleStat(ROLE_STAT_VIT, enchant_amount, apply);
+							SetRoleStat(ROLE_STAT_VIT, (int32)enchant_amount, apply);
 							break;
 						case ITEM_MOD_ROLE_DEX:
-							SetRoleStat(ROLE_STAT_DEX, enchant_amount, apply);
+							SetRoleStat(ROLE_STAT_DEX, (int32)enchant_amount, apply);
 							break;
 						case ITEM_MOD_ROLE_WILL:
-							SetRoleStat(ROLE_STAT_WILL, enchant_amount, apply);
+							SetRoleStat(ROLE_STAT_WILL, (int32)enchant_amount, apply);
 							break;
 						case ITEM_MOD_ROLE_SPI:
-							SetRoleStat(ROLE_STAT_SPI, enchant_amount, apply);
+							SetRoleStat(ROLE_STAT_SPI, (int32)enchant_amount, apply);
 							break;
                         case ITEM_MOD_ROLE_CHARISM:
-                            SetRoleStat(ROLE_STAT_CHARISM, enchant_amount, apply);
+                            SetRoleStat(ROLE_STAT_CHARISM, (int32)enchant_amount, apply);
                         break;
                         case ITEM_MOD_ROLE_AVOID:
-                            SetRoleStat(ROLE_STAT_AVOID, enchant_amount, apply);
+                            SetRoleStat(ROLE_STAT_AVOID, (int32)enchant_amount, apply);
                         break;
                         case ITEM_MOD_ROLE_LUCK:
-                            SetRoleStat(ROLE_STAT_LUCK, enchant_amount, apply);
+                            SetRoleStat(ROLE_STAT_LUCK, (int32)enchant_amount, apply);
                         break;
                         case ITEM_MOD_ROLE_HIDDEN:
-                            SetRoleStat(ROLE_STAT_HIDDEN, enchant_amount, apply);
+                            SetRoleStat(ROLE_STAT_HIDDEN, (int32)enchant_amount, apply);
                         break;
                         case ITEM_MOD_ROLE_INIT:
-                            SetRoleStat(ROLE_STAT_INIT, enchant_amount, apply);
+                            SetRoleStat(ROLE_STAT_INIT, (int32)enchant_amount, apply);
                         break;
                         case ITEM_MOD_ROLE_PER:
-                            SetRoleStat(ROLE_STAT_PER, enchant_amount, apply);
+                            SetRoleStat(ROLE_STAT_PER, (int32)enchant_amount, apply);
                         break;
                         case ITEM_MOD_SPELL_HEALING_DONE:   // deprecated
                         case ITEM_MOD_SPELL_DAMAGE_DONE:    // deprecated
@@ -17977,19 +17977,19 @@ void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
                 TC_LOG_ERROR("entities.player", "Player::_LoadRoleStats: Player '%s' try to load more than 10 additional stats.", GetName().c_str());
                 return;
             }
-			SetRoleStat(ROLE_STAT_STR, fields[0].GetUInt32(), true, false);
-			SetRoleStat(ROLE_STAT_AGI, fields[1].GetUInt32(), true, false);
-			SetRoleStat(ROLE_STAT_INT, fields[2].GetUInt32(), true, false);
-			SetRoleStat(ROLE_STAT_VIT, fields[3].GetUInt32(), true, false);
-			SetRoleStat(ROLE_STAT_DEX, fields[4].GetUInt32(), true, false);
-			SetRoleStat(ROLE_STAT_WILL, fields[5].GetUInt32(), true, false);
-			SetRoleStat(ROLE_STAT_SPI, fields[6].GetUInt32(), true, false);
-            SetRoleStat(ROLE_STAT_CHARISM, fields[7].GetUInt32(), true, false);
-            SetRoleStat(ROLE_STAT_AVOID, fields[8].GetUInt32(), true, false);
-            SetRoleStat(ROLE_STAT_LUCK, fields[9].GetUInt32(), true, false);
-            SetRoleStat(ROLE_STAT_HIDDEN, fields[10].GetUInt32(), true, false);
-            SetRoleStat(ROLE_STAT_INIT, fields[11].GetUInt32(), true, false);
-            SetRoleStat(ROLE_STAT_PER, fields[12].GetUInt32(), true, false);
+			SetRoleStat(ROLE_STAT_STR, fields[0].GetInt32(), true, false);
+			SetRoleStat(ROLE_STAT_AGI, fields[1].GetInt32(), true, false);
+			SetRoleStat(ROLE_STAT_INT, fields[2].GetInt32(), true, false);
+			SetRoleStat(ROLE_STAT_VIT, fields[3].GetInt32(), true, false);
+			SetRoleStat(ROLE_STAT_DEX, fields[4].GetInt32(), true, false);
+			SetRoleStat(ROLE_STAT_WILL, fields[5].GetInt32(), true, false);
+			SetRoleStat(ROLE_STAT_SPI, fields[6].GetInt32(), true, false);
+            SetRoleStat(ROLE_STAT_CHARISM, fields[7].GetInt32(), true, false);
+            SetRoleStat(ROLE_STAT_AVOID, fields[8].GetInt32(), true, false);
+            SetRoleStat(ROLE_STAT_LUCK, fields[9].GetInt32(), true, false);
+            SetRoleStat(ROLE_STAT_HIDDEN, fields[10].GetInt32(), true, false);
+            SetRoleStat(ROLE_STAT_INIT, fields[11].GetInt32(), true, false);
+            SetRoleStat(ROLE_STAT_PER, fields[12].GetInt32(), true, false);
 			sEluna->OnRoleStatUpdate(this, 0);
 		} while (result->NextRow());
 	}
