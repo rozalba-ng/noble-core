@@ -13046,22 +13046,35 @@ void Unit::SetLevel(uint8 lvl)
 
 void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROLE STAT SYSTEM
 {
+    TC_LOG_DEBUG("VALUE IN FUNC", "[ %u ] ENCHANT_VALUE AND %u APPLY", value,apply);
+    TC_LOG_ERROR("VALUE IN FUNC", "[ %u ] ENCHANT_VALUE AND %u APPLY", value,apply);
 	//if (HasAura(88009) && apply)
 	//	return;
 
 	//float oldRating = role_stats[stat];
-	role_stats[stat] += (apply ? value : -value);
 	if (apply) {
-         role_stats[stat] += value;
-         if (role_stats[stat] > MAX_ROLE_STAT_VAL) {
-             role_stats[stat] = MAX_ROLE_STAT_VAL;
-         }
+        TC_LOG_DEBUG("ENTERED APPLY TRUE", "[ %u ] ENCHANT_VALUE AND %u APPLY", value,apply);
+        TC_LOG_ERROR("ENTERED APPLY TRUE", "[ %u ] ENCHANT_VALUE AND %u APPLY", value,apply);
+
+        role_stats[stat] += value;
+        if (role_stats[stat] > MAX_ROLE_STAT_VAL) {
+            role_stats[stat] = MAX_ROLE_STAT_VAL;
+        }
 	} else {
+        TC_LOG_DEBUG("ENTERED APPLY FALSE", "[ %u ] ENCHANT_VALUE AND %u APPLY", value,apply);
+        TC_LOG_ERROR("ENTERED APPLY FALSE", "[ %u ] ENCHANT_VALUE AND %u APPLY", value,apply);
+
 	    if (role_stats[stat] - value < 0) {
+            TC_LOG_DEBUG("role_stats[stat] - value < 0", "[ %u ] ROLE_STAT", role_stats[stat]);
+            TC_LOG_DEBUG("role_stats[stat] - value < 0", "[ %u ] ROLE_STAT", role_stats[stat]);
             role_stats[stat] = 0;
 	    } else {
+            TC_LOG_DEBUG("role_stats[stat] - value ELSE", "[ %u ] ROLE_STAT", role_stats[stat]);
+            TC_LOG_ERROR("role_stats[stat] - value ELSE", "[ %u ] ROLE_STAT", role_stats[stat]);
             role_stats[stat] -= value;
 	    }
+        TC_LOG_DEBUG("FINAL ROLE STAT", "[ %u ] ROLE_STAT", role_stats[stat]);
+        TC_LOG_ERROR("FINAL ROLE STAT", "[ %u ] ROLE_STAT", role_stats[stat]);
 	}
 
 	if (Player* player = ToPlayer())

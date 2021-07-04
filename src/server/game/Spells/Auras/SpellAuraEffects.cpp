@@ -3563,11 +3563,11 @@ void AuraEffect::HandleAuraModStat(AuraApplication const* aurApp, uint8 mode, bo
         if (target->GetTypeId() != TYPEID_PLAYER) {
             return;
         }
-
+        TC_LOG_DEBUG("VALUE RESIEVED", "[ %u ] ENCHANT_VALUE AND %u APPLY", GetAmount(),apply);
+        TC_LOG_ERROR("VALUE RESIEVED", "[ %u ] ENCHANT_VALUE AND %u APPLY", GetAmount(),apply);
         uint32 enchant_amount = (uint32)GetAmount();
-        if (enchant_amount == 0) {
-            return;
-        }
+        TC_LOG_DEBUG("VALUE AFTER UINT", "[ %u ] ENCHANT_VALUE AND %u APPLY", enchant_amount,apply);
+        TC_LOG_ERROR("VALUE AFTER UINT", "[ %u ] ENCHANT_VALUE AND %u APPLY", enchant_amount,apply);
         switch (GetMiscValue()) // хардкожу, отнимая 10, чтоб тупо заюзать SPELL_AURA_MOD_STAT, а ролевые статы у нас от 0 до 12, и мне почти не стыдно
         {
             case ROLE_STAT_MOD_ATTACK:
