@@ -13053,7 +13053,7 @@ void Unit::SetRoleStat(uint8 stat, uint32 value, bool apply, bool update) // ROL
 	role_stats[stat] += (apply ? value : -value);
 	if (apply) {
          role_stats[stat] += value;
-         if (role_stats[stat]) > MAX_ROLE_STAT_VAL {
+         if (role_stats[stat] > MAX_ROLE_STAT_VAL) {
              role_stats[stat] = MAX_ROLE_STAT_VAL;
          }
 	} else {
