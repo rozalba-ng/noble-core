@@ -2911,6 +2911,10 @@ enum SkillType
 	SKILL_TWO_HANDED			   = 812,
 	SKILL_SHIELD2				   = 813,
 	SKILL_RANGED				   = 814,
+    SKILL_ROLE_CLASS			   = 815,
+    SKILL_ROLE_DICE			       = 816,
+    SKILL_ROLE_ARMOR			   = 817,
+    SKILL_ROLE_MAGIC			   = 818,
 	SKILL_CARPENTRY				   = 830,
 	SKILL_POTTERY				   = 831
 };
