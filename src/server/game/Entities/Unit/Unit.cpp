@@ -13048,10 +13048,13 @@ void Unit::SetRoleStat(uint8 stat, int32 value, bool apply, bool update) // ROLE
 {
 	//if (HasAura(88009) && apply)
 	//	return;
+	if (stat >= MAX_ROLE_STATS) {
+        TC_LOG_ERROR("entities.player.items", "ATTENTION SETTING WRONG ROLE STAT [ %u ]", stat);
+        return;
+	}
 
     role_stats[stat] += (apply ? value : -value);
 
-    TC_LOG_ERROR("entities.player.items", "[ %u ] final ROLE_STAT", role_stats[stat]);
 	if (Player* player = ToPlayer())
 	{
 #ifdef ELUNA
@@ -13067,15 +13070,16 @@ void Unit::SetRoleStat(uint8 stat, int32 value, bool apply, bool update) // ROLE
 
 int32 Unit::GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
 {
-	if (stat <= 12) // 12 это характеристики с 0 по 12
-		if (role_stats[stat] > MAX_ROLE_STAT_VAL) //а тут это максимальное значение характеристики, больше не вкачать
-			return 10;
-		else if (role_stats[stat] < 0)
-		    return 0;
-		else
-			return role_stats[stat];
-	else
-		return NULL;
+    if (stat >= MAX_ROLE_STATS) {
+        TC_LOG_ERROR("entities.player.items", "ATTENTION GETTING WRONG ROLE STAT [ %u ]", stat);
+        return NULL;
+    }
+    if (role_stats[stat] > MAX_ROLE_STAT_VAL) //а тут это максимальное значение характеристики, больше не вкачать
+        return 10;
+    else if (role_stats[stat] < 0)
+        return 0;
+    else
+        return role_stats[stat];
 }
 
 void Unit::SetHealth(uint32 val)
