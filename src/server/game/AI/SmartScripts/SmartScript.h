@@ -278,6 +278,10 @@ class TC_GAME_API SmartScript
         uint32 mLastTextID;
         uint32 mTalkerEntry;
         bool mUseTextTimer;
+        uint32 mNestedEventsCounter;
+
+        // Max number of nested ProcessEventsFor() calls to avoid infinite loops
+        static constexpr uint32 MAX_NESTED_EVENTS = 10;
 
         SMARTAI_TEMPLATE mTemplate;
         void InstallEvents();
