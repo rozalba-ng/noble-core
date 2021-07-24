@@ -687,7 +687,7 @@ namespace LuaItem
         }
 
         EnchantmentSlot slot = (EnchantmentSlot)Eluna::CHECKVAL<uint32>(L, 3);
-        if (slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
+        if (slot >= MAX_ENCHANTMENT_SLOT)
             return luaL_argerror(L, 2, "valid EnchantmentSlot expected");
 
         owner->ApplyEnchantment(item, slot, false);
