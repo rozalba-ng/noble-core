@@ -744,7 +744,6 @@ void WorldSession::HandlePlayerLoginOpcode(WorldPacket& recvData)
     ObjectGuid playerGuid;
 
     TC_LOG_DEBUG("network", "WORLD: Recvd Player Logon Message");
-
     recvData >> playerGuid;
 
     if (!IsLegitCharacterForAccount(playerGuid))
@@ -753,7 +752,6 @@ void WorldSession::HandlePlayerLoginOpcode(WorldPacket& recvData)
         KickPlayer();
         return;
     }
-
     LoginQueryHolder *holder = new LoginQueryHolder(GetAccountId(), playerGuid);
     if (!holder->Initialize())
     {
@@ -761,7 +759,6 @@ void WorldSession::HandlePlayerLoginOpcode(WorldPacket& recvData)
         m_playerLoading = false;
         return;
     }
-
     _charLoginCallback = CharacterDatabase.DelayQueryHolder(holder);
 }
 
@@ -783,7 +780,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         m_playerLoading = false;
         return;
     }
-
     pCurrChar->GetMotionMaster()->Initialize();
     pCurrChar->SendDungeonDifficulty(false);
 
@@ -794,7 +790,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
     data << pCurrChar->GetPositionZ();
     data << pCurrChar->GetOrientation();
     SendPacket(&data);
-
     // load player specific part before send times
     LoadAccountData(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_ACCOUNT_DATA), PER_CHARACTER_CACHE_MASK);
     SendAccountDataTimes(PER_CHARACTER_CACHE_MASK);
@@ -803,7 +798,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
     data << uint8(2);                                       // unknown value
     data << uint8(0);                                       // enable(1)/disable(0) voice chat interface in client
     SendPacket(&data);
-
     // Send MOTD
     {
         data.Initialize(SMSG_MOTD, 50);                     // new in 2.0.1
@@ -841,7 +835,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 
         TC_LOG_DEBUG("network", "WORLD: Sent server info");
     }
-
     //QueryResult* result = CharacterDatabase.PQuery("SELECT guildid, rank FROM guild_member WHERE guid = '%u'", pCurrChar->GetGUID().GetCounter());
     if (PreparedQueryResult resultGuild = holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_GUILD))
     {
@@ -854,7 +847,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         pCurrChar->SetInGuild(0);
         pCurrChar->SetRank(0);
     }
-
     if (pCurrChar->GetGuildId() != 0)
     {
         if (Guild* guild = sGuildMgr->GetGuildById(pCurrChar->GetGuildId()))
@@ -866,7 +858,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
             pCurrChar->SetInGuild(0);
         }
     }
-
     data.Initialize(SMSG_LEARNED_DANCE_MOVES, 4+4);
     data << uint32(0);
     data << uint32(0);
@@ -891,7 +882,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
                 chH.PSendSysMessage("%s", sWorld->GetNewCharString().c_str());
         }
     }
-
     if (!pCurrChar->GetMap()->AddPlayerToMap(pCurrChar))
     {
         AreaTrigger const* at = sObjectMgr->GetGoBackTrigger(pCurrChar->GetMapId());
@@ -900,7 +890,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         else
             pCurrChar->TeleportTo(pCurrChar->m_homebindMapId, pCurrChar->m_homebindX, pCurrChar->m_homebindY, pCurrChar->m_homebindZ, pCurrChar->GetOrientation());
     }
-
     ObjectAccessor::AddObject(pCurrChar);
     //TC_LOG_DEBUG("Player %s added to Map.", pCurrChar->GetName().c_str());
 
@@ -917,7 +906,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
     stmt->setUInt32(0, GetAccountId());
 
     LoginDatabase.Execute(stmt);
-
     pCurrChar->SetInGameTime(getMSTime());
 
     // announce group about member online (must be after add to player list to receive announce to self)
@@ -927,13 +915,11 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         group->SendUpdate();
         group->ResetMaxEnchantingLevel();
     }
-
     // friend status
     sSocialMgr->SendFriendStatus(pCurrChar, FRIEND_ONLINE, pCurrChar->GetGUID().GetCounter(), true);
 
     // Place character in world (and load zone) before some object loading
     pCurrChar->LoadCorpse(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_CORPSE_LOCATION));
-
     // setting Ghost+speed if dead
     if (pCurrChar->m_deathState != ALIVE)
     {
@@ -953,7 +939,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 
     // Load pet if any (if player not alive and in taxi flight or another then pet will remember as temporary unsummoned)
     pCurrChar->LoadPet();
-
     // Set FFA PvP for non GM in non-rest mode
     if (sWorld->IsFFAPvPRealm() && !pCurrChar->IsGameMaster() && !pCurrChar->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING))
         pCurrChar->SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
@@ -974,7 +959,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         pCurrChar->SendTalentsInfoData(false);              // original talents send already in to SendInitialPacketsBeforeAddToMap, resend reset state
         SendNotification(LANG_RESET_TALENTS);
     }
-
     bool firstLogin = pCurrChar->HasAtLoginFlag(AT_LOGIN_FIRST);
     if (firstLogin)
     {
@@ -994,7 +978,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 
     if (pCurrChar->IsGameMaster())
         SendNotification(LANG_GM_ON);
-
     std::string IP_str = GetRemoteAddress();
     TC_LOG_INFO("entities.player.character", "Account: %d (IP: %s) Login Character:[%s] (GUID: %u) Level: %d",
         GetAccountId(), IP_str.c_str(), pCurrChar->GetName().c_str(), pCurrChar->GetGUID().GetCounter(), pCurrChar->getLevel());
@@ -1010,7 +993,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
     sScriptMgr->OnPlayerLogin(pCurrChar, firstLogin);
 
     TC_METRIC_EVENT("player_events", "Login", pCurrChar->GetName());
-
     delete holder;
 }
 
@@ -1590,6 +1572,7 @@ void WorldSession::HandleEquipmentSetUse(WorldPacket& recvData)
 
 void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
 {
+    //TC_LOG_ERROR("entity.player", "TESTETSTEEST entry: %u playerguid: %u", entry, player->GetGUID().GetCounter());
     CharacterFactionChangeInfo factionChangeInfo;
     recvData >> factionChangeInfo.Guid;
 
@@ -1601,7 +1584,6 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
         KickPlayer();
         return;
     }
-
     recvData >> factionChangeInfo.Name
              >> factionChangeInfo.Gender
              >> factionChangeInfo.Skin
@@ -1610,7 +1592,6 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
              >> factionChangeInfo.FacialHair
              >> factionChangeInfo.Face
              >> factionChangeInfo.Race;
-
     ObjectGuid::LowType lowGuid = factionChangeInfo.Guid.GetCounter();
 
     // get the players old (at this moment current) race
@@ -1620,7 +1601,6 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
         SendCharFactionChange(CHAR_CREATE_ERROR, factionChangeInfo);
         return;
     }
-
     uint8 oldRace = nameData->Race;
     uint8 playerClass = nameData->Class;
     uint8 level = nameData->Level;
@@ -1647,12 +1627,12 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
         return;
     }
 
+
     if (!(at_loginFlags & used_loginFlag))
     {
         SendCharFactionChange(CHAR_CREATE_ERROR, factionChangeInfo);
         return;
     }
-
     if (!HasPermission(rbac::RBAC_PERM_SKIP_CHECK_CHARACTER_CREATION_RACEMASK))
     {
         uint32 raceMaskDisabled = sWorld->getIntConfig(CONFIG_CHARACTER_CREATING_DISABLED_RACEMASK);
@@ -1694,6 +1674,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
         }
     }
 
+
     SQLTransaction trans = CharacterDatabase.BeginTransaction();
 
     // resurrect the character in case he's dead
@@ -1727,13 +1708,13 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
             case RACE_UNDEAD_PLAYER:
             case RACE_TROLL:
 			case RACE_GOBLIN:
+            case RACE_TAUNKA:
 			//case RACE_BLOODELF:
 				team = TEAM_HORDE; //BY MITON
                 break;
             default:
                 break;
         }
-
         // Switch Languages
         // delete all languages first
         stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_CHAR_SKILL_LANGUAGES);
@@ -1753,7 +1734,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
         trans->Append(stmt);
 
         // Race specific languages
-        if (factionChangeInfo.Race != RACE_ORC && factionChangeInfo.Race != RACE_HUMAN)
+        if (factionChangeInfo.Race != RACE_ORC && factionChangeInfo.Race != RACE_HUMAN && factionChangeInfo.Race != RACE_ICE_TROLL)
         {
             stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CHAR_SKILL_LANGUAGE);
             stmt->setUInt32(0, lowGuid);
@@ -1787,6 +1768,30 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
                 case RACE_BLOODELF:
                     stmt->setUInt16(1, 137);
                     break;
+                case RACE_TAUNKA:
+                    stmt->setUInt16(1, 313);
+                    break;
+                case RACE_NORTHREND_SKELETON:
+                    stmt->setUInt16(1, 113);
+                    break;
+                case RACE_FOREST_TROLL:
+                    stmt->setUInt16(1, 111);
+                    break;
+                case RACE_TUSKARR:
+                    stmt->setUInt16(1, 315);
+                    break;
+                case RACE_VRYKUL:
+                    stmt->setUInt16(1, 759);
+                    break;
+                case RACE_SKELETON:
+                    stmt->setUInt16(1, 137);
+                    break;
+                case RACE_BROKEN:
+                    stmt->setUInt16(1, 315);
+                    break;
+                case RACE_NAGA:
+                    stmt->setUInt16(1, 673);
+                    break;
             }
 
             trans->Append(stmt);
@@ -1798,7 +1803,6 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
             stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_CHAR_TAXI_PATH);
             stmt->setUInt32(0, lowGuid);
             trans->Append(stmt);
-
             if (level > 7)
             {
                 // Update Taxi path
@@ -1868,7 +1872,6 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
                 stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_CHAR_SOCIAL_BY_GUID);
                 stmt->setUInt32(0, lowGuid);
                 trans->Append(stmt);
-
                 stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_CHAR_SOCIAL_BY_FRIEND);
                 stmt->setUInt32(0, lowGuid);
                 trans->Append(stmt);
@@ -2041,6 +2044,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
                 }
             }
 
+
             // Title conversion
             if (!knownTitlesStr.empty())
             {
@@ -2053,10 +2057,8 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
                     SendCharFactionChange(CHAR_CREATE_ERROR, factionChangeInfo);
                     return;
                 }
-
                 for (uint32 index = 0; index < ktcount; ++index)
                     knownTitles[index] = atoul(tokens[index]);
-
                 for (std::map<uint32, uint32>::const_iterator it = sObjectMgr->FactionChangeTitles.begin(); it != sObjectMgr->FactionChangeTitles.end(); ++it)
                 {
                     uint32 title_alliance = it->first;
@@ -2100,7 +2102,6 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
                     stmt->setString(0, ss.str().c_str());
                     stmt->setUInt32(1, lowGuid);
                     trans->Append(stmt);
-
                     // unset any currently chosen title
                     stmt = CharacterDatabase.GetPreparedStatement(CHAR_RES_CHAR_TITLES_FACTION_CHANGE);
                     stmt->setUInt32(0, lowGuid);
@@ -2111,7 +2112,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
     }
     CharacterDatabase.CommitTransaction(trans);
 
-    TC_LOG_DEBUG("entities.player", "%s (IP: %s) changed race from %u to %u", GetPlayerInfo().c_str(), GetRemoteAddress().c_str(), oldRace, factionChangeInfo.Race);
+    TC_LOG_ERROR("entities.player", "%s (IP: %s) changed race from %u to %u", GetPlayerInfo().c_str(), GetRemoteAddress().c_str(), oldRace, factionChangeInfo.Race);
 
     SendCharFactionChange(RESPONSE_SUCCESS, factionChangeInfo);
 }

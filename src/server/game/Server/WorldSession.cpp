@@ -1126,30 +1126,25 @@ void WorldSession::InitializeQueryCallbackParameters()
 void WorldSession::ProcessQueryCallbacks()
 {
     PreparedQueryResult result;
-
     if (_realmAccountLoginCallback.valid() && _realmAccountLoginCallback.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
         InitializeSessionCallback(_realmAccountLoginCallback.get());
-
     //! HandleCharEnumOpcode
     if (_charEnumCallback.valid() && _charEnumCallback.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
     {
         result = _charEnumCallback.get();
         HandleCharEnum(result);
     }
-
     if (_charCreateCallback.IsReady())
     {
         _charCreateCallback.GetResult(result);
         HandleCharCreateCallback(result, _charCreateCallback.GetParam());
     }
-
     //! HandlePlayerLoginOpcode
     if (_charLoginCallback.valid() && _charLoginCallback.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
     {
         SQLQueryHolder* param = _charLoginCallback.get();
         HandlePlayerLogin((LoginQueryHolder*)param);
     }
-
     //! HandleAddFriendOpcode
     if (_addFriendCallback.IsReady())
     {
@@ -1158,7 +1153,6 @@ void WorldSession::ProcessQueryCallbacks()
         HandleAddFriendOpcodeCallBack(result, param);
         _addFriendCallback.FreeResult();
     }
-
     //- HandleCharRenameOpcode
     if (_charRenameCallback.IsReady())
     {
@@ -1168,7 +1162,6 @@ void WorldSession::ProcessQueryCallbacks()
         delete renameInfo;
         _charRenameCallback.Reset();
     }
-
     //- HandleCharAddIgnoreOpcode
     if (_addIgnoreCallback.valid() && _addIgnoreCallback.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
     {
@@ -1184,7 +1177,6 @@ void WorldSession::ProcessQueryCallbacks()
         SendStablePetCallback(result, param);
         _sendStabledPetCallback.FreeResult();
     }
-
     //- HandleStablePet
     if (_stablePetCallback.valid() && _stablePetCallback.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
     {
@@ -1200,7 +1192,6 @@ void WorldSession::ProcessQueryCallbacks()
         HandleUnstablePetCallback(result, param);
         _unstablePetCallback.FreeResult();
     }
-
     //- HandleStableSwapPet
     if (_stableSwapCallback.IsReady())
     {

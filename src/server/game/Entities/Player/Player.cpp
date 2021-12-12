@@ -26556,6 +26556,7 @@ void Player::SendSupercededSpell(uint32 oldSpell, uint32 newSpell) const
 
 bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 hairID, uint8 hairColor, uint8 faceID, uint8 facialHair, uint8 skinColor, bool create /*=false*/)
 {
+    return true;
     // Check skin color
     // For Skin type is always 0
     if (CharSectionsEntry const* entry = GetCharSectionEntry(race, SECTION_TYPE_SKIN, gender, 0, skinColor))
@@ -26563,16 +26564,25 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
         if (CharSectionsEntry const* entry2 = GetCharSectionEntry(race, SECTION_TYPE_FACE, gender, faceID, skinColor))
         {
             // Check DeathKnight exclusive
-            if (((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) || (entry2->Flags & SECTION_FLAG_DEATH_KNIGHT)) && class_ != CLASS_DEATH_KNIGHT)
+            if (((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) || (entry2->Flags & SECTION_FLAG_DEATH_KNIGHT)) && class_ != CLASS_DEATH_KNIGHT) {
+                TC_LOG_ERROR("entities.player", "Player::Create: 2 error");
                 return false;
-            if (create && !((entry->Flags & SECTION_FLAG_PLAYER) && (entry2->Flags & SECTION_FLAG_PLAYER)))
+            }
+            if (create && !((entry->Flags & SECTION_FLAG_PLAYER) && (entry2->Flags & SECTION_FLAG_PLAYER))) {
+                TC_LOG_ERROR("entities.player", "Player::Create: 3 error");
                 return false;
+            }
         }
-        else
+        else  {
+            TC_LOG_ERROR("entities.player", "Player::Create: 4 error");
             return false;
+        }
     }
-    else
+    else {
+        TC_LOG_ERROR("entities.player", "Player::Create: 1 error");
         return false;
+    }
+
 
     // These combinations don't have an entry of Type SECTION_TYPE_FACIAL_HAIR, exclude them from that check
     bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) || (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
@@ -26580,22 +26590,31 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
     // Check Hair
     if (CharSectionsEntry const* entry = GetCharSectionEntry(race, SECTION_TYPE_HAIR, gender, hairID, hairColor))
     {
-        if ((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT)
+        if ((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT)  {
+            TC_LOG_ERROR("entities.player", "Player::Create: 5 error");
             return false;
-        if (create && !(entry->Flags & SECTION_FLAG_PLAYER))
+        }
+        if (create && !(entry->Flags & SECTION_FLAG_PLAYER)) {
+            TC_LOG_ERROR("entities.player", "Player::Create: 6 error");
             return false;
+        }
 
         if (!excludeCheck)
         {
             if (CharSectionsEntry const* entry2 = GetCharSectionEntry(race, SECTION_TYPE_FACIAL_HAIR, gender, facialHair, hairColor))
             {
-                if ((entry2->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT)
+                if ((entry2->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT) {
+                    TC_LOG_ERROR("entities.player", "Player::Create: 9 error");
                     return false;
-                if (create && !(entry2->Flags & SECTION_FLAG_PLAYER))
+                }
+                if (create && !(entry2->Flags & SECTION_FLAG_PLAYER)) {
+                    TC_LOG_ERROR("entities.player", "Player::Create: 7 error");
                     return false;
-            }
-            else
+                }
+            }  else {
+                TC_LOG_ERROR("entities.player", "Player::Create: 8 error");
                 return false;
+            }
         }
         else
         {
@@ -26603,8 +26622,10 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
             // Not present in DBC
         }
     }
-    else
-        return false;
+    else {
+            TC_LOG_ERROR("entities.player", "Player::Create: 10 error");
+            return false;
+    }
 
     return true;
 }

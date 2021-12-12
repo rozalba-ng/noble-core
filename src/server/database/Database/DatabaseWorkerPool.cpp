@@ -194,7 +194,6 @@ void DatabaseWorkerPool<T>::CommitTransaction(SQLTransaction transaction)
         break;
     }
 #endif // TRINITY_DEBUG
-
     Enqueue(new TransactionTask(transaction));
 }
 
