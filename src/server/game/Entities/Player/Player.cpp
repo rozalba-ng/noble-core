@@ -26556,7 +26556,6 @@ void Player::SendSupercededSpell(uint32 oldSpell, uint32 newSpell) const
 
 bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 hairID, uint8 hairColor, uint8 faceID, uint8 facialHair, uint8 skinColor, bool create /*=false*/)
 {
-    return true;
     // Check skin color
     // For Skin type is always 0
     if (CharSectionsEntry const* entry = GetCharSectionEntry(race, SECTION_TYPE_SKIN, gender, 0, skinColor))
@@ -26579,8 +26578,8 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
         }
     }
     else {
-        TC_LOG_ERROR("entities.player", "Player::Create: 1 error");
-        return false;
+        TC_LOG_ERROR("entities.player", "Player::Create: 1 error but return true for now, new races");
+        return true;
     }
 
 
