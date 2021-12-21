@@ -26563,39 +26563,49 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
         if (CharSectionsEntry const* entry2 = GetCharSectionEntry(race, SECTION_TYPE_FACE, gender, faceID, skinColor))
         {
             // Check DeathKnight exclusive
-            if (((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) || (entry2->Flags & SECTION_FLAG_DEATH_KNIGHT)) && class_ != CLASS_DEATH_KNIGHT)
+            if (((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) || (entry2->Flags & SECTION_FLAG_DEATH_KNIGHT)) && class_ != CLASS_DEATH_KNIGHT) {
                 return false;
-            if (create && !((entry->Flags & SECTION_FLAG_PLAYER) && (entry2->Flags & SECTION_FLAG_PLAYER)))
+            }
+            if (create && !((entry->Flags & SECTION_FLAG_PLAYER) && (entry2->Flags & SECTION_FLAG_PLAYER))) {
                 return false;
+            }
         }
-        else
+        else  {
             return false;
+        }
     }
-    else
+    else {
+        TC_LOG_ERROR("entities.player", "Player::Create: 2 SECTION_TYPE_SKIN error");
         return false;
+    }
+
 
     // These combinations don't have an entry of Type SECTION_TYPE_FACIAL_HAIR, exclude them from that check
-    bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) || (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
+    bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) || (race == RACE_BROKEN) || (race == RACE_VRYKUL)  || (race == RACE_TAUNKA)  || (race == RACE_ICE_TROLL) || (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
 
     // Check Hair
     if (CharSectionsEntry const* entry = GetCharSectionEntry(race, SECTION_TYPE_HAIR, gender, hairID, hairColor))
     {
-        if ((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT)
+        if ((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT)  {
             return false;
-        if (create && !(entry->Flags & SECTION_FLAG_PLAYER))
+        }
+        if (create && !(entry->Flags & SECTION_FLAG_PLAYER)) {
             return false;
+        }
 
         if (!excludeCheck)
         {
             if (CharSectionsEntry const* entry2 = GetCharSectionEntry(race, SECTION_TYPE_FACIAL_HAIR, gender, facialHair, hairColor))
             {
-                if ((entry2->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT)
+                if ((entry2->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT) {
                     return false;
-                if (create && !(entry2->Flags & SECTION_FLAG_PLAYER))
+                }
+                if (create && !(entry2->Flags & SECTION_FLAG_PLAYER)) {
                     return false;
-            }
-            else
+                }
+            }  else {
                 return false;
+            }
         }
         else
         {
@@ -26603,8 +26613,9 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
             // Not present in DBC
         }
     }
-    else
-        return false;
+    else {
+            return false;
+    }
 
     return true;
 }
