@@ -26564,37 +26564,32 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
         {
             // Check DeathKnight exclusive
             if (((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) || (entry2->Flags & SECTION_FLAG_DEATH_KNIGHT)) && class_ != CLASS_DEATH_KNIGHT) {
-                TC_LOG_ERROR("entities.player", "Player::Create: 2 error");
                 return false;
             }
             if (create && !((entry->Flags & SECTION_FLAG_PLAYER) && (entry2->Flags & SECTION_FLAG_PLAYER))) {
-                TC_LOG_ERROR("entities.player", "Player::Create: 3 error");
                 return false;
             }
         }
         else  {
-            TC_LOG_ERROR("entities.player", "Player::Create: 4 error");
             return false;
         }
     }
     else {
-        TC_LOG_ERROR("entities.player", "Player::Create: 1 error but return true for now, new races");
-        return true;
+        TC_LOG_ERROR("entities.player", "Player::Create: 2 SECTION_TYPE_SKIN error");
+        return false;
     }
 
 
     // These combinations don't have an entry of Type SECTION_TYPE_FACIAL_HAIR, exclude them from that check
-    bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) || (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
+    bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) || (race == RACE_BROKEN) || (race == RACE_VRYKUL)  || (race == RACE_TAUNKA)  || (race == RACE_ICE_TROLL) || (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
 
     // Check Hair
     if (CharSectionsEntry const* entry = GetCharSectionEntry(race, SECTION_TYPE_HAIR, gender, hairID, hairColor))
     {
         if ((entry->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT)  {
-            TC_LOG_ERROR("entities.player", "Player::Create: 5 error");
             return false;
         }
         if (create && !(entry->Flags & SECTION_FLAG_PLAYER)) {
-            TC_LOG_ERROR("entities.player", "Player::Create: 6 error");
             return false;
         }
 
@@ -26603,15 +26598,12 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
             if (CharSectionsEntry const* entry2 = GetCharSectionEntry(race, SECTION_TYPE_FACIAL_HAIR, gender, facialHair, hairColor))
             {
                 if ((entry2->Flags & SECTION_FLAG_DEATH_KNIGHT) && class_ != CLASS_DEATH_KNIGHT) {
-                    TC_LOG_ERROR("entities.player", "Player::Create: 9 error");
                     return false;
                 }
                 if (create && !(entry2->Flags & SECTION_FLAG_PLAYER)) {
-                    TC_LOG_ERROR("entities.player", "Player::Create: 7 error");
                     return false;
                 }
             }  else {
-                TC_LOG_ERROR("entities.player", "Player::Create: 8 error");
                 return false;
             }
         }
@@ -26622,7 +26614,6 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
         }
     }
     else {
-            TC_LOG_ERROR("entities.player", "Player::Create: 10 error");
             return false;
     }
 
