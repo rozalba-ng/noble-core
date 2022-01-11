@@ -3122,6 +3122,18 @@ namespace LuaGlobalFunctions
 		sObjectMgr->LoadCreatureOutfits();
 		return 1;
 	}
+
+    int ReloadAllNPC(Eluna* /*E*/, lua_State* L)
+    {
+        sObjectMgr->LoadGossipText();
+        sObjectMgr->LoadGossipMenu();
+        sObjectMgr->LoadCreatureOutfits();
+        sObjectMgr->LoadCreatureTemplates();
+        sObjectMgr->LoadCreatureTemplateAddons();
+        sObjectMgr->LoadEquipmentTemplates();
+        return 1;
+    }
+
 	/*int GetAllCharacterTempMounts(Eluna* E, lua_State* L)
 	{
 		lua_newtable(L);

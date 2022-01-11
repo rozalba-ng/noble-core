@@ -146,6 +146,7 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
 	{ "SetMapVisibilityRange", &LuaGlobalFunctions::SetMapVisibilityRange },
 	{ "RelocateFarCreature", &LuaGlobalFunctions::RelocateFarCreature },
 	{ "ReloadNPCOutfits", &LuaGlobalFunctions::ReloadNPCOutfits },
+    { "ReloadAllNPC", &LuaGlobalFunctions::ReloadAllNPC },
 		
     { NULL, NULL }
 };
