@@ -13054,7 +13054,8 @@ void Unit::SetRoleStat(uint8 stat, int32 value, bool apply, bool update) // ROLE
 	}
 
     role_stats[stat] += (apply ? value : -value);
-
+    UpdateMaxHealth();
+    UpdateMaxPower(POWER_MANA);
 	if (Player* player = ToPlayer())
 	{
 #ifdef ELUNA
@@ -13075,7 +13076,7 @@ int32 Unit::GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
         return NULL;
     }
     if (role_stats[stat] > MAX_ROLE_STAT_VAL) //а тут это максимальное значение характеристики, больше не вкачать
-        return 10;
+        return 50;
     else if (role_stats[stat] < 0)
         return 0;
     else

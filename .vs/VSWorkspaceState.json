@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\server",
+    "\\src\\server\\game",
+    "\\src\\server\\game\\AuctionHouseBot",
+    "\\src\\server\\game\\Entities",
+    "\\src\\server\\game\\Entities\\Unit",
+    "\\src\\server\\game\\LuaEngine",
+    "\\src\\server\\game\\Spells"
+  ],
+  "SelectedNode": "\\src\\server\\game\\LuaEngine\\UnitMethods.h",
+  "PreviewInSolutionExplorer": false
+}

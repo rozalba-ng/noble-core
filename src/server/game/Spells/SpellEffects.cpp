@@ -650,6 +650,25 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                 }
                 break;
             }
+            case SPELLFAMILY_FATEDICE:
+            {
+                damage = 0;
+                damage += m_spellInfo->Effects[effIndex].BasePoints;
+                int randomPoints = m_spellInfo->Effects[effIndex].DieSides;
+                int32 randvalue = (randomPoints >= 1)
+                    ? irand(1, randomPoints)
+                    : irand(randomPoints, 1);
+                damage += randvalue;
+                int attackStat = m_originalCaster->GetRoleStat((int)m_spellInfo->Effects[effIndex].DamageMultiplier);
+                float attackStatMultiplicator = m_spellInfo->Effects[effIndex].BonusMultiplier;
+                
+                int defStat = unitTarget->GetRoleStat(m_spellInfo->Effects[effIndex].MiscValue);
+                float defStatMultiplicator = (m_spellInfo->Effects[effIndex].MiscValueB)/100;
+                int resistDamage = defStat*defStatMultiplicator;
+
+                damage += (attackStat * attackStatMultiplicator) - resistDamage;
+                break;
+            }
         }
 
         if (m_originalCaster && damage > 0 && apply_direct_bonus)
@@ -1339,7 +1358,7 @@ void Spell::EffectPowerBurn(SpellEffIndex effIndex)
     m_damage += newDamage;
 }
 
-void Spell::EffectHeal(SpellEffIndex /*effIndex*/)
+void Spell::EffectHeal(SpellEffIndex effIndex)
 {
     if (effectHandleMode != SPELL_EFFECT_HANDLE_LAUNCH_TARGET)
         return;
@@ -1439,6 +1458,20 @@ void Spell::EffectHeal(SpellEffIndex /*effIndex*/)
         // Death Pact - return pct of max health to caster
         else if (m_spellInfo->SpellFamilyName == SPELLFAMILY_DEATHKNIGHT && m_spellInfo->SpellFamilyFlags[0] & 0x00080000)
             addhealth = caster->SpellHealingBonusDone(unitTarget, m_spellInfo, int32(caster->CountPctFromMaxHealth(damage)), HEAL);
+        else if (m_spellInfo->SpellFamilyName == SPELLFAMILY_FATEDICE)
+        {
+            addhealth = 0;
+            addhealth += m_spellInfo->Effects[effIndex].BasePoints;
+            int randomPoints = m_spellInfo->Effects[effIndex].DieSides;
+            int32 randvalue = (randomPoints >= 1)
+                ? irand(1, randomPoints)
+                : irand(randomPoints, 1);
+            addhealth += randvalue;
+            int attackStat = m_originalCaster->GetRoleStat((int)m_spellInfo->Effects[effIndex].DamageMultiplier);
+            float attackStatMultiplicator = m_spellInfo->Effects[effIndex].BonusMultiplier;
+
+            addhealth += (attackStat * attackStatMultiplicator);
+        }
         else
             addhealth = caster->SpellHealingBonusDone(unitTarget, m_spellInfo, addhealth, HEAL);
 
