@@ -19,7 +19,8 @@
 #include "Channel.h"
 #include "Guild.h"
 #include "Group.h"
-#include <iostream>
+#include "DatabaseEnv.h"
+#include "Util.h"
 
 class ChatLogScript : public PlayerScript
 {
@@ -28,29 +29,52 @@ class ChatLogScript : public PlayerScript
 
         void OnChat(Player* player, uint32 type, uint32 lang, std::string& msg) override
         {
-            std::cout << "Start chat" << std::endl;
+            bool needLog = false;
+            std::string charName = player->GetName().c_str();
+            uint8 chatType = 0;
+
             switch (type)
             {
                 case CHAT_MSG_SAY:
-                    std::cout << "Start say" << std::endl;
                     TC_LOG_DEBUG("chat.log.say", "Player %s says (language %u): %s",
-                        player->GetName().c_str(), lang, msg.c_str());
-                    TC_LOG_INFO("entities.player", "say: %s [[[%s]]]",  player->GetName().c_str(), msg.c_str());
+                                 player->GetName().c_str(), lang, msg.c_str());
+
+                    needLog = true;
+                    chatType = 1;
+
                     break;
 
                 case CHAT_MSG_EMOTE:
-                    std::cout << "Start emote" << std::endl;
                     TC_LOG_DEBUG("chat.log.emote", "Player %s emotes: %s",
                         player->GetName().c_str(), msg.c_str());
-                    TC_LOG_INFO("entities.player", "emote: %s [[[%s]]]",  player->GetName().c_str(), msg.c_str());
+
+                    needLog = true;
+                    chatType = 2;
+
                     break;
 
                 case CHAT_MSG_YELL:
-                    std::cout << "Start yell" << std::endl;
                     TC_LOG_DEBUG("chat.log.yell", "Player %s yells (language %u): %s",
                         player->GetName().c_str(), lang, msg.c_str());
-                    TC_LOG_INFO("entities.player", "yell: %s [[[%s]]]",  player->GetName().c_str(), msg.c_str());
+
+                    needLog = true;
+                    chatType = 3;
+
                     break;
+            }
+
+            if (needLog) {
+                std::string messaga = msg.c_str();
+
+                PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_INS_LOG);
+
+                stmt->setUInt64(0, uint64(1));
+                stmt->setUInt32(1, uint32(1));
+                stmt->setString(2, charName);
+                stmt->setUInt8(3, chatType);
+                stmt->setUInt32(4, uint32(utf8length(messaga)));
+                LoginDatabase.Execute(stmt);
+
             }
         }
 

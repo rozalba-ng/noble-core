@@ -17,7 +17,6 @@
 
 #include "AppenderDB.h"
 #include "Database/DatabaseEnv.h"
-#include <iostream>
 
 AppenderDB::AppenderDB(uint8 id, std::string const& name, LogLevel level, AppenderFlags /*flags*/, ExtraAppenderArgs /*extraArgs*/)
     : Appender(id, name, level), realmId(0), enabled(false) { }
@@ -26,25 +25,36 @@ AppenderDB::~AppenderDB() { }
 
 void AppenderDB::_write(LogMessage const* message)
 {
-    std::cout << "Start log" << message->text << std::endl;
     // Avoid infinite loop, PExecute triggers Logging with "sql.sql" type
     if (!enabled || (message->type.find("sql") != std::string::npos)) {
-        std::cout << "Cant log" << message->text << std::endl;
         return;
     }
+
+    std::string mess = message->text;
 
     PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_INS_LOG);
     stmt->setUInt64(0, message->mtime);
     stmt->setUInt32(1, realmId);
     stmt->setString(2, message->type);
     stmt->setUInt8(3, uint8(message->level));
-    stmt->setString(4, message->text);
+    stmt->setString(4, mess);
     LoginDatabase.Execute(stmt);
-    std::cout << "Started execute" << message->text << std::endl;
 }
 
 void AppenderDB::setRealmId(uint32 _realmId)
 {
     enabled = true;
     realmId = _realmId;
+}
+
+void AppenderDB::logChatDirect(std::string const& message) {
+    std::string type = "chatlog";
+
+    PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_INS_LOG);
+    stmt->setUInt64(0, uint64(1));
+    stmt->setUInt32(1, uint32(1));
+    stmt->setString(2, type);
+    stmt->setUInt8(3, uint8(1));
+    stmt->setString(4, message);
+    LoginDatabase.Execute(stmt);
 }

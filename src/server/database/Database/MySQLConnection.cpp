@@ -32,6 +32,7 @@
 #include "Timer.h"
 #include "Log.h"
 #include "ProducerConsumerQueue.h"
+#include <iostream>
 
 MySQLConnection::MySQLConnection(MySQLConnectionInfo& connInfo) :
 m_reconnecting(false),
@@ -154,8 +155,11 @@ bool MySQLConnection::PrepareStatements()
 
 bool MySQLConnection::Execute(const char* sql)
 {
-    if (!m_Mysql)
+    if (!m_Mysql) {
+        std::cout << "Check msql 1 " << std::endl;
         return false;
+    }
+
 
     {
         uint32 _s = getMSTime();
@@ -167,13 +171,18 @@ bool MySQLConnection::Execute(const char* sql)
             TC_LOG_INFO("sql.sql", "SQL: %s", sql);
             TC_LOG_ERROR("sql.sql", "[%u] %s", lErrno, mysql_error(m_Mysql));
 
-            if (_HandleMySQLErrno(lErrno))  // If it returns true, an error was handled successfully (i.e. reconnection)
+            if (_HandleMySQLErrno(lErrno)) {
+                std::cout << "Check msql Try again " << std::endl;
                 return Execute(sql);       // Try again
+            } // If it returns true, an error was handled successfully (i.e. reconnection)
 
+            std::cout << "Check msql false " << std::endl;
             return false;
         }
-        else
+        else {
+            std::cout << "Check msql no quert " << std::endl;
             TC_LOG_DEBUG("sql.sql", "[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql);
+        }
     }
 
     return true;
@@ -484,6 +493,7 @@ bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, uint8 attempts /*= 5*/)
         {
             if (m_Mysql)
             {
+                std::cout << "sql errno 1 " << std::endl;
                 TC_LOG_ERROR("sql.sql", "Lost the connection to the MySQL server!");
 
                 mysql_close(GetHandle());
@@ -494,6 +504,7 @@ bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, uint8 attempts /*= 5*/)
         }
         case CR_CONN_HOST_ERROR:
         {
+            std::cout << "sql errno 2 " << std::endl;
             TC_LOG_INFO("sql.sql", "Attempting to reconnect to the MySQL server...");
 
             m_reconnecting = true;
@@ -504,11 +515,13 @@ bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, uint8 attempts /*= 5*/)
                 // Don't remove 'this' pointer unless you want to skip loading all prepared statements...
                 if (!this->PrepareStatements())
                 {
+                    std::cout << "sql errno 3 " << std::endl;
                     TC_LOG_FATAL("sql.sql", "Could not re-prepare statements!");
                     std::this_thread::sleep_for(std::chrono::seconds(10));
                     std::abort();
                 }
 
+                std::cout << "sql errno 4 " << std::endl;
                 TC_LOG_INFO("sql.sql", "Successfully reconnected to %s @%s:%s (%s).",
                     m_connectionInfo.database.c_str(), m_connectionInfo.host.c_str(), m_connectionInfo.port_or_socket.c_str(),
                         (m_connectionFlags & CONNECTION_ASYNC) ? "asynchronous" : "synchronous");
@@ -521,6 +534,7 @@ bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, uint8 attempts /*= 5*/)
             {
                 // Shut down the server when the mysql server isn't
                 // reachable for some time
+                std::cout << "sql errno 5 " << std::endl;
                 TC_LOG_FATAL("sql.sql", "Failed to reconnect to the MySQL server, "
                              "terminating the server to prevent data corruption!");
 
@@ -530,6 +544,7 @@ bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, uint8 attempts /*= 5*/)
             }
             else
             {
+                std::cout << "sql errno 6 " << std::endl;
                 // It's possible this attempted reconnect throws 2006 at us.
                 // To prevent crazy recursive calls, sleep here.
                 std::this_thread::sleep_for(std::chrono::seconds(3)); // Sleep 3 seconds
@@ -547,16 +562,19 @@ bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, uint8 attempts /*= 5*/)
         // Outdated table or database structure - terminate core
         case ER_BAD_FIELD_ERROR:
         case ER_NO_SUCH_TABLE:
+            std::cout << "sql errno 7 " << std::endl;
             TC_LOG_ERROR("sql.sql", "Your database structure is not up to date. Please make sure you've executed all queries in the sql/updates folders.");
             std::this_thread::sleep_for(std::chrono::seconds(10));
             std::abort();
             return false;
         case ER_PARSE_ERROR:
+            std::cout << "sql errno 8 " << std::endl;
             TC_LOG_ERROR("sql.sql", "Error while parsing SQL. Core fix required.");
             std::this_thread::sleep_for(std::chrono::seconds(10));
             std::abort();
             return false;
         default:
+            std::cout << "sql errno 9 " << std::endl;
             TC_LOG_ERROR("sql.sql", "Unhandled MySQL errno %u. Unexpected behaviour possible.", errNo);
             return false;
     }
