@@ -2307,9 +2307,6 @@ class TC_GAME_API Unit : public WorldObject
         uint32 m_state;                                     // Even derived shouldn't modify
         uint32 m_CombatTimer;
         uint32 m_lastManaUse;                               // msecs
-
-        int32 m_rolebattleid;
-
         TimeTrackerSmall m_movesplineTimer;
 
         Diminishing m_Diminishing;

@@ -17,4 +17,3 @@ CMakeLists.txt.user
 *.BASE.*
 *.LOCAL.*
 nbproject/*
-.vs/

@@ -1487,12 +1487,7 @@ namespace LuaUnit
         unit->setFaction(factionId);
         return 0;
     }
-    int SetRoleBattleId(Eluna* /*E*/, lua_State* L, Unit* unit)
-    {
-        uint32 battleId = Eluna::CHECKVAL<uint32>(L, 2);
-        unit->m_rolebattleid = battleId;
-        return 0;
-    }
+
     /**
      * Sets the [Unit]'s level.
      *
