@@ -32,16 +32,19 @@ class ChatLogScript : public PlayerScript
                 case CHAT_MSG_SAY:
                     TC_LOG_DEBUG("chat.log.say", "Player %s says (language %u): %s",
                         player->GetName().c_str(), lang, msg.c_str());
+                    TC_LOG_INFO("entities.player", "say: %s [[[%s]]]",  player->GetName().c_str(), msg.c_str());
                     break;
 
                 case CHAT_MSG_EMOTE:
                     TC_LOG_DEBUG("chat.log.emote", "Player %s emotes: %s",
                         player->GetName().c_str(), msg.c_str());
+                    TC_LOG_INFO("entities.player", "emote: %s [[[%s]]]",  player->GetName().c_str(), msg.c_str());
                     break;
 
                 case CHAT_MSG_YELL:
                     TC_LOG_DEBUG("chat.log.yell", "Player %s yells (language %u): %s",
                         player->GetName().c_str(), lang, msg.c_str());
+                    TC_LOG_INFO("entities.player", "yell: %s [[[%s]]]",  player->GetName().c_str(), msg.c_str());
                     break;
             }
         }
