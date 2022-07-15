@@ -25,9 +25,12 @@ AppenderDB::~AppenderDB() { }
 
 void AppenderDB::_write(LogMessage const* message)
 {
+    std::cout << "Start log" << message->text << std::endl;
     // Avoid infinite loop, PExecute triggers Logging with "sql.sql" type
-    if (!enabled || (message->type.find("sql") != std::string::npos))
+    if (!enabled || (message->type.find("sql") != std::string::npos)) {
+        std::cout << "Cant log" << message->text << std::endl;
         return;
+    }
 
     PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_INS_LOG);
     stmt->setUInt64(0, message->mtime);
@@ -36,6 +39,7 @@ void AppenderDB::_write(LogMessage const* message)
     stmt->setUInt8(3, uint8(message->level));
     stmt->setString(4, message->text);
     LoginDatabase.Execute(stmt);
+    std::cout << "Started execute" << message->text << std::endl;
 }
 
 void AppenderDB::setRealmId(uint32 _realmId)
