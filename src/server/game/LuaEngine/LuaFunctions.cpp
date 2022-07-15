@@ -295,6 +295,7 @@ ElunaRegister<Unit> UnitMethods[] =
 
     // Setters
     { "SetFaction", &LuaUnit::SetFaction },
+    { "SetRoleBattleId", &LuaUnit::SetRoleBattleId },
     { "SetLevel", &LuaUnit::SetLevel },
     { "SetHealth", &LuaUnit::SetHealth },
     { "SetMaxHealth", &LuaUnit::SetMaxHealth },

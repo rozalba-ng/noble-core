@@ -259,6 +259,7 @@ Unit::Unit(bool isWorldObject) :
 
     m_CombatTimer = 0;
     m_lastManaUse = 0;
+    m_rolebattleid = 0;
 
     for (uint8 i = 0; i < MAX_SPELL_SCHOOL; ++i)
         m_threatModifier[i] = 1.0f;
@@ -8360,7 +8361,14 @@ ReputationRank Unit::GetReactionTo(Unit const* target) const
     // always friendly to charmer or owner
     if (GetCharmerOrOwnerOrSelf() == target->GetCharmerOrOwnerOrSelf())
         return REP_FRIENDLY;
+    if (this->m_rolebattleid > 0)
+    {
+        if (this->m_rolebattleid == target->m_rolebattleid)
+            return REP_HOSTILE
+        else
+            return REP_FRIENDLY
 
+    }
     Player const* selfPlayerOwner = GetAffectingPlayer();
     Player const* targetPlayerOwner = target->GetAffectingPlayer();
 
