@@ -264,7 +264,6 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetAura", &LuaUnit::GetAura },
     { "GetCombatTime", &LuaUnit::GetCombatTime },
     { "GetFaction", &LuaUnit::GetFaction },
-    { "GetRoleBattleId", &LuaUnit::GetRoleBattleId },
     { "GetCurrentSpell", &LuaUnit::GetCurrentSpell },
     { "GetCreatureType", &LuaUnit::GetCreatureType },
     { "GetMountId", &LuaUnit::GetMountId },

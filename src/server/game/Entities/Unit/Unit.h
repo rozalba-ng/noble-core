@@ -2307,10 +2307,9 @@ class TC_GAME_API Unit : public WorldObject
         uint32 m_state;                                     // Even derived shouldn't modify
         uint32 m_CombatTimer;
         uint32 m_lastManaUse;                               // msecs
-        
+
         int32 m_rolebattleid;
-        int32 GetRoleBattleId()   const { return m_rolebattleid; }
-        void SetRoleBattleId(int32 battleId) { m_rolebattleid = battleId; }
+
         TimeTrackerSmall m_movesplineTimer;
 
         Diminishing m_Diminishing;

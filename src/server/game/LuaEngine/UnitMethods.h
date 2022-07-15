@@ -1149,11 +1149,7 @@ namespace LuaUnit
         Eluna::Push(L, unit->getFaction());
         return 1;
     }
-    int GetRoleBattleId(Eluna* /*E*/, lua_State* L, Unit* unit)
-    {
-        Eluna::Push(L, unit->GetRoleBattleId());
-        return 1;
-    }
+
     /**
      * Returns the [Aura] of the given spell entry on the [Unit] or nil.
      *
@@ -1494,7 +1490,7 @@ namespace LuaUnit
     int SetRoleBattleId(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint32 battleId = Eluna::CHECKVAL<uint32>(L, 2);
-        unit->SetRoleBattleId(battleId);
+        unit->m_rolebattleid = battleId;
         return 0;
     }
     /**
