@@ -8364,9 +8364,9 @@ ReputationRank Unit::GetReactionTo(Unit const* target) const
     if (this->m_rolebattleid > 0)
     {
         if (this->m_rolebattleid == target->m_rolebattleid)
-            return REP_HOSTILE
+            return REP_HOSTILE;
         else
-            return REP_FRIENDLY
+            return REP_FRIENDLY;
 
     }
     Player const* selfPlayerOwner = GetAffectingPlayer();
