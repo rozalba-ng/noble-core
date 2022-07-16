@@ -452,7 +452,7 @@ public:
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
 	void OnRoleStatUpdate(Player* pPlayer, uint32 stat); // ROLE STAT SYSTEM 
     bool OnHandDamage(Unit* unit, Unit* target);
-    bool OnUnitStartCast(Unit* unit, Spell* spell);
+    bool OnUnitStartCast(Unit* unit, Spell* spell,bool isFirstInChain);
 	void OnMovementFlagsSetPlayer(Player* me, uint32 moveFlags, bool add);
 	void OnApplySpellEffects(Unit* me, Spell* pSpell);
 
