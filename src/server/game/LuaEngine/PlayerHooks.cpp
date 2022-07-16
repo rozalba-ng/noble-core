@@ -590,14 +590,20 @@ void Eluna::OnRoleStatUpdate(Player* pPlayer, uint32 stat) // ROLE STAT SYSTEM
 	Push(stat);
 	CallAllFunctions(PlayerEventBindings, key);
 }
-bool Eluna::OnHandDamage(Unit* unit, Unit* target) // Когда игрок наносит урон с автоматической атаки
+bool Eluna::OnHandDamage(Unit* unit, Unit* target) // Когда юнит наносит урон с автоматической атаки
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_HAND_DAMAGE, true);
     Push(unit);
     Push(target);
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
-
+bool Eluna::OnUnitStartCast(Unit* unit, Spell* spell) // Когда юнит начинает готовить спелл
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_UNIT_START_CAST, true);
+    Push(unit);
+    Push(spell);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
 void Eluna::OnMovementFlagsSetPlayer(Player* me, uint32 moveFlags, bool add)
 {
 	START_HOOK(PLAYER_EVENT_ON_MOVEMENT_FLAGS_SET);
