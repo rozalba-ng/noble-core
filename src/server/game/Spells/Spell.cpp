@@ -2886,9 +2886,11 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggered
     }
 #ifdef ELUNA
     if (!sEluna->OnUnitStartCast(m_caster, this))
+    {
         SendCastResult(SPELL_FAILED_SPELL_IN_PROGRESS);
         finish(false);
         return;
+    }
 #endif
     InitExplicitTargets(*targets);
 
