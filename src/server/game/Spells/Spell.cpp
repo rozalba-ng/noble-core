@@ -2884,9 +2884,12 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggered
         m_castItemGUID.Clear();
         m_castItemEntry = 0;
     }
-    bool isFirst = this->m_spellInfo->ChainEntry->first == this->m_spellInfo;
+    
     InitExplicitTargets(*targets);
 #ifdef ELUNA
+    bool isFirst = false;
+    if (this->m_spellInfo->ChainEntry != NULL && this->m_spellInfo->ChainEntry->first == this->m_spellInfo)
+        isFirst = true;
     if (!sEluna->OnUnitStartCast(m_caster, this, isFirst))
     {
         SendCastResult(SPELL_FAILED_SPELL_IN_PROGRESS);
