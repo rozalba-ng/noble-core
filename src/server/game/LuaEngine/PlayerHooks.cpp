@@ -602,7 +602,7 @@ bool Eluna::OnUnitStartCast(Unit* unit, Spell* spell, bool isFirstInChain) // Ко
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_UNIT_START_CAST, true);
     Push(unit);
     Push(spell);
-    Push(isFirstInChain)
+    Push(isFirstInChain);
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 void Eluna::OnMovementFlagsSetPlayer(Player* me, uint32 moveFlags, bool add)
