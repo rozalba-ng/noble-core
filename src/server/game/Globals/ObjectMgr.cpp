@@ -847,7 +847,7 @@ void ObjectMgr::CheckCreatureTemplate(CreatureTemplate const* cInfo)
 
     if (!cInfo->unit_class || ((1 << (cInfo->unit_class-1)) & CLASSMASK_ALL_CREATURES) == 0)
     {
-        TC_LOG_ERROR("sql.sql", "Creature (Entry: %u) has invalid unit_class (%u) in creature_template. Set to 1 (UNIT_CLASS_WARRIOR).", cInfo->Entry, cInfo->unit_class);
+//        TC_LOG_ERROR("sql.sql", "Creature (Entry: %u) has invalid unit_class (%u) in creature_template. Set to 1 (UNIT_CLASS_WARRIOR).", cInfo->Entry, cInfo->unit_class);
         const_cast<CreatureTemplate*>(cInfo)->unit_class = UNIT_CLASS_WARRIOR;
     }
 
@@ -1747,8 +1747,8 @@ void ObjectMgr::LoadCreatures()
         }
 
         // Skip spawnMask check for transport maps
-        if (!IsTransportMap(data.mapid) && data.spawnMask & ~spawnMasks[data.mapid])
-            TC_LOG_ERROR("sql.sql", "Table `creature` has creature (GUID: %u) that have wrong spawn mask %u including unsupported difficulty modes for map (Id: %u).", guid, data.spawnMask, data.mapid);
+//        if (!IsTransportMap(data.mapid) && data.spawnMask & ~spawnMasks[data.mapid])
+//            TC_LOG_ERROR("sql.sql", "Table `creature` has creature (GUID: %u) that have wrong spawn mask %u including unsupported difficulty modes for map (Id: %u).", guid, data.spawnMask, data.mapid);
 
         bool ok = true;
         for (uint32 diff = 0; diff < MAX_DIFFICULTY - 1 && ok; ++diff)
@@ -2241,8 +2241,8 @@ void ObjectMgr::LoadGameobjects()
 
         data.spawnMask      = fields[14].GetUInt8();
 
-        if (!IsTransportMap(data.mapid) && data.spawnMask & ~spawnMasks[data.mapid])
-            TC_LOG_ERROR("sql.sql", "Table `gameobject` has gameobject (GUID: %u Entry: %u) that has wrong spawn mask %u including unsupported difficulty modes for map (Id: %u), skip", guid, data.id, data.spawnMask, data.mapid);
+//        if (!IsTransportMap(data.mapid) && data.spawnMask & ~spawnMasks[data.mapid])
+//            TC_LOG_ERROR("sql.sql", "Table `gameobject` has gameobject (GUID: %u Entry: %u) that has wrong spawn mask %u including unsupported difficulty modes for map (Id: %u), skip", guid, data.id, data.spawnMask, data.mapid);
 
         data.phaseMask      = fields[15].GetUInt32();
         int16 gameEvent     = fields[16].GetInt8();
