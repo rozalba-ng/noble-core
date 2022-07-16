@@ -2888,7 +2888,7 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggered
     InitExplicitTargets(*targets);
 #ifdef ELUNA
     bool isFirst = false;
-    if (this->m_spellInfo->ChainEntry != NULL && this->m_spellInfo->ChainEntry->first.Id == this->m_spellInfo.Id)
+    if (this->m_spellInfo->ChainEntry != NULL && this->m_spellInfo->ChainEntry->first->Id == this->m_spellInfo->Id)
         isFirst = true;
     if (!sEluna->OnUnitStartCast(m_caster, this, isFirst))
     {
