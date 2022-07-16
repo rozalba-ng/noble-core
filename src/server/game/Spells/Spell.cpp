@@ -2887,9 +2887,7 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggered
     
     InitExplicitTargets(*targets);
 #ifdef ELUNA
-    bool isFirst = false;
-    if (std::vector<int32> const* spell_triggered = sSpellMgr->GetSpellLinked(m_spellInfo->Id))
-        isFirst = true;
+    bool isFirst = IsTriggered();
     if (!sEluna->OnUnitStartCast(m_caster, this, isFirst))
     {
         SendCastResult(SPELL_FAILED_SPELL_IN_PROGRESS);
