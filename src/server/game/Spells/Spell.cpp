@@ -2886,7 +2886,7 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggered
     }
 #ifdef ELUNA
     if (!sEluna->OnUnitStartCast(m_caster, this))
-        cancel();
+        finish(true);
         return;
 #endif
     InitExplicitTargets(*targets);
