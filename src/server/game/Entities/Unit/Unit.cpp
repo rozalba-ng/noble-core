@@ -906,10 +906,7 @@ void Unit::CastSpell(SpellCastTargets const& targets, SpellInfo const* spellInfo
             spell->SetSpellValue(itr->first, itr->second);
 
     spell->m_CastItem = castItem;
-#ifdef ELUNA
-    if (!sEluna->OnUnitStartCast(this, spell))
-        return;
-#endif
+
     spell->prepare(&targets, triggeredByAura);
 }
 

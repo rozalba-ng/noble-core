@@ -2884,7 +2884,10 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggered
         m_castItemGUID.Clear();
         m_castItemEntry = 0;
     }
-
+#ifdef ELUNA
+    if (!sEluna->OnUnitStartCast(m_caster, this))
+        return;
+#endif
     InitExplicitTargets(*targets);
 
     // Fill aura scaling information
