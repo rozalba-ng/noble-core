@@ -31,7 +31,7 @@ class ChatLogScript : public PlayerScript
         {
             bool needLog = false;
             std::string charName = player->GetName().c_str();
-            uint8 chatType = 0;
+            std::string chatType = "log";
 
             switch (type)
             {
@@ -40,7 +40,7 @@ class ChatLogScript : public PlayerScript
                                  player->GetName().c_str(), lang, msg.c_str());
 
                     needLog = true;
-                    chatType = 1;
+                    chatType = "say";
 
                     break;
 
@@ -49,7 +49,7 @@ class ChatLogScript : public PlayerScript
                         player->GetName().c_str(), msg.c_str());
 
                     needLog = true;
-                    chatType = 2;
+                    chatType = "emote";
 
                     break;
 
@@ -58,7 +58,7 @@ class ChatLogScript : public PlayerScript
                         player->GetName().c_str(), lang, msg.c_str());
 
                     needLog = true;
-                    chatType = 3;
+                    chatType = "yell";
 
                     break;
             }
@@ -66,14 +66,13 @@ class ChatLogScript : public PlayerScript
             if (needLog) {
                 std::string messaga = msg.c_str();
 
-                PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_INS_LOG);
+                PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CHARACTER_CHAT_LOG);
 
-                stmt->setUInt64(0, uint64(1));
-                stmt->setUInt32(1, uint32(1));
-                stmt->setString(2, charName);
-                stmt->setUInt8(3, chatType);
-                stmt->setUInt32(4, uint32(utf8length(messaga)));
-                LoginDatabase.Execute(stmt);
+                stmt->setString(0, charName);
+                stmt->setString(1, chatType);
+                stmt->setUInt32(2, uint32(utf8length(messaga)));
+                stmt->setString(3, msg);
+                CharacterDatabase.Execute(stmt);
 
             }
         }
