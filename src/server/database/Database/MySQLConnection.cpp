@@ -180,7 +180,6 @@ bool MySQLConnection::Execute(const char* sql)
             return false;
         }
         else {
-            std::cout << "Check msql no quert " << std::endl;
             TC_LOG_DEBUG("sql.sql", "[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql);
         }
     }
