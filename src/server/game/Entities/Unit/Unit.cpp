@@ -1187,7 +1187,10 @@ void Unit::CalculateMeleeDamage(Unit* victim, uint32 damage, CalcDamageInfo* dam
 
     if (!IsAlive() || !victim->IsAlive())
         return;
-
+#ifdef ELUNA
+    if (!sEluna->OnHandDamage(this, victim))
+        return;
+#endif
     // Select HitInfo/procAttacker/procVictim flag based on attack type
     switch (attackType)
     {
@@ -1992,10 +1995,7 @@ void Unit::CalcHealAbsorb(Unit* victim, SpellInfo const* healSpell, uint32 &heal
 
 void Unit::AttackerStateUpdate (Unit* victim, WeaponAttackType attType, bool extra)
 {
-#ifdef ELUNA
-    if (!sEluna->OnHandDamage(this, victim))
-        return;
-#endif
+
     if (HasUnitState(UNIT_STATE_CANNOT_AUTOATTACK) || HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED))
         return;
 
