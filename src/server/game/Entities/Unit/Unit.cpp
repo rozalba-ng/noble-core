@@ -1187,10 +1187,7 @@ void Unit::CalculateMeleeDamage(Unit* victim, uint32 damage, CalcDamageInfo* dam
 
     if (!IsAlive() || !victim->IsAlive())
         return;
-#ifdef ELUNA
-    if (!sEluna->OnHandDamage(this, victim))
-        return;
-#endif
+
     // Select HitInfo/procAttacker/procVictim flag based on attack type
     switch (attackType)
     {

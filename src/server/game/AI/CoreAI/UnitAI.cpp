@@ -52,7 +52,10 @@ void UnitAI::DoMeleeAttackIfReady()
         return;
 
     Unit* victim = me->GetVictim();
-
+#ifdef ELUNA
+    if (!sEluna->OnHandDamage(me, me->GetVictim()))
+        return;
+#endif
     if (!me->IsWithinMeleeRange(victim))
         return;
 

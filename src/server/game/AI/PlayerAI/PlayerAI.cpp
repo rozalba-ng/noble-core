@@ -673,9 +673,13 @@ void PlayerAI::DoRangedAttackIfReady()
         return;
 
     Unit* victim = me->GetVictim();
+
     if (!victim)
         return;
-
+#ifdef ELUNA
+    if (!sEluna->OnHandDamage(me, victim))
+        return;
+#endif
     uint32 rangedAttackSpell = 0;
 
     Item const* rangedItem = me->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_RANGED);
@@ -706,6 +710,7 @@ void PlayerAI::DoRangedAttackIfReady()
 
 void PlayerAI::DoAutoAttackIfReady()
 {
+
     if (IsRangedAttacker())
         DoRangedAttackIfReady();
     else
