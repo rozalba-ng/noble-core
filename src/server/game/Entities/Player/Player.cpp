@@ -1312,7 +1312,10 @@ void Player::Update(uint32 p_time)
         {
             // default combat reach 10
             /// @todo add weapon, skill check
-
+#ifdef ELUNA
+            if (!sEluna->OnHandDamage(this, GetVictim()))
+                return;
+#endif
             if (isAttackReady(BASE_ATTACK))
             {
                 if (!IsWithinMeleeRange(victim))

@@ -8547,7 +8547,10 @@ bool Unit::Attack(Unit* victim, bool meleeAttack)
 {
     if (!victim || victim == this)
         return false;
-
+#ifdef ELUNA
+    if (!sEluna->OnHandDamage(this, victim))
+        return;
+#endif
     // dead units can neither attack nor be attacked
     if (!IsAlive() || !victim->IsInWorld() || !victim->IsAlive())
         return false;

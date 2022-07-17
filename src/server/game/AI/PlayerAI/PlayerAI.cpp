@@ -18,9 +18,7 @@
 #include "PlayerAI.h"
 #include "SpellAuras.h"
 #include "SpellAuraEffects.h"
-#ifdef ELUNA
-#include "LuaEngine.h"
-#endif
+
 static const uint8 NUM_TALENT_TREES = 3;
 static const uint8 NUM_SPEC_ICONICS = 3;
 
@@ -678,10 +676,7 @@ void PlayerAI::DoRangedAttackIfReady()
 
     if (!victim)
         return;
-#ifdef ELUNA
-    if (!sEluna->OnHandDamage(me, victim))
-        return;
-#endif
+
     uint32 rangedAttackSpell = 0;
 
     Item const* rangedItem = me->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_RANGED);
