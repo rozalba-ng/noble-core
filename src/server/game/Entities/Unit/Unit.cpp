@@ -1372,10 +1372,7 @@ void Unit::CalculateMeleeDamage(Unit* victim, uint32 damage, CalcDamageInfo* dam
 void Unit::DealMeleeDamage(CalcDamageInfo* damageInfo, bool durabilityLoss)
 {
     Unit* victim = damageInfo->target;
-#ifdef ELUNA
-    if (!sEluna->OnHandDamage(this, victim))
-        return;
-#endif
+
     if (!victim->IsAlive() || victim->HasUnitState(UNIT_STATE_IN_FLIGHT) || (victim->GetTypeId() == TYPEID_UNIT && victim->ToCreature()->IsEvadingAttacks()))
         return;
 
@@ -1995,6 +1992,10 @@ void Unit::CalcHealAbsorb(Unit* victim, SpellInfo const* healSpell, uint32 &heal
 
 void Unit::AttackerStateUpdate (Unit* victim, WeaponAttackType attType, bool extra)
 {
+#ifdef ELUNA
+    if (!sEluna->OnHandDamage(this, victim))
+        return;
+#endif
     if (HasUnitState(UNIT_STATE_CANNOT_AUTOATTACK) || HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED))
         return;
 
