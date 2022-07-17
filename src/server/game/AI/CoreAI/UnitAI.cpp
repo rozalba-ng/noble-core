@@ -25,7 +25,9 @@
 #include "SpellInfo.h"
 #include "Spell.h"
 #include "CreatureAIImpl.h"
-
+#ifdef ELUNA
+#include "LuaEngine.h"
+#endif
 void UnitAI::AttackStart(Unit* victim)
 {
     if (victim && me->Attack(victim, true))

@@ -18,7 +18,9 @@
 #include "PlayerAI.h"
 #include "SpellAuras.h"
 #include "SpellAuraEffects.h"
-
+#ifdef ELUNA
+#include "LuaEngine.h"
+#endif
 static const uint8 NUM_TALENT_TREES = 3;
 static const uint8 NUM_SPEC_ICONICS = 3;
 
