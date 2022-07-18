@@ -470,6 +470,8 @@ Player::Player(WorldSession* session): Unit(true)
     m_baseHealthRegen = 0;
     m_spellPenetrationItemMod = 0;
 
+    m_manaRegenDisabled = false;
+
     // Honor System
     m_lastHonorUpdateTime = time(nullptr);
 
@@ -2219,6 +2221,9 @@ void Player::Regenerate(Powers power)
 {
     uint32 maxValue = GetMaxPower(power);
     if (!maxValue)
+        return;
+
+    if (power == POWER_MANA && m_manaRegenDisabled)
         return;
 
     uint32 curValue = GetPower(power);

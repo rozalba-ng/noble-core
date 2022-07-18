@@ -3924,6 +3924,21 @@ namespace LuaPlayer
         return 0;
     }
 
+
+    int SetManaRegenDisable(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
+
+        if (apply)
+        {
+            player->m_manaRegenDisabled = true;
+        }
+        else
+        {
+            player->m_manaRegenDisabled = false;
+        }
+        return 0;
+    }
 #if !defined(CLASSIC) && !defined(TBC)
     /**
      * Starts a movie for the [Player]
