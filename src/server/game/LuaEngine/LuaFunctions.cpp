@@ -333,7 +333,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "SetWaterWalk", &LuaUnit::SetWaterWalk },
     { "SetStandState", &LuaUnit::SetStandState },
 	{ "SetRoleStat", &LuaUnit::SetRoleStat },
-    { "SetManaRegenDisable", &LuaPlayer::SetManaRegenDisable },
+    { "SetManaRegenDisable", &LuaUnit::SetManaRegenDisable },
     // Boolean
     { "IsAlive", &LuaUnit::IsAlive },
     { "IsDead", &LuaUnit::IsDead },
