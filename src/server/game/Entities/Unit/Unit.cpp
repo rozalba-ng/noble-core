@@ -13152,7 +13152,8 @@ void Unit::SetPower(Powers power, uint32 val)
 {
     if (GetPower(power) == val)
         return;
-
+    if (power == POWER_MANA && m_manaRegenDisabled)
+        return;
     uint32 maxPower = GetMaxPower(power);
     if (maxPower < val)
         val = maxPower;

@@ -521,6 +521,7 @@ ElunaRegister<Player> PlayerMethods[] =
 	{ "GetSelectedUnit", &LuaPlayer::GetSelectedUnit },
 	//{ "GetCharacterMountList", &LuaPlayer::GetCharacterMountList },
 	{ "GetTransport", &LuaPlayer::GetTransport },
+    { "GetManaRegenDisable", &LuaPlayer::GetManaRegenDisable }
 	{ "GetTransportOffsetX", &LuaPlayer::GetTransportOffsetX },
 #ifndef CATA
     { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
