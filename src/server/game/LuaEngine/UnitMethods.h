@@ -1569,20 +1569,6 @@ namespace LuaUnit
         return 0;
     }
 
-    int SetManaRegenDisable(Eluna* /*E*/, lua_State* L, Unit* unit)
-    {
-        bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
-
-        if (apply)
-        {
-            unit->m_manaRegenDisabled = true;
-        }
-        else
-        {
-            unit->m_manaRegenDisabled = false;
-        }
-        return 0;
-    }
     /**
      * Sets the [Unit]'s max power amount for the given power type.
      *

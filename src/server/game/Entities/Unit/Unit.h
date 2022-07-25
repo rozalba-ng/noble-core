@@ -1388,8 +1388,6 @@ class TC_GAME_API Unit : public WorldObject
 
 		void SetRoleStat(uint8 stat, int32 val, bool apply, bool update = true); // ROLE STAT SYSTEM
 		int32 GetRoleStat(uint8 stat) const;
-        
-        bool m_manaRegenDisabled;
 
         void SetHealth(uint32 val);
         void SetMaxHealth(uint32 val);

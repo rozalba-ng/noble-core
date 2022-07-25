@@ -333,7 +333,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "SetWaterWalk", &LuaUnit::SetWaterWalk },
     { "SetStandState", &LuaUnit::SetStandState },
 	{ "SetRoleStat", &LuaUnit::SetRoleStat },
-    { "SetManaRegenDisable", &LuaUnit::SetManaRegenDisable },
+
     // Boolean
     { "IsAlive", &LuaUnit::IsAlive },
     { "IsDead", &LuaUnit::IsDead },
@@ -758,7 +758,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GroupInvite", &LuaPlayer::GroupInvite },
     { "GroupCreate", &LuaPlayer::GroupCreate },
     { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
-    
+    { "SetManaRegenDisable", &LuaPlayer::SetManaRegenDisable },
 	//{ "SpawnTempCharacterMount", &LuaPlayer::SpawnTempCharacterMount },		
 #if !defined(CLASSIC) && !defined(TBC)
     { "SendMovieStart", &LuaPlayer::SendMovieStart },

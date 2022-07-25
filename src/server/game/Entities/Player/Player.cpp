@@ -2331,6 +2331,8 @@ void Player::Regenerate(Powers power)
         else
             m_powerFraction[power] = addvalue - integerValue;
     }
+    if (power == POWER_MANA && m_manaRegenDisabled)
+        return;
     if (m_regenTimerCount >= 2000)
         SetPower(power, curValue);
     else

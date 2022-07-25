@@ -1135,7 +1135,7 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         uint32 GetTotalPlayedTime() const { return m_Played_time[PLAYED_TIME_TOTAL]; }
         uint32 GetLevelPlayedTime() const { return m_Played_time[PLAYED_TIME_LEVEL]; }
 
-        
+        bool m_manaRegenDisabled;
 
         void setDeathState(DeathState s) override;                   // overwrite Unit::setDeathState
 
