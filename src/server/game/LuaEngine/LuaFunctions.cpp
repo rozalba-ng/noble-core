@@ -333,7 +333,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "SetWaterWalk", &LuaUnit::SetWaterWalk },
     { "SetStandState", &LuaUnit::SetStandState },
 	{ "SetRoleStat", &LuaUnit::SetRoleStat },
-
+    { "SetManaRegenDisable", &LuaPlayer::SetManaRegenDisable },
     // Boolean
     { "IsAlive", &LuaUnit::IsAlive },
     { "IsDead", &LuaUnit::IsDead },
@@ -521,7 +521,6 @@ ElunaRegister<Player> PlayerMethods[] =
 	{ "GetSelectedUnit", &LuaPlayer::GetSelectedUnit },
 	//{ "GetCharacterMountList", &LuaPlayer::GetCharacterMountList },
 	{ "GetTransport", &LuaPlayer::GetTransport },
-    { "GetManaRegenDisable", &LuaPlayer::GetManaRegenDisable },
 	{ "GetTransportOffsetX", &LuaPlayer::GetTransportOffsetX },
 #ifndef CATA
     { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
@@ -759,7 +758,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GroupInvite", &LuaPlayer::GroupInvite },
     { "GroupCreate", &LuaPlayer::GroupCreate },
     { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
-    { "SetManaRegenDisable", &LuaPlayer::SetManaRegenDisable },
+    
 	//{ "SpawnTempCharacterMount", &LuaPlayer::SpawnTempCharacterMount },		
 #if !defined(CLASSIC) && !defined(TBC)
     { "SendMovieStart", &LuaPlayer::SendMovieStart },
