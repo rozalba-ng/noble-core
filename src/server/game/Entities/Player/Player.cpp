@@ -2223,7 +2223,7 @@ void Player::Regenerate(Powers power)
     if (!maxValue)
         return;
 
-    if (power == POWER_MANA && m_manaRegenDisabled)
+    if (power == POWER_MANA && this.m_manaRegenDisabled)
         return;
 
     uint32 curValue = GetPower(power);
