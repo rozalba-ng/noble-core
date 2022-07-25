@@ -2237,6 +2237,8 @@ void Player::Regenerate(Powers power)
     {
         case POWER_MANA:
         {
+            if (m_manaRegenDisabled==true)
+                return;
             bool recentCast = IsUnderLastManaUseEffect();
             float ManaIncreaseRate = sWorld->getRate(RATE_POWER_MANA);
 
@@ -2331,8 +2333,7 @@ void Player::Regenerate(Powers power)
         else
             m_powerFraction[power] = addvalue - integerValue;
     }
-    if (power == POWER_MANA && m_manaRegenDisabled)
-        return;
+    
     if (m_regenTimerCount >= 2000)
         SetPower(power, curValue);
     else
