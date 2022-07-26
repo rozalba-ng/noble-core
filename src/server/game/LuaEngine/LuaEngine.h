@@ -455,6 +455,7 @@ public:
     bool OnUnitStartCast(Unit* unit, Spell* spell,bool isFirstInChain);
 	void OnMovementFlagsSetPlayer(Player* me, uint32 moveFlags, bool add);
 	void OnApplySpellEffects(Unit* me, Spell* pSpell);
+    void OnManaChange(Player* pPlayer, uint32 curMana);
 
 #ifndef CLASSIC
 #ifndef TBC

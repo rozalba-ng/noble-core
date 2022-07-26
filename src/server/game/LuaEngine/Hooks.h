@@ -209,7 +209,7 @@ namespace Hooks
 		PLAYER_EVENT_ON_APPLY_SPELL_EFFECTS		=	  48,       // (event, player, spell)
         PLAYER_EVENT_ON_HAND_DAMAGE             =     49,       // (event, player, target)
         PLAYER_EVENT_ON_UNIT_START_CAST         =     50,       // (event, player, spell,isFirstInChain)
-		
+        PLAYER_EVENT_ON_MANA_CHANGE             =     51,       // (event, player, curMana)
         PLAYER_EVENT_COUNT
     };
 

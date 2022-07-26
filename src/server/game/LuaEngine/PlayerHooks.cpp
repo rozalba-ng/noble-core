@@ -590,6 +590,13 @@ void Eluna::OnRoleStatUpdate(Player* pPlayer, uint32 stat) // ROLE STAT SYSTEM
 	Push(stat);
 	CallAllFunctions(PlayerEventBindings, key);
 }
+void Eluna::OnManaChange(Player* pPlayer, uint32 curMana) // Когда у персонажа меняется мана
+{
+    START_HOOK(PLAYER_EVENT_ON_MANA_CHANGE);
+    Push(pPlayer);
+    Push(curMana);
+    CallAllFunctions(PlayerEventBindings, key);
+}
 bool Eluna::OnHandDamage(Unit* unit, Unit* target) // Когда юнит наносит урон с автоматической атаки
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_HAND_DAMAGE, true);
