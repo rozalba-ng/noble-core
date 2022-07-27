@@ -2412,9 +2412,11 @@ SpellMissInfo Unit::MeleeSpellHitResult(Unit* victim, SpellInfo const* spellInfo
     uint32 missChance = uint32(MeleeSpellMissChance(victim, attType, skillDiff, spellInfo->Id) * 100.0f);
     // Roll miss
     uint32 tmp = missChance;
-    if (roll < tmp)
-        return SPELL_MISS_MISS;
-
+    if (spellInfo->SpellFamilyName != SPELLFAMILY_FATEDICE)
+    {
+        if (roll < tmp)
+            return SPELL_MISS_MISS;
+    }
     // Chance resist mechanic (select max value from every mechanic spell effect)
     int32 resist_mech = 0;
     // Get effects mechanic and chance
@@ -2614,10 +2616,11 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit* victim, SpellInfo const* spellInfo
     int32 tmp = 10000 - HitChance;
 
     int32 rand = irand(0, 10000);
-
-    if (rand < tmp)
-        return SPELL_MISS_MISS;
-
+    if (spellInfo->SpellFamilyName != SPELLFAMILY_FATEDICE)
+    {
+        if (rand < tmp)
+            return SPELL_MISS_MISS;
+    }
     // Chance resist mechanic (select max value from every mechanic spell effect)
     int32 resist_chance = victim->GetMechanicResistChance(spellInfo) * 100;
     tmp += resist_chance;
