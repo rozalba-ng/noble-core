@@ -1508,11 +1508,13 @@ void Spell::SelectImplicitChainTargets(SpellEffIndex effIndex, SpellImplicitTarg
     if (maxTargets > 1)
     {
         // mark damage multipliers as used
-        for (uint32 k = effIndex; k < MAX_SPELL_EFFECTS; ++k)
-            if (effMask & (1 << k))
-                m_damageMultipliers[k] = 1.0f;
-        m_applyMultiplierMask |= effMask;
-
+        if (m_spellInfo->SpellFamilyName != SPELLFAMILY_FATEDICE)
+        {
+            for (uint32 k = effIndex; k < MAX_SPELL_EFFECTS; ++k)
+                if (effMask & (1 << k))
+                    m_damageMultipliers[k] = 1.0f;
+            m_applyMultiplierMask |= effMask;
+        }
         std::list<WorldObject*> targets;
         SearchChainTargets(targets, maxTargets - 1, target, targetType.GetObjectType(), targetType.GetCheckType()
             , m_spellInfo->Effects[effIndex].ImplicitTargetConditions, targetType.GetTarget() == TARGET_UNIT_TARGET_CHAINHEAL_ALLY);
