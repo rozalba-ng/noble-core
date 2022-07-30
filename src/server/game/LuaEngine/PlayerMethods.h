@@ -3943,7 +3943,7 @@ namespace LuaPlayer
     {
         uint32 level = Eluna::CHECKVAL<uint32>(L, 2, 0);
         player->m_nobleLevel = level;
-        player->UpdateMaxPower(0);
+        player->UpdateMaxPower(POWER_MANA);
         return 0;
     }
 #if !defined(CLASSIC) && !defined(TBC)
