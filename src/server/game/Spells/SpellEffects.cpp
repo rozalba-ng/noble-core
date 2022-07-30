@@ -670,8 +670,8 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                 float staminaDamageReductionPerc = 0.01f;
 
                 damage += ((attackStat * attackStatMultiplicator) - resistDamage) * (1 - (staminaStat* staminaDamageReductionPerc));
-                if (damage<=0)
-                    damage = 0
+                if (damage <= 0)
+                    damage = 0;
                 break;
             }
         }
