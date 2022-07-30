@@ -18013,7 +18013,7 @@ void Player::_LoadNobleLevel(PreparedQueryResult result) // LEVEL SYSTEM
         do
         {
             Field* fields = result->Fetch();
-            m_nobleLevel = fields[0].GetUInt32()
+            m_nobleLevel = fields[0].GetUInt32();
         } while (result->NextRow());
     }
 }
