@@ -818,6 +818,7 @@ enum PlayerLoginQueryIndex
     PLAYER_LOGIN_QUERY_LOAD_MONTHLY_QUEST_STATUS    = 32,
     PLAYER_LOGIN_QUERY_LOAD_CORPSE_LOCATION         = 33,
 	PLAYER_LOGIN_QUERY_LOAD_ROLE_STATS				= 34, // ROLE STAT SYSTEM
+    PLAYER_LOGIN_QUERY_LOAD_LEVEL_SYSTEM            = 35, // LEVEL SYSTEM
     MAX_PLAYER_LOGIN_QUERY
 };
 
@@ -1136,6 +1137,7 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         uint32 GetLevelPlayedTime() const { return m_Played_time[PLAYED_TIME_LEVEL]; }
 
         bool m_manaRegenDisabled;
+        uint32 m_nobleLevel;
 
         void setDeathState(DeathState s) override;                   // overwrite Unit::setDeathState
 
@@ -2351,6 +2353,7 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         void _LoadTalents(PreparedQueryResult result);
         void _LoadInstanceTimeRestrictions(PreparedQueryResult result);
 		void _LoadRoleStats(PreparedQueryResult result); // ROLE STAT SYSTEM
+        void _LoadNobleLevel(PreparedQueryResult result); //LEVEL SYSTEM
 
         /*********************************************************/
         /***                   SAVE SYSTEM                     ***/

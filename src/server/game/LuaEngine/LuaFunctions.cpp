@@ -759,6 +759,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GroupCreate", &LuaPlayer::GroupCreate },
     { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
     { "SetManaRegenDisable", &LuaPlayer::SetManaRegenDisable },
+    { "UpdateLevelInCore", &LuaPlayer::UpdateLevelInCore },
+        
 	//{ "SpawnTempCharacterMount", &LuaPlayer::SpawnTempCharacterMount },		
 #if !defined(CLASSIC) && !defined(TBC)
     { "SendMovieStart", &LuaPlayer::SendMovieStart },

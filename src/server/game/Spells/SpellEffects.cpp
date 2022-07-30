@@ -666,7 +666,12 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                 float defStatMultiplicator = (m_spellInfo->Effects[effIndex].MiscValueB)/100;
                 int resistDamage = defStat*defStatMultiplicator;
 
-                damage += (attackStat * attackStatMultiplicator) - resistDamage;
+                int staminaStat = unitTarget->GetRoleStat(3);
+                float staminaDamageReductionPerc = 0.01f;
+
+                damage += ((attackStat * attackStatMultiplicator) - resistDamage) * (1 - (staminaStat* staminaDamageReductionPerc));
+                if (damage<=0)
+                    damage = 0
                 break;
             }
         }

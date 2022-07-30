@@ -17518,6 +17518,8 @@ bool Player::LoadFromDB(ObjectGuid guid, SQLQueryHolder *holder)
 
 	_LoadRoleStats(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_ROLE_STATS)); // ROLE STAT SYSTEM
 
+    _LoadNobleLevel(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_LEVEL_SYSTEM)); // LEVELING SYSTEM
+
     _LoadInventory(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_INVENTORY), time_diff);
 
     // update items with duration and realtime
@@ -18004,7 +18006,17 @@ void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
 		} while (result->NextRow());
 	}
 }
-
+void Player::_LoadNobleLevel(PreparedQueryResult result) // LEVEL SYSTEM
+{
+    if (result)
+    {
+        do
+        {
+            Field* fields = result->Fetch();
+            m_nobleLevel = fields[0].GetUInt32()
+        } while (result->NextRow());
+    }
+}
 Item* Player::_LoadItem(SQLTransaction& trans, uint32 zoneId, uint32 timeDiff, Field* fields)
 {
     Item* item = nullptr;

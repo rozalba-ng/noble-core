@@ -297,9 +297,9 @@ void Player::UpdateMaxHealth()
 
     float value = GetModifierValue(unitMod, BASE_VALUE) + GetCreateHealth();
     value *= GetModifierValue(unitMod, BASE_PCT);
-    int roleStamina = GetRoleStat(3);
-    int roleStaminaBonusMultiplicator = 5;
-    value += GetModifierValue(unitMod, TOTAL_VALUE) + GetHealthBonusFromStamina() + (roleStamina*roleStaminaBonusMultiplicator);
+    int rolePhysArmor = GetRoleStat(4);
+    int rolePhysArmorBonusMultiplicator = 3;
+    value += GetModifierValue(unitMod, TOTAL_VALUE) + GetHealthBonusFromStamina() + (rolePhysArmor * rolePhysArmorBonusMultiplicator);
     value *= GetModifierValue(unitMod, TOTAL_PCT);
 
     SetMaxHealth((uint32)value);
@@ -312,10 +312,12 @@ void Player::UpdateMaxPower(Powers power)
     float bonusPower = (power == POWER_MANA && GetCreatePowers(power) > 0) ? GetManaBonusFromIntellect() : 0;
 
     float value = GetModifierValue(unitMod, BASE_VALUE) + GetCreatePowers(power);
-    int roleStamina = GetRoleStat(3);
-    int roleStaminaBonusMultiplicator = 5;
+    int roleManaArmor= GetRoleStat(5);
+    int roleManaArmorBonusMultiplicator = 3;
+    uint32 currentLevel = m_nobleLevel;
+    int levelManaMultiplicator = 5;
     value *= GetModifierValue(unitMod, BASE_PCT);
-    value += GetModifierValue(unitMod, TOTAL_VALUE) +  bonusPower + (roleStamina*roleStaminaBonusMultiplicator);
+    value += GetModifierValue(unitMod, TOTAL_VALUE) +  bonusPower + (roleManaArmor * roleManaArmorBonusMultiplicator) + (currentLevel+levelManaMultiplicator);
     value *= GetModifierValue(unitMod, TOTAL_PCT);
 
     SetMaxPower(power, uint32(value));
