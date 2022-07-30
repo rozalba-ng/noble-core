@@ -653,12 +653,13 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
             case SPELLFAMILY_FATEDICE:
             {
                 damage = 0;
-                damage += m_spellInfo->Effects[effIndex].BasePoints;
+                int32 pureDamage = 0;
+                pureDamage += m_spellInfo->Effects[effIndex].BasePoints;
                 int randomPoints = m_spellInfo->Effects[effIndex].DieSides;
                 int32 randvalue = (randomPoints >= 1)
                     ? irand(1, randomPoints)
                     : irand(randomPoints, 1);
-                damage += randvalue;
+                pureDamage += randvalue;
                 int attackStat = m_originalCaster->GetRoleStat((int)m_spellInfo->Effects[effIndex].DamageMultiplier);
                 float attackStatMultiplicator = m_spellInfo->Effects[effIndex].BonusMultiplier;
                 
@@ -668,8 +669,8 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
 
                 int staminaStat = unitTarget->GetRoleStat(3);
                 float staminaDamageReductionPerc = 0.01f;
-
-                damage += ((attackStat * attackStatMultiplicator) - resistDamage) * (1 - (staminaStat* staminaDamageReductionPerc));
+                pureDamage += (attackStat * attackStatMultiplicator)
+                damage += (pureDamage - resistDamage) * (1 - (staminaStat* staminaDamageReductionPerc));
                 if (damage <= 0)
                     damage = 0;
                 break;
