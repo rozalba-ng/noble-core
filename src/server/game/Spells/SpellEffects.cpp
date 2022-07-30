@@ -669,7 +669,7 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
 
                 int staminaStat = unitTarget->GetRoleStat(3);
                 float staminaDamageReductionPerc = 0.01f;
-                pureDamage += (attackStat * attackStatMultiplicator)
+                pureDamage += (attackStat * attackStatMultiplicator);
                 damage += (pureDamage - resistDamage) * (1 - (staminaStat* staminaDamageReductionPerc));
                 if (damage <= 0)
                     damage = 0;
