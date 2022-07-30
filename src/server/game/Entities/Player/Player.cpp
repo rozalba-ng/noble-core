@@ -471,7 +471,7 @@ Player::Player(WorldSession* session): Unit(true)
     m_spellPenetrationItemMod = 0;
 
     m_manaRegenDisabled = false;
-
+    m_nobleLevel = 1;
     // Honor System
     m_lastHonorUpdateTime = time(nullptr);
 

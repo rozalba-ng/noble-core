@@ -314,10 +314,10 @@ void Player::UpdateMaxPower(Powers power)
     float value = GetModifierValue(unitMod, BASE_VALUE) + GetCreatePowers(power);
     int roleManaArmor= GetRoleStat(5);
     int roleManaArmorBonusMultiplicator = 3;
-    uint32 currentLevel = m_nobleLevel;
+    uint32 currentLevel = m_nobleLevel-1;
     int levelManaMultiplicator = 5;
     value *= GetModifierValue(unitMod, BASE_PCT);
-    value += GetModifierValue(unitMod, TOTAL_VALUE) +  bonusPower + (roleManaArmor * roleManaArmorBonusMultiplicator) + (currentLevel+levelManaMultiplicator);
+    value += GetModifierValue(unitMod, TOTAL_VALUE) +  bonusPower + (roleManaArmor * roleManaArmorBonusMultiplicator) + (currentLevel*levelManaMultiplicator);
     value *= GetModifierValue(unitMod, TOTAL_PCT);
 
     SetMaxPower(power, uint32(value));
