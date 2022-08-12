@@ -435,7 +435,6 @@ ElunaRegister<Unit> UnitMethods[] =
 	{ "ChangeSeat", &LuaUnit::ChangeSeat },
 	{ "AddMovementFlag", &LuaUnit::AddMovementFlag },
 	{ "RemoveMovementFlag", &LuaUnit::RemoveMovementFlag },
-
     { NULL, NULL }
 };
 
@@ -1053,7 +1052,7 @@ ElunaRegister<Spell> SpellMethods[] =
     { "Cancel", &LuaSpell::Cancel },
     { "Cast", &LuaSpell::Cast },
     { "Finish", &LuaSpell::Finish },
-
+    { "DontFinishTurn", &LuaSpell:DontFinishTurn}
     { NULL, NULL }
 };
 

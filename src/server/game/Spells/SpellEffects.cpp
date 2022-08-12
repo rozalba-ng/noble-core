@@ -1464,17 +1464,22 @@ void Spell::EffectHeal(SpellEffIndex effIndex)
             addhealth = caster->SpellHealingBonusDone(unitTarget, m_spellInfo, int32(caster->CountPctFromMaxHealth(damage)), HEAL);
         else if (m_spellInfo->SpellFamilyName == SPELLFAMILY_FATEDICE)
         {
+
+            uint32 pureheal = 0;
             addhealth = 0;
-            addhealth += m_spellInfo->Effects[effIndex].BasePoints;
+            pureheal += m_spellInfo->Effects[effIndex].BasePoints;
             int randomPoints = m_spellInfo->Effects[effIndex].DieSides;
             int32 randvalue = (randomPoints >= 1)
                 ? irand(1, randomPoints)
                 : irand(randomPoints, 1);
-            addhealth += randvalue;
+            pureheal += randvalue;
             int attackStat = m_originalCaster->GetRoleStat((int)m_spellInfo->Effects[effIndex].DamageMultiplier);
             float attackStatMultiplicator = m_spellInfo->Effects[effIndex].BonusMultiplier;
 
-            addhealth += (attackStat * attackStatMultiplicator);
+            pureheal += (attackStat * attackStatMultiplicator);
+            if (unitTarget->HasAura(104029))
+                pureheal *= 0.6f;             //Если имеет ауру колдуна, то сокращаем хил на 40%.
+            addhealth += pureheal;
         }
         else
             addhealth = caster->SpellHealingBonusDone(unitTarget, m_spellInfo, addhealth, HEAL);

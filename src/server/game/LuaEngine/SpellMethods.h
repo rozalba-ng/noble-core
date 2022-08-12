@@ -198,5 +198,11 @@ namespace LuaSpell
 		Eluna::Push(L, spell->m_spellInfo->Effects[index].MiscValue);
 		return 1;
 	}
+
+    int DontFinishTurn(Eluna* /*E*/, lua_State* L, Spell* spell)
+    {
+        Eluna::Push(L, spell->m_spellInfo->HasAttrubute(SPELL_ATTR2_CANT_CRIT));
+        return 1;
+    }
 };
 #endif
