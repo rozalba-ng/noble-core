@@ -201,7 +201,7 @@ namespace LuaSpell
 
     int DontFinishTurn(Eluna* /*E*/, lua_State* L, Spell* spell)
     {
-        Eluna::Push(L, spell->m_spellInfo->HasAttrubute(SPELL_ATTR2_CANT_CRIT));
+        Eluna::Push(L, spell->m_spellInfo->HasAttribute(SPELL_ATTR2_CANT_CRIT));
         return 1;
     }
 };
