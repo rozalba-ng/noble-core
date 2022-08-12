@@ -441,6 +441,8 @@ public:
     void OnEmote(Player* pPlayer, uint32 emote);
     void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid);
     void OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck);
+    void OnDamageTaken(Unit* Caster, Unit* Victim, uint32 damage);
+    void OnHealTaken(Unit* Caster, Unit* Victim, uint32 heal);
     void OnLogin(Player* pPlayer);
     void OnLogout(Player* pPlayer);
     void OnCreate(Player* pPlayer);
