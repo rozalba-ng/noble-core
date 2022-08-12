@@ -1052,7 +1052,7 @@ ElunaRegister<Spell> SpellMethods[] =
     { "Cancel", &LuaSpell::Cancel },
     { "Cast", &LuaSpell::Cast },
     { "Finish", &LuaSpell::Finish },
-    { "DontFinishTurn", &LuaSpell:DontFinishTurn}
+    { "DontFinishTurn", &LuaSpell::DontFinishTurn },
     { NULL, NULL }
 };
 
