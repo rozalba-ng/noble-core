@@ -1477,7 +1477,7 @@ void Spell::EffectHeal(SpellEffIndex effIndex)
             float attackStatMultiplicator = m_spellInfo->Effects[effIndex].BonusMultiplier;
 
             pureheal += (attackStat * attackStatMultiplicator);
-            if (unitTarget->HasAura(104029))
+            if (unitTarget->HasAura(104029) && unitTarget!=m_originalCaster)
                 pureheal *= 0.6f;             //Если имеет ауру колдуна, то сокращаем хил на 40%.
             addhealth += pureheal;
         }
