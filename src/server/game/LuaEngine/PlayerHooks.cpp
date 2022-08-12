@@ -367,6 +367,22 @@ void Eluna::OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck)
     Push(skipCheck);
     CallAllFunctions(PlayerEventBindings, key);
 }
+void Eluna::OnDamageTaken(Unit* Caster, Unit* Victim, uint32 damage)
+{
+    START_HOOK(PLAYER_EVENT_ON_DAMAGE_TAKEN);
+    Push(Caster);
+    Push(Victim);
+    Push(damage);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+void Eluna::OnHealTaken(Unit* Caster, Unit* Victim, uint32 heal)
+{
+    START_HOOK(PLAYER_EVENT_ON_HEAL_TAKEN);
+    Push(Caster);
+    Push(Victim);
+    Push(heal);
+    CallAllFunctions(PlayerEventBindings, key);
+}
 
 void Eluna::OnLogin(Player* pPlayer)
 {

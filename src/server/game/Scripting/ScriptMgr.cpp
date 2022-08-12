@@ -2574,12 +2574,18 @@ void ScriptMgr::OnHeal(Unit* healer, Unit* reciever, uint32& gain)
 {
     FOREACH_SCRIPT(UnitScript)->OnHeal(healer, reciever, gain);
     FOREACH_SCRIPT(PlayerScript)->OnHeal(healer, reciever, gain);
+#ifdef ELUNA
+    sEluna->OnHealTaken(healer,reciever,gain);
+#endif
 }
 
 void ScriptMgr::OnDamage(Unit* attacker, Unit* victim, uint32& damage)
 {
     FOREACH_SCRIPT(UnitScript)->OnDamage(attacker, victim, damage);
     FOREACH_SCRIPT(PlayerScript)->OnDamage(attacker, victim, damage);
+#ifdef ELUNA
+    sEluna->OnDamageTaken(attacker, victim, damage);
+#endif
 }
 
 void ScriptMgr::ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage)
