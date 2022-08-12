@@ -359,10 +359,10 @@ void Eluna::OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-void Eluna::OnSpellCast(Unit* caster, Spell* pSpell, bool skipCheck)
+void Eluna::OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck)
 {
     START_HOOK(PLAYER_EVENT_ON_SPELL_CAST);
-    Push(caster);
+    Push(pPlayer);
     Push(pSpell);
     Push(skipCheck);
     CallAllFunctions(PlayerEventBindings, key);
