@@ -3353,7 +3353,9 @@ void Spell::cast(bool skipCheck)
 		// Miton. Перенес в конец спелл каста, чтобы получить возможность выводить больше данных о спелле во время ивента.
 		sScriptMgr->OnPlayerSpellCast(playerCaster, this, skipCheck);
 	}
-
+#ifdef ELUNA
+    sEluna->OnSpellCast(m_caster, this, skipCheck);
+#endif
     SetExecutedCurrently(false);
 
     if (Creature* creatureCaster = m_caster->ToCreature())

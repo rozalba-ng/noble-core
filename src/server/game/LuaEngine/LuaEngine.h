@@ -440,7 +440,7 @@ public:
     bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver);
     void OnEmote(Player* pPlayer, uint32 emote);
     void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid);
-    void OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck);
+    void OnSpellCast(Unit* caster, Spell* pSpell, bool skipCheck);
     void OnDamageTaken(Unit* Caster, Unit* Victim, uint32 damage);
     void OnHealTaken(Unit* Caster, Unit* Victim, uint32 heal);
     void OnLogin(Player* pPlayer);
