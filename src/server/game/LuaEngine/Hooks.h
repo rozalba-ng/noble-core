@@ -212,6 +212,7 @@ namespace Hooks
         PLAYER_EVENT_ON_MANA_CHANGE             =     51,       // (event, player, curMana)
         PLAYER_EVENT_ON_DAMAGE_TAKEN            =     52,       // (event, caster, victim, damage)
         PLAYER_EVENT_ON_HEAL_TAKEN              =     53,       // (event, caster, victim, heal)
+        PLAYER_EVENT_ON_SPELL_EFFECTS_CAST      =     54,       // (event, caster, victim)
         PLAYER_EVENT_COUNT
     };
 

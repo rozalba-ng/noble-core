@@ -2413,6 +2413,9 @@ void Spell::DoAllEffectOnTarget(TargetInfo* target)
 
     // All calculated do it!
     // Do healing and triggers
+#ifdef ELUNA
+    sEluna->OnSpellEffectsCast(m_caster, unitTarget);
+#endif
     if (m_healing > 0)
     {
         bool crit = target->crit;
