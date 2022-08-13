@@ -668,6 +668,12 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                 int resistDamage = defStat*defStatMultiplicator;
 
                 pureDamage += (attackStat * attackStatMultiplicator);
+                if (unitTarget->HasAura(104064)) //Малое поглощение
+                    pureDamage -= 25;
+                if (unitTarget->HasAura(104065)) //Среднее поглощение
+                    pureDamage -= 50;
+                if (unitTarget->HasAura(104066)) //Высокое поглощение
+                    pureDamage -= 100;
                 damage += (pureDamage - resistDamage);
                 if (damage <= 0)
                     damage = 0;
