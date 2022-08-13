@@ -2413,9 +2413,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo* target)
 
     // All calculated do it!
     // Do healing and triggers
-#ifdef ELUNA
-    sEluna->OnSpellEffectsCast(m_caster, unitTarget);
-#endif
+
     if (m_healing > 0)
     {
         bool crit = target->crit;
@@ -3356,6 +3354,12 @@ void Spell::cast(bool skipCheck)
 		// Miton. Перенес в конец спелл каста, чтобы получить возможность выводить больше данных о спелле во время ивента.
 		sScriptMgr->OnPlayerSpellCast(playerCaster, this, skipCheck);
 	}
+   
+#ifdef ELUNA
+    if (this->m_spellInfo->SpellFamilyName == SPELLFAMILY_FATEDICE)
+        sEluna->OnFatediceSpellCast(this,m_caster, unitTarget, this->m_damage, this->m_healing);
+#endif
+   
 
     SetExecutedCurrently(false);
 

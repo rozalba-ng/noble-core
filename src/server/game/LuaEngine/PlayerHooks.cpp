@@ -375,11 +375,14 @@ void Eluna::OnDamageTaken(Unit* Caster, Unit* Victim, uint32 damage)
     Push(damage);
     CallAllFunctions(PlayerEventBindings, key);
 }
-void Eluna::OnSpellEffectsCast(Unit* Caster, Unit* Victim)
+void Eluna::OnFatediceSpellCast(Spell* pSpell, Unit* Caster, Unit* Victim,int32 damage,int32 healing)
 {
     START_HOOK(PLAYER_EVENT_ON_SPELL_EFFECTS_CAST);
+    Push(pSpell);
     Push(Caster);
     Push(Victim);
+    Push(damage);
+    Push(healing);
     CallAllFunctions(PlayerEventBindings, key);
 }
 void Eluna::OnHealTaken(Unit* Caster, Unit* Victim, uint32 heal)
