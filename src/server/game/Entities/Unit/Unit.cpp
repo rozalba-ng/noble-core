@@ -2576,19 +2576,22 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit* victim, SpellInfo const* spellInfo
 
     SpellSchoolMask schoolMask = spellInfo->GetSchoolMask();
     // PvP - PvE spell misschances per leveldif > 2
-    int32 lchance = victim->GetTypeId() == TYPEID_PLAYER ? 7 : 11;
-    int32 thisLevel = getLevelForTarget(victim);
-    if (GetTypeId() == TYPEID_UNIT && ToCreature()->IsTrigger())
-        thisLevel = std::max<int32>(thisLevel, spellInfo->SpellLevel);
-    int32 leveldif = int32(victim->getLevelForTarget(this)) - thisLevel;
+//    int32 lchance = victim->GetTypeId() == TYPEID_PLAYER ? 7 : 11;
+//    int32 thisLevel = getLevelForTarget(victim);
+//    if (GetTypeId() == TYPEID_UNIT && ToCreature()->IsTrigger())
+//        thisLevel = std::max<int32>(thisLevel, spellInfo->SpellLevel);
+//    int32 leveldif = int32(victim->getLevelForTarget(this)) - thisLevel;
+//
+//    // Base hit chance from attacker and victim levels
+//    int32 modHitChance;
+//	if (leveldif < 3)
+//		//modHitChance = 96 - leveldif; ������
+//		modHitChance = 100 - leveldif;
+//    else
+//        modHitChance = 94 - (leveldif - 2) * lchance;
 
-    // Base hit chance from attacker and victim levels
-    int32 modHitChance;
-	if (leveldif < 3)
-		//modHitChance = 96 - leveldif; ������
-		modHitChance = 100 - leveldif;
-    else
-        modHitChance = 94 - (leveldif - 2) * lchance;
+    // хардкожу 99% базовое попадание, независимо от левла
+    modHitChance = victim->GetTypeId() == TYPEID_PLAYER ? 100 : 99;
 
     // Spellmod from SPELLMOD_RESIST_MISS_CHANCE
     if (Player* modOwner = GetSpellModOwner())
@@ -16206,6 +16209,10 @@ float Unit::MeleeSpellMissChance(const Unit* victim, WeaponAttackType attType, i
         return 0.0f;
     if (missChance > 60.0f)
         return 60.0f;
+
+    // хардкожу мисс милишной на 0% - незавивисимо от оружия и навыков владения
+    missChance = 0.0f;
+
     return missChance;
 }
 
