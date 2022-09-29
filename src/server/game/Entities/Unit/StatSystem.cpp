@@ -230,7 +230,7 @@ void Player::UpdateResistances(uint32 school)
     if (school > SPELL_SCHOOL_NORMAL)
     {
         float value  = GetTotalAuraModValue(UnitMods(UNIT_MOD_RESISTANCE_START + school));
-		value = 0.0f; //Комбат
+		value = 0.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
         SetResistance(SpellSchools(school), int32(value));
 
         Pet* pet = GetPet();
@@ -259,7 +259,7 @@ void Player::UpdateArmor()
     }
 
     value *= GetModifierValue(unitMod, TOTAL_PCT);
-	value = 0.0f; //Комбат
+	value = 0.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
 
     SetArmor(int32(value));
 
@@ -274,7 +274,7 @@ float Player::GetHealthBonusFromStamina()
 {
     float stamina = GetStat(STAT_STAMINA);
 	//float baseStam = std::min(20.0f, stamina);
-	float baseStam = 10.0f; //Комбат
+	float baseStam = 10.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
     float moreStam = stamina - baseStam;
 
     return baseStam + (moreStam*10.0f);
@@ -285,7 +285,7 @@ float Player::GetManaBonusFromIntellect()
     float intellect = GetStat(STAT_INTELLECT);
 
 	//float baseInt = std::min(20.0f, intellect);
-	float baseInt = 10.0f; //Комбат
+	float baseInt = 10.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
     float moreInt = intellect - baseInt;
 
     return baseInt + (moreInt * 15.0f);
@@ -297,9 +297,7 @@ void Player::UpdateMaxHealth()
 
     float value = GetModifierValue(unitMod, BASE_VALUE) + GetCreateHealth();
     value *= GetModifierValue(unitMod, BASE_PCT);
-    uint32 currentLevel = m_nobleLevel - 1;
-    int levelHealthMultiplicator = 5;
-    value += GetModifierValue(unitMod, TOTAL_VALUE) + GetHealthBonusFromStamina() + (currentLevel * levelHealthMultiplicator);
+    value += GetModifierValue(unitMod, TOTAL_VALUE) + GetHealthBonusFromStamina();
     value *= GetModifierValue(unitMod, TOTAL_PCT);
 
     SetMaxHealth((uint32)value);
@@ -312,10 +310,8 @@ void Player::UpdateMaxPower(Powers power)
     float bonusPower = (power == POWER_MANA && GetCreatePowers(power) > 0) ? GetManaBonusFromIntellect() : 0;
 
     float value = GetModifierValue(unitMod, BASE_VALUE) + GetCreatePowers(power);
-    uint32 currentLevel = m_nobleLevel-1;
-    int levelManaMultiplicator = 5;
     value *= GetModifierValue(unitMod, BASE_PCT);
-    value += GetModifierValue(unitMod, TOTAL_VALUE) +  bonusPower + (currentLevel*levelManaMultiplicator);
+    value += GetModifierValue(unitMod, TOTAL_VALUE) +  bonusPower;
     value *= GetModifierValue(unitMod, TOTAL_PCT);
 
     SetMaxPower(power, uint32(value));
@@ -382,7 +378,7 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
         switch (getClass())
         {
 			case CLASS_WARRIOR:
-				//val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f - 20.0f; Комбат
+				//val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f - 20.0f; пїЅпїЅпїЅпїЅпїЅпїЅ
 				val2 = GetStat(STAT_STRENGTH) - 10.0f;
 				break;
 			case CLASS_PALADIN:
@@ -536,7 +532,7 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
 void Player::UpdateShieldBlockValue()
 {
 	//SetUInt32Value(PLAYER_SHIELD_BLOCK, GetShieldBlockValue());
-	SetUInt32Value(PLAYER_SHIELD_BLOCK, int32(0.0f)); //Комбат
+	SetUInt32Value(PLAYER_SHIELD_BLOCK, int32(0.0f)); //пїЅпїЅпїЅпїЅпїЅпїЅ
 }
 
 void Player::CalculateMinMaxDamage(WeaponAttackType attType, bool normalized, bool addTotalPct, float& minDamage, float& maxDamage)
@@ -592,7 +588,7 @@ void Player::CalculateMinMaxDamage(WeaponAttackType attType, bool normalized, bo
 	{
 	weaponMinDamage += GetAmmoDPS() * attackSpeedMod;
 	weaponMaxDamage += GetAmmoDPS() * attackSpeedMod;
-	}*/ //Комбат
+	}*/ //пїЅпїЅпїЅпїЅпїЅпїЅ
 
 	//minDamage = ((weaponMinDamage + baseValue) * basePct + totalValue) * totalPct;
 	//maxDamage = ((weaponMaxDamage + baseValue) * basePct + totalValue) * totalPct;
@@ -627,7 +623,7 @@ void Player::UpdateBlockPercentage()
 
         value = value < 0.0f ? 0.0f : value;
     }
-	value = 0.0f; //Комбат
+	value = 0.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
     SetStatFloatValue(PLAYER_BLOCK_PERCENTAGE, value);
 }
 
@@ -665,14 +661,14 @@ void Player::UpdateCritPercentage(WeaponAttackType attType)
          value = value > sWorld->getFloatConfig(CONFIG_STATS_LIMITS_CRIT) ? sWorld->getFloatConfig(CONFIG_STATS_LIMITS_CRIT) : value;
 
 	//value = value < 0.0f ? 0.0f : value;
-	value = 0.0f; //Комбат
+	value = 0.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
     SetStatFloatValue(index, value);
 }
 
 void Player::UpdateAllCritPercentages()
 {
 	//float value = GetMeleeCritFromAgility();
-	float value = 0.0f; //Комбат
+	float value = 0.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
 
     SetBaseModValue(CRIT_PERCENTAGE, PCT_MOD, value);
     SetBaseModValue(OFFHAND_CRIT_PERCENTAGE, PCT_MOD, value);
@@ -723,7 +719,7 @@ float Player::GetMissPercentageFromDefence() const
     // apply diminishing formula to diminishing miss chance
     uint32 pclass = getClass()-1;
 	//return nondiminishing + (diminishing * miss_cap[pclass] / (diminishing + miss_cap[pclass] * m_diminishing_k[pclass]));
-	return 0.0f; //Комбат
+	return 0.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
 }
 
 void Player::UpdateParryPercentage()
@@ -764,7 +760,7 @@ void Player::UpdateParryPercentage()
 
         value = value < 0.0f ? 0.0f : value;
     }
-	value = 0.0f; //Комбат
+	value = 0.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
 	SetStatFloatValue(PLAYER_PARRY_PERCENTAGE, value);
 }
 
@@ -797,8 +793,8 @@ void Player::UpdateDodgePercentage()
     // apply diminishing formula to diminishing dodge chance
     //uint32 pclass = getClass()-1;
     //float value = nondiminishing + (diminishing * dodge_cap[pclass] / (diminishing + dodge_cap[pclass] * m_diminishing_k[pclass]));
-	uint32 pclass = getClass() - 1; //Выдаём всем один кап.
-	float value = nondiminishing + diminishing + 2.0f; //Комбат
+	uint32 pclass = getClass() - 1; //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.
+	float value = nondiminishing + diminishing + 2.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
 
     if (sWorld->getBoolConfig(CONFIG_STATS_LIMITS_ENABLE))
          value = value > sWorld->getFloatConfig(CONFIG_STATS_LIMITS_DODGE) ? sWorld->getFloatConfig(CONFIG_STATS_LIMITS_DODGE) : value;
@@ -829,14 +825,14 @@ void Player::UpdateSpellCritChance(uint32 school)
     crit += GetRatingBonusValue(CR_CRIT_SPELL);
 
     // Store crit value
-	crit = 0.0f; //Комбат
+	crit = 0.0f; //пїЅпїЅпїЅпїЅпїЅпїЅ
     SetFloatValue(PLAYER_SPELL_CRIT_PERCENTAGE1 + school, crit);
 }
 
 void Player::UpdateArmorPenetration(int32 amount)
 {
     // Store Rating Value
-	amount = 0; //Комбат
+	amount = 0; //пїЅпїЅпїЅпїЅпїЅпїЅ
     SetUInt32Value(PLAYER_FIELD_COMBAT_RATING_1 + CR_ARMOR_PENETRATION, amount);
 }
 
@@ -1013,7 +1009,7 @@ void Creature::UpdateResistances(uint32 school)
     if (school > SPELL_SCHOOL_NORMAL)
     {
         float value  = GetTotalAuraModValue(UnitMods(UNIT_MOD_RESISTANCE_START + school));
-		value = 0.0f;  //Комбат
+		value = 0.0f;  //пїЅпїЅпїЅпїЅпїЅпїЅ
         SetResistance(SpellSchools(school), int32(value));
     }
     else
@@ -1023,7 +1019,7 @@ void Creature::UpdateResistances(uint32 school)
 void Creature::UpdateArmor()
 {
     float value = GetTotalAuraModValue(UNIT_MOD_ARMOR);
-	value = 0.0f;  //Комбат
+	value = 0.0f;  //пїЅпїЅпїЅпїЅпїЅпїЅ
     SetArmor(int32(value));
 }
 
@@ -1257,7 +1253,7 @@ void Guardian::UpdateResistances(uint32 school)
         // hunter and warlock pets gain 40% of owner's resistance
         if (IsPet())
             value += float(CalculatePct(m_owner->GetResistance(SpellSchools(school)), 40));
-		value = 0.0f;  //Комбат
+		value = 0.0f;  //пїЅпїЅпїЅпїЅпїЅпїЅ
         SetResistance(SpellSchools(school), int32(value));
     }
     else
@@ -1280,7 +1276,7 @@ void Guardian::UpdateArmor()
     value += GetModifierValue(unitMod, TOTAL_VALUE) + bonus_armor;
     value *= GetModifierValue(unitMod, TOTAL_PCT);
 
-	value = 0.0f;  //Комбат
+	value = 0.0f;  //пїЅпїЅпїЅпїЅпїЅпїЅ
     SetArmor(int32(value));
 }
 
