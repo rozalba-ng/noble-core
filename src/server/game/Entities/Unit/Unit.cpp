@@ -2591,6 +2591,7 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit* victim, SpellInfo const* spellInfo
 //        modHitChance = 94 - (leveldif - 2) * lchance;
 
     // хардкожу 99% базовое попадание, независимо от левла
+    int32 modHitChance;
     modHitChance = victim->GetTypeId() == TYPEID_PLAYER ? 100 : 99;
 
     // Spellmod from SPELLMOD_RESIST_MISS_CHANCE
