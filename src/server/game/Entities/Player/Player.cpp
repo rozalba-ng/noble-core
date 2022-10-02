@@ -1,4 +1,4 @@
-/*
+/*/*
  * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -470,6 +470,8 @@ Player::Player(WorldSession* session): Unit(true)
     m_baseHealthRegen = 0;
     m_spellPenetrationItemMod = 0;
 
+    m_manaRegenDisabled = false;
+    m_nobleLevel = 1;
     // Honor System
     m_lastHonorUpdateTime = time(nullptr);
 
@@ -1312,7 +1314,10 @@ void Player::Update(uint32 p_time)
         {
             // default combat reach 10
             /// @todo add weapon, skill check
-
+#ifdef ELUNA
+            if (!sEluna->OnHandDamage(this, GetVictim()))
+                return;
+#endif
             if (isAttackReady(BASE_ATTACK))
             {
                 if (!IsWithinMeleeRange(victim))
@@ -2218,6 +2223,8 @@ void Player::Regenerate(Powers power)
     if (!maxValue)
         return;
 
+    
+
     uint32 curValue = GetPower(power);
 
     /// @todo possible use of miscvalueb instead of amount
@@ -2230,6 +2237,8 @@ void Player::Regenerate(Powers power)
     {
         case POWER_MANA:
         {
+            if (m_manaRegenDisabled==true)
+                return;
             bool recentCast = IsUnderLastManaUseEffect();
             float ManaIncreaseRate = sWorld->getRate(RATE_POWER_MANA);
 
@@ -2324,6 +2333,7 @@ void Player::Regenerate(Powers power)
         else
             m_powerFraction[power] = addvalue - integerValue;
     }
+    
     if (m_regenTimerCount >= 2000)
         SetPower(power, curValue);
     else
@@ -17508,6 +17518,8 @@ bool Player::LoadFromDB(ObjectGuid guid, SQLQueryHolder *holder)
 
 	_LoadRoleStats(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_ROLE_STATS)); // ROLE STAT SYSTEM
 
+    _LoadNobleLevel(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_LEVEL_SYSTEM)); // LEVELING SYSTEM
+
     _LoadInventory(holder->GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_INVENTORY), time_diff);
 
     // update items with duration and realtime
@@ -17967,12 +17979,12 @@ void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
 		do
 		{
 			Field* fields = result->Fetch();
-			if ((fields[0].GetUInt32() + fields[1].GetUInt32() + fields[2].GetUInt32() + fields[3].GetUInt32() + fields[4].GetUInt32() + fields[5].GetUInt32() + fields[6].GetUInt32()) > 15) // меняю с 8 на 15 НО НАДО КОНТРОЛИРОВАТЬ НА СТОРОНЕ БАЗ И САЙТА ОЧЕНЬ СЕРЬЕЗНО, на сайте ограничение на 8 основных статов! (это запас на будущее распределение)
+			if ((fields[0].GetUInt32() + fields[1].GetUInt32() + fields[2].GetUInt32() + fields[3].GetUInt32() + fields[4].GetUInt32() + fields[5].GetUInt32() + fields[6].GetUInt32()) > 50) // меняю с 15 на 50 НО НАДО КОНТРОЛИРОВАТЬ НА СТОРОНЕ БАЗ И САЙТА ОЧЕНЬ СЕРЬЕЗНО, на сайте ограничение на 8 основных статов! (это запас на будущее распределение)
 			{
 				TC_LOG_ERROR("entities.player", "Player::_LoadRoleStats: Player '%s' try to load more than 8 stats.", GetName().c_str());
 				return;
 			}
-            if ((fields[7].GetUInt32() + fields[8].GetUInt32() + fields[9].GetUInt32() + fields[10].GetUInt32() + fields[11].GetUInt32() + fields[12].GetUInt32()) > 15)
+            if ((fields[7].GetUInt32() + fields[8].GetUInt32() + fields[9].GetUInt32() + fields[10].GetUInt32() + fields[11].GetUInt32() + fields[12].GetUInt32()) > 50)
             {
                 TC_LOG_ERROR("entities.player", "Player::_LoadRoleStats: Player '%s' try to load more than 10 additional stats.", GetName().c_str());
                 return;
@@ -17994,7 +18006,17 @@ void Player::_LoadRoleStats(PreparedQueryResult result) // ROLE STAT SYSTEM
 		} while (result->NextRow());
 	}
 }
-
+void Player::_LoadNobleLevel(PreparedQueryResult result) // LEVEL SYSTEM
+{
+    if (result)
+    {
+        do
+        {
+            Field* fields = result->Fetch();
+            m_nobleLevel = fields[0].GetUInt32();
+        } while (result->NextRow());
+    }
+}
 Item* Player::_LoadItem(SQLTransaction& trans, uint32 zoneId, uint32 timeDiff, Field* fields)
 {
     Item* item = nullptr;

@@ -623,6 +623,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_INS_CONTAINER_ITEM, "INSERT INTO container_item (ContainerID, SlotID, item_guid) VALUES (?, ?, ?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_CHARACTER_ROLE_STATS, "SELECT STR, AGI, INTEL, VIT, DEX, WILL, SPI, CHA, AVOID, LUCK, HID, INIT, PER   FROM character_role_stats WHERE guid = ?", CONNECTION_ASYNC); // ROLE STAT SYSTEM
     PrepareStatement(CHAR_INS_CHARACTER_CHAT_LOG, "INSERT INTO character_chat_log (name, chat_type, symbols_num, chat_string) VALUES (?, ?, ?, ?)", CONNECTION_ASYNC);
-	//PrepareStatement(CHAR_DEL_CHARACTER_MOUNT, "DELETE FROM character_mount WHERE owner_id = ? AND creature_entry = ?", CONNECTION_ASYNC);
+    PrepareStatement(CHAR_SEL_CHARACTER_LEVEL_SYSTEM, "SELECT `level` FROM character_noblegarden_leveling WHERE guid = ?", CONNECTION_ASYNC); // LEVEL SYSTEM
+    //PrepareStatement(CHAR_DEL_CHARACTER_MOUNT, "DELETE FROM character_mount WHERE owner_id = ? AND creature_entry = ?", CONNECTION_ASYNC);
 	//PrepareStatement(CHAR_INS_CHARACTER_MOUNT, "INSERT INTO character_mount (owner_id, creature_entry, item_1, item_2, item_3) VALUES (?, ?, ?, ?, ?)", CONNECTION_ASYNC);
 }

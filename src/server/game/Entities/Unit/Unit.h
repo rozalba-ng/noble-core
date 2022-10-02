@@ -1069,7 +1069,7 @@ enum RoleStats
 };
 
 #define MAX_ROLE_STATS 13
-#define MAX_ROLE_STAT_VAL 10 // порог, выше которого нельзя поднимать характеристику
+#define MAX_ROLE_STAT_VAL 50 // порог, выше которого нельзя поднимать характеристику
 
 enum ActiveStates
 {

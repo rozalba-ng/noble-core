@@ -650,6 +650,35 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                 }
                 break;
             }
+            case SPELLFAMILY_FATEDICE:
+            {
+                damage = 0;
+                int32 pureDamage = 0;
+                pureDamage += m_spellInfo->Effects[effIndex].BasePoints;
+                int randomPoints = m_spellInfo->Effects[effIndex].DieSides;
+                int32 randvalue = (randomPoints >= 1)
+                    ? irand(1, randomPoints)
+                    : irand(randomPoints, 1);
+                pureDamage += randvalue;
+                int attackStat = m_originalCaster->GetRoleStat((int)m_spellInfo->Effects[effIndex].DamageMultiplier);
+                float attackStatMultiplicator = m_spellInfo->Effects[effIndex].BonusMultiplier;
+                
+                int defStat = unitTarget->GetRoleStat(m_spellInfo->Effects[effIndex].MiscValue);
+                float defStatMultiplicator = (float)(m_spellInfo->Effects[effIndex].MiscValueB)/(float)100;
+                int resistDamage = defStat*defStatMultiplicator;
+
+                pureDamage += (attackStat * attackStatMultiplicator);
+                if (unitTarget->HasAura(104064)) //Малое поглощение
+                    pureDamage -= 25;
+                if (unitTarget->HasAura(104065)) //Среднее поглощение
+                    pureDamage -= 50;
+                if (unitTarget->HasAura(104066)) //Высокое поглощение
+                    pureDamage -= 100;
+                damage += (pureDamage - resistDamage);
+                if (damage <= 0)
+                    damage = 0;
+                break;
+            }
         }
 
         if (m_originalCaster && damage > 0 && apply_direct_bonus)
@@ -1339,7 +1368,7 @@ void Spell::EffectPowerBurn(SpellEffIndex effIndex)
     m_damage += newDamage;
 }
 
-void Spell::EffectHeal(SpellEffIndex /*effIndex*/)
+void Spell::EffectHeal(SpellEffIndex effIndex)
 {
     if (effectHandleMode != SPELL_EFFECT_HANDLE_LAUNCH_TARGET)
         return;
@@ -1439,6 +1468,25 @@ void Spell::EffectHeal(SpellEffIndex /*effIndex*/)
         // Death Pact - return pct of max health to caster
         else if (m_spellInfo->SpellFamilyName == SPELLFAMILY_DEATHKNIGHT && m_spellInfo->SpellFamilyFlags[0] & 0x00080000)
             addhealth = caster->SpellHealingBonusDone(unitTarget, m_spellInfo, int32(caster->CountPctFromMaxHealth(damage)), HEAL);
+        else if (m_spellInfo->SpellFamilyName == SPELLFAMILY_FATEDICE)
+        {
+
+            uint32 pureheal = 0;
+            addhealth = 0;
+            pureheal += m_spellInfo->Effects[effIndex].BasePoints;
+            int randomPoints = m_spellInfo->Effects[effIndex].DieSides;
+            int32 randvalue = (randomPoints >= 1)
+                ? irand(1, randomPoints)
+                : irand(randomPoints, 1);
+            pureheal += randvalue;
+            int attackStat = m_originalCaster->GetRoleStat((int)m_spellInfo->Effects[effIndex].DamageMultiplier);
+            float attackStatMultiplicator = m_spellInfo->Effects[effIndex].BonusMultiplier;
+
+            pureheal += (attackStat * attackStatMultiplicator);
+            if (unitTarget->HasAura(104029) && unitTarget!=m_originalCaster)
+                pureheal *= 0.6f;             //Если имеет ауру колдуна, то сокращаем хил на 40%.
+            addhealth += pureheal;
+        }
         else
             addhealth = caster->SpellHealingBonusDone(unitTarget, m_spellInfo, addhealth, HEAL);
 

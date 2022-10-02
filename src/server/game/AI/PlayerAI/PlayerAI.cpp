@@ -673,6 +673,7 @@ void PlayerAI::DoRangedAttackIfReady()
         return;
 
     Unit* victim = me->GetVictim();
+
     if (!victim)
         return;
 
@@ -706,6 +707,7 @@ void PlayerAI::DoRangedAttackIfReady()
 
 void PlayerAI::DoAutoAttackIfReady()
 {
+
     if (IsRangedAttacker())
         DoRangedAttackIfReady();
     else

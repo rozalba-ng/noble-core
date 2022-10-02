@@ -3558,7 +3558,7 @@ void AuraEffect::HandleAuraModStat(AuraApplication const* aurApp, uint8 mode, bo
         return;
 
     // 7 - all role stats attak, 8 - all defs, 9 - all additional, 10 - ROLE_STAT_STR, 22 - ROLE_STAT_PER
-    if (GetMiscValue() >= 7 && GetMiscValue() <= 22) {
+    if (GetMiscValue() >= 7 && GetMiscValue() <= 23) {
         Unit* target = aurApp->GetTarget();
         if (target->GetTypeId() != TYPEID_PLAYER) {
             return;
@@ -3566,16 +3566,24 @@ void AuraEffect::HandleAuraModStat(AuraApplication const* aurApp, uint8 mode, bo
         int32 enchant_amount = GetAmount();
         switch (GetMiscValue())
         {
+            case ROLE_STAT_MOD_ALL_FIGHT:
+                target->SetRoleStat(ROLE_STAT_STR, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_AGI, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_INT, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_SPI, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_DEX, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_WILL, enchant_amount, apply);
+                break;
             case ROLE_STAT_MOD_ATTACK:
                 target->SetRoleStat(ROLE_STAT_STR, enchant_amount, apply);
                 target->SetRoleStat(ROLE_STAT_AGI, enchant_amount, apply);
                 target->SetRoleStat(ROLE_STAT_INT, enchant_amount, apply);
+                target->SetRoleStat(ROLE_STAT_SPI, enchant_amount, apply);
                 break;
             case ROLE_STAT_MOD_DEF:
-                target->SetRoleStat(ROLE_STAT_VIT, enchant_amount, apply);
+                //target->SetRoleStat(ROLE_STAT_VIT, enchant_amount, apply);
                 target->SetRoleStat(ROLE_STAT_DEX, enchant_amount, apply);
                 target->SetRoleStat(ROLE_STAT_WILL, enchant_amount, apply);
-                target->SetRoleStat(ROLE_STAT_SPI, enchant_amount, apply);
                 break;
             case ROLE_STAT_MOD_ADDITIONAL:
                 target->SetRoleStat(ROLE_STAT_CHARISM, enchant_amount, apply);

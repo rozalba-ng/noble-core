@@ -367,6 +367,32 @@ void Eluna::OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck)
     Push(skipCheck);
     CallAllFunctions(PlayerEventBindings, key);
 }
+void Eluna::OnDamageTaken(Unit* Caster, Unit* Victim, uint32 damage)
+{
+    START_HOOK(PLAYER_EVENT_ON_DAMAGE_TAKEN);
+    Push(Caster);
+    Push(Victim);
+    Push(damage);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+void Eluna::OnFatediceSpellCast(Spell* pSpell, Unit* Caster, Unit* Victim,int32 damage,int32 healing)
+{
+    START_HOOK(PLAYER_EVENT_ON_SPELL_EFFECTS_CAST);
+    Push(pSpell);
+    Push(Caster);
+    Push(Victim);
+    Push(damage);
+    Push(healing);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+void Eluna::OnHealTaken(Unit* Caster, Unit* Victim, uint32 heal)
+{
+    START_HOOK(PLAYER_EVENT_ON_HEAL_TAKEN);
+    Push(Caster);
+    Push(Victim);
+    Push(heal);
+    CallAllFunctions(PlayerEventBindings, key);
+}
 
 void Eluna::OnLogin(Player* pPlayer)
 {
@@ -590,7 +616,28 @@ void Eluna::OnRoleStatUpdate(Player* pPlayer, uint32 stat) // ROLE STAT SYSTEM
 	Push(stat);
 	CallAllFunctions(PlayerEventBindings, key);
 }
-
+void Eluna::OnManaChange(Player* pPlayer, uint32 curMana) // Когда у персонажа меняется мана
+{
+    START_HOOK(PLAYER_EVENT_ON_MANA_CHANGE);
+    Push(pPlayer);
+    Push(curMana);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+bool Eluna::OnHandDamage(Unit* unit, Unit* target) // Когда юнит наносит урон с автоматической атаки
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_HAND_DAMAGE, true);
+    Push(unit);
+    Push(target);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
+bool Eluna::OnUnitStartCast(Unit* unit, Spell* spell, bool isFirstInChain) // Когда юнит начинает готовить спелл
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_UNIT_START_CAST, true);
+    Push(unit);
+    Push(spell);
+    Push(isFirstInChain);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
 void Eluna::OnMovementFlagsSetPlayer(Player* me, uint32 moveFlags, bool add)
 {
 	START_HOOK(PLAYER_EVENT_ON_MOVEMENT_FLAGS_SET);

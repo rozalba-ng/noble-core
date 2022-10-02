@@ -42,7 +42,8 @@ enum RoleStatsMod
     ROLE_STAT_MOD_LUCK		          = 19,
     ROLE_STAT_MOD_HIDDEN		      = 20,
     ROLE_STAT_MOD_INIT	              = 21,
-    ROLE_STAT_MOD_PER	              = 22
+    ROLE_STAT_MOD_PER	              = 22,
+    ROLE_STAT_MOD_ALL_FIGHT	          = 23
 };
 
 typedef void(AuraEffect::*pAuraEffectHandler)(AuraApplication const* aurApp, uint8 mode, bool apply) const;

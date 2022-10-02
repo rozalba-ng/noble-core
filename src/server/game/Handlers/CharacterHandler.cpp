@@ -215,6 +215,10 @@ bool LoginQueryHolder::Initialize()
 	stmt->setUInt32(0, lowGuid);
 	res &= SetPreparedQuery(PLAYER_LOGIN_QUERY_LOAD_ROLE_STATS, stmt);
 
+    stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARACTER_LEVEL_SYSTEM); // LEVEL SYSTEM
+    stmt->setUInt32(0, lowGuid);
+    res &= SetPreparedQuery(PLAYER_LOGIN_QUERY_LOAD_LEVEL_SYSTEM, stmt);
+
     return res;
 }
 

@@ -207,7 +207,12 @@ namespace Hooks
 		PLAYER_EVENT_ON_UNEQUIP					=     46,       // (event, player, item, bag, slot)
 		PLAYER_EVENT_ON_MOVEMENT_FLAGS_SET		=	  47,       // (event, player, item, bag, slot)
 		PLAYER_EVENT_ON_APPLY_SPELL_EFFECTS		=	  48,       // (event, player, spell)
-		
+        PLAYER_EVENT_ON_HAND_DAMAGE             =     49,       // (event, player, target)
+        PLAYER_EVENT_ON_UNIT_START_CAST         =     50,       // (event, player, spell,isFirstInChain)
+        PLAYER_EVENT_ON_MANA_CHANGE             =     51,       // (event, player, curMana)
+        PLAYER_EVENT_ON_DAMAGE_TAKEN            =     52,       // (event, caster, victim, damage)
+        PLAYER_EVENT_ON_HEAL_TAKEN              =     53,       // (event, caster, victim, heal)
+        PLAYER_EVENT_ON_SPELL_EFFECTS_CAST      =     54,       // (event, caster, victim)
         PLAYER_EVENT_COUNT
     };
 

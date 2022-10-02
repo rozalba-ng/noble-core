@@ -1508,11 +1508,13 @@ void Spell::SelectImplicitChainTargets(SpellEffIndex effIndex, SpellImplicitTarg
     if (maxTargets > 1)
     {
         // mark damage multipliers as used
-        for (uint32 k = effIndex; k < MAX_SPELL_EFFECTS; ++k)
-            if (effMask & (1 << k))
-                m_damageMultipliers[k] = 1.0f;
-        m_applyMultiplierMask |= effMask;
-
+        if (m_spellInfo->SpellFamilyName != SPELLFAMILY_FATEDICE)
+        {
+            for (uint32 k = effIndex; k < MAX_SPELL_EFFECTS; ++k)
+                if (effMask & (1 << k))
+                    m_damageMultipliers[k] = 1.0f;
+            m_applyMultiplierMask |= effMask;
+        }
         std::list<WorldObject*> targets;
         SearchChainTargets(targets, maxTargets - 1, target, targetType.GetObjectType(), targetType.GetCheckType()
             , m_spellInfo->Effects[effIndex].ImplicitTargetConditions, targetType.GetTarget() == TARGET_UNIT_TARGET_CHAINHEAL_ALLY);
@@ -2411,6 +2413,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo* target)
 
     // All calculated do it!
     // Do healing and triggers
+
     if (m_healing > 0)
     {
         bool crit = target->crit;
@@ -2884,9 +2887,17 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggered
         m_castItemGUID.Clear();
         m_castItemEntry = 0;
     }
-
+    
     InitExplicitTargets(*targets);
-
+#ifdef ELUNA
+    bool isFirst = IsTriggered();
+    if (!sEluna->OnUnitStartCast(m_caster, this, isFirst))
+    {
+        SendCastResult(SPELL_FAILED_SPELL_IN_PROGRESS);
+        finish(false);
+        return;
+    }
+#endif
     // Fill aura scaling information
     if (m_caster->IsControlledByPlayer() && !m_spellInfo->IsPassive() && m_spellInfo->SpellLevel && !m_spellInfo->IsChanneled() && !(_triggeredCastFlags & TRIGGERED_IGNORE_AURA_SCALING))
     {
@@ -3343,6 +3354,12 @@ void Spell::cast(bool skipCheck)
 		// Miton. Перенес в конец спелл каста, чтобы получить возможность выводить больше данных о спелле во время ивента.
 		sScriptMgr->OnPlayerSpellCast(playerCaster, this, skipCheck);
 	}
+   
+#ifdef ELUNA
+    if (this->m_spellInfo->SpellFamilyName == SPELLFAMILY_FATEDICE)
+        sEluna->OnFatediceSpellCast(this,m_caster, unitTarget, this->m_damage, this->m_healing);
+#endif
+   
 
     SetExecutedCurrently(false);
 

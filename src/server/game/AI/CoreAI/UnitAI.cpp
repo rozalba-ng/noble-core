@@ -52,7 +52,6 @@ void UnitAI::DoMeleeAttackIfReady()
         return;
 
     Unit* victim = me->GetVictim();
-
     if (!me->IsWithinMeleeRange(victim))
         return;
 

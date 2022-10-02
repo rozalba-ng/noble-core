@@ -441,6 +441,9 @@ public:
     void OnEmote(Player* pPlayer, uint32 emote);
     void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid);
     void OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck);
+    void OnDamageTaken(Unit* Caster, Unit* Victim, uint32 damage);
+    void OnFatediceSpellCast(Spell* pSpell, Unit* Caster, Unit* Victim, int32 damage, int32 healing);
+    void OnHealTaken(Unit* Caster, Unit* Victim, uint32 heal);
     void OnLogin(Player* pPlayer);
     void OnLogout(Player* pPlayer);
     void OnCreate(Player* pPlayer);
@@ -451,8 +454,11 @@ public:
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
 	void OnRoleStatUpdate(Player* pPlayer, uint32 stat); // ROLE STAT SYSTEM 
+    bool OnHandDamage(Unit* unit, Unit* target);
+    bool OnUnitStartCast(Unit* unit, Spell* spell,bool isFirstInChain);
 	void OnMovementFlagsSetPlayer(Player* me, uint32 moveFlags, bool add);
 	void OnApplySpellEffects(Unit* me, Spell* pSpell);
+    void OnManaChange(Player* pPlayer, uint32 curMana);
 
 #ifndef CLASSIC
 #ifndef TBC

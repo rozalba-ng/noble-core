@@ -435,7 +435,6 @@ ElunaRegister<Unit> UnitMethods[] =
 	{ "ChangeSeat", &LuaUnit::ChangeSeat },
 	{ "AddMovementFlag", &LuaUnit::AddMovementFlag },
 	{ "RemoveMovementFlag", &LuaUnit::RemoveMovementFlag },
-
     { NULL, NULL }
 };
 
@@ -758,6 +757,9 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GroupInvite", &LuaPlayer::GroupInvite },
     { "GroupCreate", &LuaPlayer::GroupCreate },
     { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
+    { "SetManaRegenDisable", &LuaPlayer::SetManaRegenDisable },
+    { "UpdateLevelInCore", &LuaPlayer::UpdateLevelInCore },
+        
 	//{ "SpawnTempCharacterMount", &LuaPlayer::SpawnTempCharacterMount },		
 #if !defined(CLASSIC) && !defined(TBC)
     { "SendMovieStart", &LuaPlayer::SendMovieStart },
@@ -1050,7 +1052,7 @@ ElunaRegister<Spell> SpellMethods[] =
     { "Cancel", &LuaSpell::Cancel },
     { "Cast", &LuaSpell::Cast },
     { "Finish", &LuaSpell::Finish },
-
+    { "DontFinishTurn", &LuaSpell::DontFinishTurn },
     { NULL, NULL }
 };
 

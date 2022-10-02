@@ -3924,6 +3924,28 @@ namespace LuaPlayer
         return 0;
     }
 
+
+    int SetManaRegenDisable(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
+
+        if (apply)
+        {
+            player->m_manaRegenDisabled = true;
+        }
+        else
+        {
+            player->m_manaRegenDisabled = false;
+        }
+        return 0;
+    }
+    int UpdateLevelInCore(Eluna* E, lua_State* L, Player* player) // LEVEL SYSTEM
+    {
+        uint32 level = Eluna::CHECKVAL<uint32>(L, 2, 0);
+        player->m_nobleLevel = level;
+        // player->UpdateMaxPower(POWER_MANA); - убираю, переводим на стандартную зависимость от левла
+        return 0;
+    }
 #if !defined(CLASSIC) && !defined(TBC)
     /**
      * Starts a movie for the [Player]

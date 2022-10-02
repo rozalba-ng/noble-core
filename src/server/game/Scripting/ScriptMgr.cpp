@@ -2572,14 +2572,22 @@ void ScriptMgr::OnGroupDisband(Group* group)
 // Unit
 void ScriptMgr::OnHeal(Unit* healer, Unit* reciever, uint32& gain)
 {
+#ifdef ELUNA
+    sEluna->OnHealTaken(healer, reciever, gain);
+#endif
     FOREACH_SCRIPT(UnitScript)->OnHeal(healer, reciever, gain);
     FOREACH_SCRIPT(PlayerScript)->OnHeal(healer, reciever, gain);
+
 }
 
 void ScriptMgr::OnDamage(Unit* attacker, Unit* victim, uint32& damage)
 {
+#ifdef ELUNA
+    sEluna->OnDamageTaken(attacker, victim, damage);
+#endif
     FOREACH_SCRIPT(UnitScript)->OnDamage(attacker, victim, damage);
     FOREACH_SCRIPT(PlayerScript)->OnDamage(attacker, victim, damage);
+
 }
 
 void ScriptMgr::ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage)

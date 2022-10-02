@@ -906,6 +906,7 @@ void Unit::CastSpell(SpellCastTargets const& targets, SpellInfo const* spellInfo
             spell->SetSpellValue(itr->first, itr->second);
 
     spell->m_CastItem = castItem;
+
     spell->prepare(&targets, triggeredByAura);
 }
 
@@ -1991,6 +1992,7 @@ void Unit::CalcHealAbsorb(Unit* victim, SpellInfo const* healSpell, uint32 &heal
 
 void Unit::AttackerStateUpdate (Unit* victim, WeaponAttackType attType, bool extra)
 {
+
     if (HasUnitState(UNIT_STATE_CANNOT_AUTOATTACK) || HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED))
         return;
 
@@ -2410,9 +2412,11 @@ SpellMissInfo Unit::MeleeSpellHitResult(Unit* victim, SpellInfo const* spellInfo
     uint32 missChance = uint32(MeleeSpellMissChance(victim, attType, skillDiff, spellInfo->Id) * 100.0f);
     // Roll miss
     uint32 tmp = missChance;
-    if (roll < tmp)
-        return SPELL_MISS_MISS;
-
+    if (spellInfo->SpellFamilyName != SPELLFAMILY_FATEDICE)
+    {
+        if (roll < tmp)
+            return SPELL_MISS_MISS;
+    }
     // Chance resist mechanic (select max value from every mechanic spell effect)
     int32 resist_mech = 0;
     // Get effects mechanic and chance
@@ -2572,19 +2576,23 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit* victim, SpellInfo const* spellInfo
 
     SpellSchoolMask schoolMask = spellInfo->GetSchoolMask();
     // PvP - PvE spell misschances per leveldif > 2
-    int32 lchance = victim->GetTypeId() == TYPEID_PLAYER ? 7 : 11;
-    int32 thisLevel = getLevelForTarget(victim);
-    if (GetTypeId() == TYPEID_UNIT && ToCreature()->IsTrigger())
-        thisLevel = std::max<int32>(thisLevel, spellInfo->SpellLevel);
-    int32 leveldif = int32(victim->getLevelForTarget(this)) - thisLevel;
+//    int32 lchance = victim->GetTypeId() == TYPEID_PLAYER ? 7 : 11;
+//    int32 thisLevel = getLevelForTarget(victim);
+//    if (GetTypeId() == TYPEID_UNIT && ToCreature()->IsTrigger())
+//        thisLevel = std::max<int32>(thisLevel, spellInfo->SpellLevel);
+//    int32 leveldif = int32(victim->getLevelForTarget(this)) - thisLevel;
+//
+//    // Base hit chance from attacker and victim levels
+//    int32 modHitChance;
+//	if (leveldif < 3)
+//		//modHitChance = 96 - leveldif; ������
+//		modHitChance = 100 - leveldif;
+//    else
+//        modHitChance = 94 - (leveldif - 2) * lchance;
 
-    // Base hit chance from attacker and victim levels
+    // хардкожу 99% базовое попадание, независимо от левла
     int32 modHitChance;
-	if (leveldif < 3)
-		//modHitChance = 96 - leveldif; ������
-		modHitChance = 100 - leveldif;
-    else
-        modHitChance = 94 - (leveldif - 2) * lchance;
+    modHitChance = victim->GetTypeId() == TYPEID_PLAYER ? 100 : 99;
 
     // Spellmod from SPELLMOD_RESIST_MISS_CHANCE
     if (Player* modOwner = GetSpellModOwner())
@@ -2612,10 +2620,11 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit* victim, SpellInfo const* spellInfo
     int32 tmp = 10000 - HitChance;
 
     int32 rand = irand(0, 10000);
-
-    if (rand < tmp)
-        return SPELL_MISS_MISS;
-
+    if (spellInfo->SpellFamilyName != SPELLFAMILY_FATEDICE)
+    {
+        if (rand < tmp)
+            return SPELL_MISS_MISS;
+    }
     // Chance resist mechanic (select max value from every mechanic spell effect)
     int32 resist_chance = victim->GetMechanicResistChance(spellInfo) * 100;
     tmp += resist_chance;
@@ -8545,7 +8554,10 @@ bool Unit::Attack(Unit* victim, bool meleeAttack)
 {
     if (!victim || victim == this)
         return false;
-
+#ifdef ELUNA
+    if (!sEluna->OnHandDamage(this, victim))
+        return false;
+#endif
     // dead units can neither attack nor be attacked
     if (!IsAlive() || !victim->IsInWorld() || !victim->IsAlive())
         return false;
@@ -13054,7 +13066,8 @@ void Unit::SetRoleStat(uint8 stat, int32 value, bool apply, bool update) // ROLE
 	}
 
     role_stats[stat] += (apply ? value : -value);
-
+    UpdateMaxHealth();
+    UpdateMaxPower(POWER_MANA);
 	if (Player* player = ToPlayer())
 	{
 #ifdef ELUNA
@@ -13075,7 +13088,7 @@ int32 Unit::GetRoleStat(uint8 stat) const // ROLE STAT SYSTEM
         return NULL;
     }
     if (role_stats[stat] > MAX_ROLE_STAT_VAL) //а тут это максимальное значение характеристики, больше не вкачать
-        return 10;
+        return 50;
     else if (role_stats[stat] < 0)
         return 0;
     else
@@ -13153,7 +13166,7 @@ void Unit::SetPower(Powers power, uint32 val)
 
     SetStatInt32Value(UNIT_FIELD_POWER1 + power, val);
 
-    WorldPacket data(SMSG_POWER_UPDATE);
+    WorldPacket data(SMSG_POWER_UPDATE, 8 + 1 + 4);
     data << GetPackGUID();
     data << uint8(power);
     data << uint32(val);
@@ -13162,6 +13175,8 @@ void Unit::SetPower(Powers power, uint32 val)
     // group update
     if (Player* player = ToPlayer())
     {
+        if (power==POWER_MANA)
+            sEluna->OnManaChange(player, val);
         if (player->GetGroup())
             player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_POWER);
     }
@@ -16195,6 +16210,10 @@ float Unit::MeleeSpellMissChance(const Unit* victim, WeaponAttackType attType, i
         return 0.0f;
     if (missChance > 60.0f)
         return 60.0f;
+
+    // хардкожу мисс милишной на 0% - незавивисимо от оружия и навыков владения
+    missChance = 0.0f;
+
     return missChance;
 }
 
