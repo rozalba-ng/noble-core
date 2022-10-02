@@ -104,7 +104,7 @@ void LoadWeatherData()
 
         uint32 zone_id = fields[0].GetUInt32();
 
-        WeatherData& wzc = mWeatherZoneMap[zone_id];
+        WeatherData& wzc = mWeatherZoneMap[zone_id]; // тут может быть краш
 
         for (uint8 season = 0; season < WEATHER_SEASONS; ++season)
         {
