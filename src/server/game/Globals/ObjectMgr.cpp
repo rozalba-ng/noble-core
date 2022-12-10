@@ -3091,7 +3091,7 @@ void ObjectMgr::LoadItemTemplate(uint32 ent)
     }
 
     bool enforceDBCAttributes = sWorld->getBoolConfig(CONFIG_DBC_ENFORCE_ITEM_ATTRIBUTES);
-
+    uint32 count = 0;
     do
     {
         Field* fields = result->Fetch();
