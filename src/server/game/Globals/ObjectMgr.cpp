@@ -3079,7 +3079,8 @@ void ObjectMgr::LoadItemTemplates()
 void ObjectMgr::LoadItemTemplate(uint32 ent)
 {
     uint32 oldMSTime = getMSTime();
-
+    char entstr[21];
+    sprintf(entstr, "%d", ent);
     //                                                 0      1       2               3              4        5        6       7          8         9        10        11           12
     QueryResult result = WorldDatabase.Query("SELECT entry, class, subclass, SoundOverrideSubclass, name, displayid, Quality, Flags, FlagsExtra, BuyCount, BuyPrice, SellPrice, InventoryType, "
         //                                              13              14           15          16             17               18                19              20
@@ -3111,7 +3112,7 @@ void ObjectMgr::LoadItemTemplate(uint32 ent)
         //                                            126                 127                     128            129            130            131         132         133
         "GemProperties, RequiredDisenchantSkill, ArmorDamageModifier, duration, ItemLimitCategory, HolidayId, ScriptName, DisenchantID, "
         //                                           134        135            136
-        "FoodType, minMoneyLoot, maxMoneyLoot, flagsCustom FROM item_template WHERE entry="+std::to_string(ent));
+        "FoodType, minMoneyLoot, maxMoneyLoot, flagsCustom FROM item_template WHERE entry="+entstr);
 
     if (!result)
     {
