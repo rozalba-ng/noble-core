@@ -3119,6 +3119,7 @@ void ObjectMgr::LoadItemTemplate(uint32 ent)
         return;
     }
 
+    bool enforceDBCAttributes = sWorld->getBoolConfig(CONFIG_DBC_ENFORCE_ITEM_ATTRIBUTES);
 
     do
     {
