@@ -47,7 +47,7 @@
 #include "MoveSpline.h"
 #include "WardenMac.h"
 #include "Metric.h"
-
+#include <ctime>
 #include <zlib.h>
 
 namespace {
@@ -1294,7 +1294,8 @@ void WorldSession::InitializeSessionCallback(SQLQueryHolder* realmHolder)
     ResetTimeOutTime();
 
     SendAddonsInfo();
-    SendClientCacheVersion(sWorld->getIntConfig(CONFIG_CLIENTCACHE_VERSION));
+    std::srand(std::time(nullptr));
+    SendClientCacheVersion(std::rand() % 10000 + 1));
     SendTutorialsData();
 
     delete realmHolder;
