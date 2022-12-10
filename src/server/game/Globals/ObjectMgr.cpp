@@ -3112,7 +3112,7 @@ void ObjectMgr::LoadItemTemplate(uint32 ent)
         //                                            126                 127                     128            129            130            131         132         133
         "GemProperties, RequiredDisenchantSkill, ArmorDamageModifier, duration, ItemLimitCategory, HolidayId, ScriptName, DisenchantID, "
         //                                           134        135            136
-        "FoodType, minMoneyLoot, maxMoneyLoot, flagsCustom FROM item_template WHERE entry="+entstr);
+        "FoodType, minMoneyLoot, maxMoneyLoot, flagsCustom FROM item_template WHERE entry="+ +std::string(entstr));
 
     if (!result)
     {
