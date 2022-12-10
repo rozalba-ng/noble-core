@@ -1295,7 +1295,7 @@ void WorldSession::InitializeSessionCallback(SQLQueryHolder* realmHolder)
 
     SendAddonsInfo();
     std::srand(std::time(nullptr));
-    SendClientCacheVersion(std::rand() % 10000 + 1));
+    SendClientCacheVersion(std::rand() % 10000 + 1);
     SendTutorialsData();
 
     delete realmHolder;
