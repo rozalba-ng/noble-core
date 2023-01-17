@@ -84,11 +84,15 @@ enum Races
     RACE_FOREST_TROLL       = 18, // черножелезник
     RACE_TAUNKA             = 19, // зандалар
     RACE_NORTHREND_SKELETON = 20, // ночнорожденный
-    RACE_ICE_TROLL          = 21  // тирасец
+    RACE_ICE_TROLL          = 21,  // тирасец
+    RACE_BLOODELFN         = 22,  // новый БЭ
+    RACE_THINHUMAN          = 23,  // тонкий человек
+    RACE_UPGRIGHT          = 24,  // прямой орк
+    RACE_HALFELF          = 25  // полуэльф
 };
 
 // max+1 for player race
-#define MAX_RACES         22
+#define MAX_RACES         26
 
 #define RACEMASK_ALL_PLAYABLE \
     ((1<<(RACE_HUMAN-1))    |(1<<(RACE_ORC-1))                |(1<<(RACE_DWARF-1))     | \
@@ -98,7 +102,9 @@ enum Races
      (1<<(RACE_NAGA-1))     |\
      (1<<(RACE_BROKEN-1))   |(1<<(RACE_SKELETON-1))           |(1<<(RACE_VRYKUL-1))    | \
      (1<<(RACE_TUSKARR-1))  |(1<<(RACE_FOREST_TROLL-1))       |(1<<(RACE_TAUNKA-1))    | \
-     (1<<(RACE_NORTHREND_SKELETON-1)) | (1<<(RACE_ICE_TROLL-1)))
+     (1<<(RACE_NORTHREND_SKELETON-1)) | (1<<(RACE_ICE_TROLL-1)))	| \
+	 (1<<(RRACE_BLOODELFN-1))  |(1<<(RACE_THINHUMAN-1))       |(1<<(RACE_UPGRIGHT-1))    | \
+	 (1<<(RACE_HALFELF-1))     |\
 
 #define RACEMASK_ALLIANCE \
     ((1<<(RACE_HUMAN-1)) | (1<<(RACE_DWARF-1)) | (1<<(RACE_NIGHTELF-1)) | \
@@ -107,6 +113,7 @@ enum Races
      (1<<(RACE_BROKEN-1))| \
      (1<<(RACE_SKELETON-1))|(1<<(RACE_VRYKUL-1))|(1<<(RACE_TUSKARR-1))| \
      (1<<(RACE_FOREST_TROLL-1))| (1<<(RACE_NORTHREND_SKELETON-1))| (1<<(RACE_ICE_TROLL-1)))
+	 (1<<(RRACE_BLOODELFN-1)) | (1<<(RACE_THINHUMAN-1)) | (1<<(RACE_HALFELF-1))     |\
 
 #define RACEMASK_HORDE RACEMASK_ALL_PLAYABLE & ~RACEMASK_ALLIANCE
 
