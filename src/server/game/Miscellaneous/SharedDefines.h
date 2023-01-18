@@ -102,9 +102,9 @@ enum Races
      (1<<(RACE_NAGA-1))     |\
      (1<<(RACE_BROKEN-1))   |(1<<(RACE_SKELETON-1))           |(1<<(RACE_VRYKUL-1))    | \
      (1<<(RACE_TUSKARR-1))  |(1<<(RACE_FOREST_TROLL-1))       |(1<<(RACE_TAUNKA-1))    | \
-     (1<<(RACE_NORTHREND_SKELETON-1)) | (1<<(RACE_ICE_TROLL-1)))	| \
+     (1<<(RACE_NORTHREND_SKELETON-1)) | (1<<(RACE_ICE_TROLL-1))	| \
 	 (1<<(RACE_BLOODELFN-1))  |(1<<(RACE_THINHUMAN-1))       |(1<<(RACE_UPGRIGHT-1))    | \
-	 (1<<(RACE_HALFELF-1))     |\
+	 (1<<(RACE_HALFELF-1)))     | \
 
 #define RACEMASK_ALLIANCE \
     ((1<<(RACE_HUMAN-1)) | (1<<(RACE_DWARF-1)) | (1<<(RACE_NIGHTELF-1)) | \
@@ -112,8 +112,8 @@ enum Races
      (1<<(RACE_DRAENEI-1)) |(1<<(RACE_FEL_ORC-1)) | (1<<(RACE_NAGA-1))| \
      (1<<(RACE_BROKEN-1))| \
      (1<<(RACE_SKELETON-1))|(1<<(RACE_VRYKUL-1))|(1<<(RACE_TUSKARR-1))| \
-     (1<<(RACE_FOREST_TROLL-1))| (1<<(RACE_NORTHREND_SKELETON-1))| (1<<(RACE_ICE_TROLL-1)))
-	 (1<<(RACE_BLOODELFN-1)) | (1<<(RACE_THINHUMAN-1)) | (1<<(RACE_HALFELF-1))     |\
+     (1<<(RACE_FOREST_TROLL-1))| (1<<(RACE_NORTHREND_SKELETON-1))| (1<<(RACE_ICE_TROLL-1))| \
+	 (1<<(RACE_BLOODELFN-1)) | (1<<(RACE_THINHUMAN-1)) | (1<<(RACE_HALFELF-1)))     | \
 
 #define RACEMASK_HORDE RACEMASK_ALL_PLAYABLE & ~RACEMASK_ALLIANCE
 
