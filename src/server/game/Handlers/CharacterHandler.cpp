@@ -1339,7 +1339,7 @@ void WorldSession::HandleCharCustomize(WorldPacket& recvData)
         recvData.rfinish();
         KickPlayer();
         return;
-    }case
+    }
 
     recvData >> customizeInfo.Name
              >> customizeInfo.Gender
