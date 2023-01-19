@@ -263,7 +263,7 @@ ObjectMgr::~ObjectMgr()
         {
             if (_playerInfo[race][class_])
                 delete[] _playerInfo[race][class_]->levelInfo;
-            delete _playerInfo[race][class_]
+            delete _playerInfo[race][class_];
         }
     }
 
