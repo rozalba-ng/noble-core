@@ -96,9 +96,9 @@ enum Races
      (1<<(RACE_NIGHTELF-1)) |(1<<(RACE_UNDEAD_PLAYER-1))      |(1<<(RACE_TAUREN-1))    | \
      (1<<(RACE_GNOME-1))    |(1<<(RACE_TROLL-1))              |(1<<(RACE_GOBLIN-1))    | \
      (1<<(RACE_BLOODELF-1)) |(1<<(RACE_DRAENEI-1))            |(1<<(RACE_FEL_ORC-1))   | \
-     (1<<(RACE_NAGA-1))     |(1<<(RACE_BROKEN-1))             |(1<<(RACE_SKELETON-1))  | \      
+     (1<<(RACE_NAGA-1))     |(1<<(RACE_BROKEN-1))             |(1<<(RACE_SKELETON-1))  | \
      (1<<(RACE_VRYKUL-1))   |(1<<(RACE_TUSKARR-1))            |(1<<(RACE_FOREST_TROLL-1))  | \
-     (1<<(RACE_TAUNKA-1))   |(1<<(RACE_NORTHREND_SKELETON-1)) |(1<<(RACE_ICE_TROLL-1)) | \    
+     (1<<(RACE_TAUNKA-1))   |(1<<(RACE_NORTHREND_SKELETON-1)) |(1<<(RACE_ICE_TROLL-1)) | \
 	 (1<<(RACE_BLOODELFN-1)))  
 
 #define RACEMASK_ALLIANCE \
