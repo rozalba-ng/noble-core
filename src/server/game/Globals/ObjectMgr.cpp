@@ -10173,14 +10173,11 @@ VehiclePassengersList const* ObjectMgr::GetVehiclePassengersList(uint32 guid) co
 PlayerInfo const* ObjectMgr::GetPlayerInfo(uint32 race, uint32 class_) const
 {
     if (race >= MAX_RACES)
-        TC_LOG_ERROR("entities.player", "Player::Create: 1 error");
         return NULL;
     if (class_ >= MAX_CLASSES)
-        TC_LOG_ERROR("entities.player", "Player::Create: 2 error");
         return NULL;
     PlayerInfo const* info = _playerInfo[race][class_];
     if (!info)
-    TC_LOG_ERROR("entities.player", "Player::Create: 3 error");
         return NULL;
     return info;
 }
