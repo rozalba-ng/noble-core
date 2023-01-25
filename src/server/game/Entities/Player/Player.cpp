@@ -1635,7 +1635,7 @@ bool Player::BuildEnumData(PreparedQueryResult result, WorldPacket* data)
     if (!info)
     {
         TC_LOG_ERROR("entities.player.loading", "Player %u has incorrect race/class pair. Don't build enum.", guid);
-        continue;
+        return;
     }
     else if (!IsValidGender(gender))
     {
