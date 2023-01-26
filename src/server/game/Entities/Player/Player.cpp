@@ -606,7 +606,7 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
     {
         TC_LOG_ERROR("entities.player", "Player::Create: Possible hacking attempt: Account %u tried to create a character named '%s' with an invalid race/class pair (%u/%u) - refusing to do so.",
                 GetSession()->GetAccountId(), m_name.c_str(), createInfo->Race, createInfo->Class);
-        return true;
+        return false;
     }
 
     for (uint8 i = 0; i < PLAYER_SLOTS_COUNT; i++)
@@ -1632,8 +1632,14 @@ bool Player::BuildEnumData(PreparedQueryResult result, WorldPacket* data)
     uint8 gender = fields[4].GetUInt8();
 
     PlayerInfo const* info = sObjectMgr->GetPlayerInfo(plrRace, plrClass);
+    
+    if (!info)
+    {
+        TC_LOG_ERROR("entities.player.loading", "Player %u has incorrect race/class pair. Don't build enum.", guid);
+        return false;
+    }
 
-    if (!IsValidGender(gender))
+    else if (!IsValidGender(gender))
     {
         TC_LOG_ERROR("entities.player.loading", "Player (%u) has incorrect gender (%u), don't build enum.", guid, gender);
         return false;
