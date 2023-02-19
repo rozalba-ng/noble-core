@@ -147,7 +147,8 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
 	{ "RelocateFarCreature", &LuaGlobalFunctions::RelocateFarCreature },
 	{ "ReloadNPCOutfits", &LuaGlobalFunctions::ReloadNPCOutfits },
     { "ReloadAllNPC", &LuaGlobalFunctions::ReloadAllNPC },
-		
+    { "ReloadItemByEntry", &LuaGlobalFunctions::ReloadItemByEntry },
+
     { NULL, NULL }
 };
 

@@ -1632,11 +1632,13 @@ bool Player::BuildEnumData(PreparedQueryResult result, WorldPacket* data)
     uint8 gender = fields[4].GetUInt8();
 
     PlayerInfo const* info = sObjectMgr->GetPlayerInfo(plrRace, plrClass);
+    
     if (!info)
     {
         TC_LOG_ERROR("entities.player.loading", "Player %u has incorrect race/class pair. Don't build enum.", guid);
         return false;
     }
+
     else if (!IsValidGender(gender))
     {
         TC_LOG_ERROR("entities.player.loading", "Player (%u) has incorrect gender (%u), don't build enum.", guid, gender);
@@ -26603,7 +26605,7 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
 
 
     // These combinations don't have an entry of Type SECTION_TYPE_FACIAL_HAIR, exclude them from that check
-    bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) || (race == RACE_BROKEN) || (race == RACE_VRYKUL)  || (race == RACE_TAUNKA)  || (race == RACE_ICE_TROLL) || (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
+    bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) || (race == RACE_BROKEN) || (race == RACE_VRYKUL)  || (race == RACE_TAUNKA)  || (race == RACE_ICE_TROLL) || (race == RACE_BLOODELFN) || (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
 
     // Check Hair
     if (CharSectionsEntry const* entry = GetCharSectionEntry(race, SECTION_TYPE_HAIR, gender, hairID, hairColor))

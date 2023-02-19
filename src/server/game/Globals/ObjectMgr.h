@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -1033,6 +1033,7 @@ class TC_GAME_API ObjectMgr
 		void LoadGameobjectsContainerItem();
         void LoadGameobjects();
         void LoadItemTemplates();
+        void LoadItemTemplate(uint32 ent); //Привет от Эзила
         void LoadItemLocales();
         void LoadItemSetNames();
         void LoadItemSetNameLocales();

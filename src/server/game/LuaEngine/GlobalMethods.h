@@ -3134,6 +3134,13 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    int ReloadItemByEntry(Eluna* /*E*/, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        sObjectMgr->LoadItemTemplate(entry);
+        return 1;
+    }
+
 	/*int GetAllCharacterTempMounts(Eluna* E, lua_State* L)
 	{
 		lua_newtable(L);
