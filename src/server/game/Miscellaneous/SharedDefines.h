@@ -86,10 +86,11 @@ enum Races
     RACE_NORTHREND_SKELETON = 20, // ночнорожденный
     RACE_ICE_TROLL          = 21,  // тирасец
     RACE_BLOODELFN          = 22  // новый БЭ
+    RACE_UPRIGHT         = 23  // прямой орк
 };
 
 // max+1 for player race
-#define MAX_RACES         23
+#define MAX_RACES         24
 
 #define RACEMASK_ALL_PLAYABLE \
     ((1<<(RACE_HUMAN-1))    |(1<<(RACE_ORC-1))                |(1<<(RACE_DWARF-1))     | \
@@ -99,7 +100,7 @@ enum Races
      (1<<(RACE_NAGA-1))     |(1<<(RACE_BROKEN-1))             |(1<<(RACE_SKELETON-1))  | \
      (1<<(RACE_VRYKUL-1))   |(1<<(RACE_TUSKARR-1))            |(1<<(RACE_FOREST_TROLL-1))  | \
      (1<<(RACE_TAUNKA-1))   |(1<<(RACE_NORTHREND_SKELETON-1)) |(1<<(RACE_ICE_TROLL-1)) | \
-	 (1<<(RACE_BLOODELFN-1)))  
+	 (1<<(RACE_BLOODELFN-1))    |(1<<(RACE_UPRIGHT-1)))  
 
 #define RACEMASK_ALLIANCE \
     ((1<<(RACE_HUMAN-1)) | (1<<(RACE_DWARF-1)) | (1<<(RACE_NIGHTELF-1)) | \
