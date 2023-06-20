@@ -85,7 +85,7 @@ enum Races
     RACE_TAUNKA             = 19, // зандалар
     RACE_NORTHREND_SKELETON = 20, // ночнорожденный
     RACE_ICE_TROLL          = 21,  // тирасец
-    RACE_BLOODELFN          = 22  // новый БЭ
+    RACE_BLOODELFN          = 22,  // новый БЭ
     RACE_UPRIGHT         = 23  // прямой орк
 };
 
