@@ -1802,6 +1802,9 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
 				case RACE_BLOODELFN:
 					stmt->setUInt16(1, 759);
 					break;
+                case RACE_UPRIGHT:
+					stmt->setUInt16(1, 759);
+					break;
             }
 
             trans->Append(stmt);
