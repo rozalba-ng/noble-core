@@ -1633,9 +1633,7 @@ bool Player::BuildEnumData(PreparedQueryResult result, WorldPacket* data)
 
     PlayerInfo const* info = sObjectMgr->GetPlayerInfo(plrRace, plrClass);
     
-
-
-    else if (!IsValidGender(gender))
+    if (!IsValidGender(gender))
     {
         TC_LOG_ERROR("entities.player.loading", "Player (%u) has incorrect gender (%u), don't build enum.", guid, gender);
         return false;
