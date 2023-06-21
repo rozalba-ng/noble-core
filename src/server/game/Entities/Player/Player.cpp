@@ -602,8 +602,12 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
     m_name = createInfo->Name;
     
     PlayerInfo const* info = sObjectMgr->GetPlayerInfo(createInfo->Race, createInfo->Class);
-
-
+    if (!info)
+    {
+        TC_LOG_ERROR("entities.player", "Player::Create: Possible hacking attempt: Account %u tried to create a character named '%s' with an invalid race/class pair (%u/%u) - refusing to do so.",
+                GetSession()->GetAccountId(), m_name.c_str(), createInfo->Race, createInfo->Class);
+        return false;
+    }
 
     for (uint8 i = 0; i < PLAYER_SLOTS_COUNT; i++)
         m_items[i] = nullptr;
@@ -26601,7 +26605,7 @@ bool Player::ValidateAppearance(uint8 race, uint8 class_, uint8 gender, uint8 ha
 
 
     // These combinations don't have an entry of Type SECTION_TYPE_FACIAL_HAIR, exclude them from that check
-    bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) || (race == RACE_BROKEN) || (race == RACE_VRYKUL)  || (race == RACE_TAUNKA)  || (race == RACE_ICE_TROLL) || (race == RACE_BLOODELFN) || (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
+    bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) || (race == RACE_BROKEN) || (race == RACE_VRYKUL)  || (race == RACE_TAUNKA)  || (race == RACE_ICE_TROLL) || (race == RACE_BLOODELFN) || (race == RACE_UPRIGHT) || (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
 
     // Check Hair
     if (CharSectionsEntry const* entry = GetCharSectionEntry(race, SECTION_TYPE_HAIR, gender, hairID, hairColor))
