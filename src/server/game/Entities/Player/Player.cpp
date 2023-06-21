@@ -600,10 +600,20 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
     Object::_Create(guidlow, 0, HighGuid::Player);
 
     m_name = createInfo->Name;
+    
+    PlayerInfo const* info = sObjectMgr->GetPlayerInfo(createInfo->Race, createInfo->Class);
+    if (!info)
+    {
+        TC_LOG_ERROR("entities.player", "Player::Create: Possible hacking attempt: Account %u tried to create a character named '%s' with an invalid race/class pair (%u/%u) - refusing to do so.",
+                GetSession()->GetAccountId(), m_name.c_str(), createInfo->Race, createInfo->Class);
+        return true;
+    }
+
 
     for (uint8 i = 0; i < PLAYER_SLOTS_COUNT; i++)
         m_items[i] = nullptr;
-
+        
+    Relocate(info->positionX, info->positionY, info->positionZ, info->orientation);
 
     ChrClassesEntry const* cEntry = sChrClassesStore.LookupEntry(createInfo->Class);
     if (!cEntry)
@@ -613,6 +623,7 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
         return false;
     }
 
+    SetMap(sMapMgr->CreateMap(info->mapId, this));
 
     //uint8 powertype = cEntry->powerType; ������
 	uint8 powertype = 0;
