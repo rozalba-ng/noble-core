@@ -806,8 +806,9 @@ ElunaRegister<Creature> CreatureMethods[] =
 	{ "GetOwner", &LuaCreature::GetOwner },	
 	{ "GetNameForLocaleRu", &LuaCreature::GetNameForLocaleRu },
 	{ "GetCreatureReplacer", &LuaCreature::GetCreatureReplacer },
-	
-    // Setters
+    { "GetOwnerId", &LuaCreature::GetOwnerId },
+
+                // Setters
     { "SetHover", &LuaCreature::SetHover },
     { "SetDisableGravity", &LuaCreature::SetDisableGravity },
     { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
@@ -896,6 +897,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
     { "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow },
 	{ "GetOwner", &LuaGameObject::GetOwner },
+    { "GetOwnerId", &LuaGameObject::GetOwnerId },
 	{ "MoveGameObject", &LuaGameObject::MoveGameObject },
 	{ "GetCreatureAttach", &LuaGameObject::GetCreatureAttach },
 	{ "GetContainerSize", &LuaGameObject::GetContainerSize },

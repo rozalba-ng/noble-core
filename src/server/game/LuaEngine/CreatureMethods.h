@@ -1340,6 +1340,12 @@ namespace LuaCreature
 		return 1;
 	}
 
+	int GetOwnerId(Eluna* /*E*/, lua_State* L, Creature* creature)
+	{
+		Eluna::Push(L, creature->GetOwnerId());
+		return 1;
+	}
+
 	int GetCreatureReplacer(Eluna* /*E*/, lua_State* L, Creature* creature)
 	{
 		Eluna::Push(L, creature->GetCreatureReplacer());
