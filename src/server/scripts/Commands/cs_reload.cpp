@@ -940,7 +940,7 @@ public:
 		return true;
 	}
 
-    static bool HandleReloadOneItemTemplateCommand(ChatHandler* handler, const char* /*args*/)
+    static bool HandleReloadOneItemTemplateCommand(ChatHandler* handler, char const* args)
     {
         TC_LOG_INFO("misc", "Loading Item... (`item_template`)");
         if (!*args)
