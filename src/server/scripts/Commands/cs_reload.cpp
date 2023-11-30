@@ -159,7 +159,7 @@ public:
             { "vehicle_template_accessory",    rbac::RBAC_PERM_COMMAND_RELOAD_VEHICLE_TEMPLATE_ACCESSORY,       true,  &HandleReloadVehicleTemplateAccessoryCommand,   "" },
 			{ "all_creature_template",         rbac::RBAC_PERM_COMMAND_RELOAD_ALL_CREATURE_TEMPLATE,            true,  &HandleReloadAllCreatureTemplateCommand,        "" },
 			{ "all_gameobject_template",       rbac::RBAC_PERM_COMMAND_RELOAD_ALL_GAMEOBJECT_TEMPLATE,          true,  &HandleReloadAllGameObjectTemplateCommand,      "" },
-			{ "all_item_template",			   rbac::RBAC_PERM_COMMAND_RELOAD_ALL_ITEM_TEMPLATE,                true,  &HandleReloadAllItemTemplateCommand,			   "" }
+			{ "all_item_template",			   rbac::RBAC_PERM_COMMAND_RELOAD_ALL_ITEM_TEMPLATE,                true,  &HandleReloadAllItemTemplateCommand,			   "" },
 			{ "one_item_template",			   rbac::RBAC_PERM_COMMAND_RELOAD_ONE_ITEM_TEMPLATE,                true,  &HandleReloadOneItemTemplateCommand,			   "" },
 			{ "npc_text",					   rbac::RBAC_PERM_COMMAND_RELOAD_NPC_TEXT,							true,  &HandleReloadNpcTextCommand,					   "" },
 			{ "creature_equip_template",	   rbac::RBAC_PERM_COMMAND_RELOAD_CREATURE_EQUIPMENT_TEMPLATE,      true,  &HandleReloadEquipmentTemplateCommand,		   "" },
