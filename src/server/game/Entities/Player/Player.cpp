@@ -1201,7 +1201,7 @@ void Player::SetDrunkValue(uint8 newDrunkValue, uint32 itemId /*= 0*/)
     data << uint64(GetGUID());
     data << uint32(newDrunkenState);
     data << uint32(itemId);
-    SendMessageToSet(&data, true);
+    SendMessageToSetInRange(&data, sWorld->getFloatConfig(CONFIG_LISTEN_RANGE_SAY), true);
 }
 
 void Player::Update(uint32 p_time)
