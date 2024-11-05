@@ -433,6 +433,32 @@ void ObjectMgr::LoadCreatureTemplates()
     TC_LOG_INFO("server.loading", ">> Loaded %u creature definitions in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
 }
 
+void ObjectMgr::ReloadCreatureTemplate(uint32 entry)
+{
+    PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_CREATURE_TEMPLATE);
+    stmt->setUInt32(0, entry);
+    PreparedQueryResult result = WorldDatabase.Query(stmt);
+
+    if (!result)
+    {
+        handler->PSendSysMessage(LANG_COMMAND_CREATURETEMPLATE_NOTFOUND, entry);
+        continue;
+    }
+
+    CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(entry);
+    if (!cInfo)
+    {
+        handler->PSendSysMessage(LANG_COMMAND_CREATURESTORAGE_NOTFOUND, entry);
+        continue;
+    }
+
+    TC_LOG_INFO("misc", "Reloading creature template entry %u", entry);
+
+    Field* fields = result->Fetch();
+    sObjectMgr->LoadCreatureTemplate(fields);
+    sObjectMgr->CheckCreatureTemplate(cInfo);
+}
+
 void ObjectMgr::LoadCreatureTemplate(Field* fields)
 {
     uint32 entry = fields[0].GetUInt32();
@@ -1671,6 +1697,51 @@ void ObjectMgr::LoadTempSummons()
     } while (result->NextRow());
 
     TC_LOG_INFO("server.loading", ">> Loaded %u temp summons in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+}
+
+void ObjectMgr::ReloadCreature(uint32 guid)
+{
+    uint32 oldMSTime = getMSTime();
+    PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_CREATURE);
+    stmt->setUInt32(0, guid);
+    PreparedQueryResult result = CharacterDatabase.Query(stmt);
+    if (!result)
+    {
+        TC_LOG_ERROR("creature.loading", ">> Loaded 0 creatures. No creature with guid=%d in `creature`.");
+        return;
+    }
+    Field* fields = result->Fetch();
+
+    uint32 entry        = fields[1].GetUInt32();
+
+    CreatureTemplate const* cInfo = GetCreatureTemplate(entry);
+    if (!cInfo)
+    {
+        TC_LOG_ERROR("sql.sql", "Table `creature` has creature (GUID: %u) with non existing creature entry %u, skipped.", guid, entry);
+        continue;
+    }
+
+    CreatureData& data = _creatureDataStore[guid];
+    data.id             = entry;
+    data.mapid          = fields[2].GetUInt16();
+    data.displayid      = fields[3].GetUInt32();
+    data.equipmentId    = fields[4].GetInt8();
+    data.posX           = fields[5].GetFloat();
+    data.posY           = fields[6].GetFloat();
+    data.posZ           = fields[7].GetFloat();
+    data.orientation    = fields[8].GetFloat();
+    data.spawntimesecs  = fields[9].GetUInt32();
+    data.spawndist      = fields[10].GetFloat();
+    data.currentwaypoint= fields[11].GetUInt32();
+    data.curhealth      = fields[12].GetUInt32();
+    data.curmana        = fields[13].GetUInt32();
+    data.movementType   = fields[14].GetUInt8();
+    data.spawnMask      = fields[15].GetUInt8();
+    data.phaseMask      = fields[16].GetUInt32();
+    data.npcflag        = fields[17].GetUInt32();
+    data.unit_flags     = fields[18].GetUInt32();
+    data.dynamicflags   = fields[19].GetUInt32();
+    data.owner_id		= fields[20].GetUInt32();
 }
 
 void ObjectMgr::LoadCreatures()

@@ -164,6 +164,7 @@ public:
 			{ "npc_text",					   rbac::RBAC_PERM_COMMAND_RELOAD_NPC_TEXT,							true,  &HandleReloadNpcTextCommand,					   "" },
 			{ "creature_equip_template",	   rbac::RBAC_PERM_COMMAND_RELOAD_CREATURE_EQUIPMENT_TEMPLATE,      true,  &HandleReloadEquipmentTemplateCommand,		   "" },
 			{ "creature_template_addon",	   rbac::RBAC_PERM_COMMAND_RELOAD_CREATURE_TEMPLATE_ADDON ,			true,  &HandleReloadCreatureTemplateAddonCommand,	   "" },
+			{ "creature",	                   rbac::RBAC_PERM_COMMAND_RELOAD_ONE_CREATURE,			            true,  &HandleReloadOneCreatureCommand,	               "" },
         };
         static std::vector<ChatCommand> commandTable =
         {
@@ -441,29 +442,8 @@ public:
         for (Tokenizer::const_iterator itr = entries.begin(); itr != entries.end(); ++itr)
         {
             uint32 entry = uint32(atoi(*itr));
-
-            PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_CREATURE_TEMPLATE);
-            stmt->setUInt32(0, entry);
-            PreparedQueryResult result = WorldDatabase.Query(stmt);
-
-            if (!result)
-            {
-                handler->PSendSysMessage(LANG_COMMAND_CREATURETEMPLATE_NOTFOUND, entry);
-                continue;
-            }
-
-            CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(entry);
-            if (!cInfo)
-            {
-                handler->PSendSysMessage(LANG_COMMAND_CREATURESTORAGE_NOTFOUND, entry);
-                continue;
-            }
-
-            TC_LOG_INFO("misc", "Reloading creature template entry %u", entry);
-
-            Field* fields = result->Fetch();
-            sObjectMgr->LoadCreatureTemplate(fields);
-            sObjectMgr->CheckCreatureTemplate(cInfo);
+            if (entry == 0) continue;
+            sObjectMgr->ReloadCreatureTemplate(entry);
         }
 
         handler->SendGlobalGMSysMessage("Creature template reloaded.");
@@ -544,7 +524,25 @@ public:
 		return true;
 	}
 
-	static bool HandleReloadAllGameObjectTemplateCommand(ChatHandler* handler, const char* /*args*/)
+    static bool HandleReloadOneCreatureCommand(ChatHandler* handler, char const* args)
+    {
+        TC_LOG_INFO("misc", "Loading Creature... (`creature`)");
+        if (!*args)
+            return false;
+
+        char* id = strtok((char*)args, " ");
+        if (!id)
+            return false;
+
+        uint32 creatureId = atoi(id);
+        if (!creatureId)
+            return false;
+
+        sObjectMgr->ReloadCreature(creatureId);
+        return true;
+    }
+
+    static bool HandleReloadAllGameObjectTemplateCommand(ChatHandler* handler, const char* /*args*/)
 	{
 		TC_LOG_INFO("misc", "Loading Gameobject Templates... (`gameobject_template`)");
 		sObjectMgr->LoadGameObjectTemplate();

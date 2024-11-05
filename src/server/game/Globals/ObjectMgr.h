@@ -1017,11 +1017,13 @@ class TC_GAME_API ObjectMgr
 		bool RemoveCreatureGameobject(uint32 entry, uint32 item, bool to_db = true);
 		void AddVehiclePassenger(uint32 spawnid, uint32 guidLow, float radius, float angle, float pos_z, float orientation, uint32 type = 1);
 		bool RemoveVehiclePassengers(uint32 spawnid, VehiclePassengersList::const_iterator passenger);
+        void ReloadCreatureTemplate(uint32 entry)
         void LoadCreatureTemplate(Field* fields);
         void CheckCreatureTemplate(CreatureTemplate const* cInfo);
         void LoadGameObjectQuestItems();
         void LoadCreatureQuestItems();
         void LoadTempSummons();
+        void ReloadCreature(uint32 guid);
         void LoadCreatures();
         void LoadLinkedRespawn();
         bool SetCreatureLinkedRespawn(ObjectGuid::LowType guid, ObjectGuid::LowType linkedGuid);

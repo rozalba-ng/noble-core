@@ -148,6 +148,8 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
 	{ "ReloadNPCOutfits", &LuaGlobalFunctions::ReloadNPCOutfits },
     { "ReloadAllNPC", &LuaGlobalFunctions::ReloadAllNPC },
     { "ReloadItemByEntry", &LuaGlobalFunctions::ReloadItemByEntry },
+    { "ReloadCreatureTemplateByEntry", &LuaGlobalFunctions::ReloadCreatureTemplateByEntry },
+    { "ReloadCreatureByEntry", &LuaGlobalFunctions::ReloadCreatureByEntry },
 
     { NULL, NULL }
 };

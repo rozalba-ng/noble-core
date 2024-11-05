@@ -3141,6 +3141,19 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    int ReloadCreatureByEntry(Eluna* /*E*/, lua_State* L)
+    {
+        uint32 id = Eluna::CHECKVAL<uint32>(L, 1);
+        sObjectMgr->ReloadCreature(id);
+        return 1;
+    }
+
+    int ReloadCreatureTemplateByEntry(Eluna* /*E*/, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        sObjectMgr->ReloadCreatureTemplate(entry);
+        return 1;
+    }
 	/*int GetAllCharacterTempMounts(Eluna* E, lua_State* L)
 	{
 		lua_newtable(L);

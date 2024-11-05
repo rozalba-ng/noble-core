@@ -94,4 +94,5 @@ void WorldDatabaseConnection::DoPrepareStatements()
     PrepareStatement(WORLD_UPD_GAMEOBJECT_ZONE_AREA_DATA, "UPDATE gameobject SET zoneId = ?, areaId = ? WHERE guid = ?", CONNECTION_ASYNC);
 	PrepareStatement(WORLD_INS_CREATURE_GAMEOBJECTS, "INSERT INTO creature_gameobjects (creature_guid, gameobject_guid, gameobject_type, `radius`, `angle`, `pos_z`, `orientation`) VALUES(?, ?, ?, ?, ?, ?, ?)", CONNECTION_ASYNC);
 	PrepareStatement(WORLD_DEL_CREATURE_GAMEOBJECTS, "DELETE FROM creature_gameobjects WHERE creature_guid = ? AND gameobject_guid = ?", CONNECTION_ASYNC);
+    PrepareStatement(WORLD_SEL_CREATURE, "SELECT guid, id, map, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, spawnMask, phaseMask, npcflag, unit_flags, dynamicflags, owner_id FROM creature WHERE guid = ?", CONNECTION_SYNCH);
 }
