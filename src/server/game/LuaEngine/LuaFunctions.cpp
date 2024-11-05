@@ -150,6 +150,7 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "ReloadItemByEntry", &LuaGlobalFunctions::ReloadItemByEntry },
     { "ReloadCreatureTemplateByEntry", &LuaGlobalFunctions::ReloadCreatureTemplateByEntry },
     { "ReloadCreatureByEntry", &LuaGlobalFunctions::ReloadCreatureByEntry },
+    { "ReloadCreatureOutfitByEntry", &LuaGlobalFunctions::ReloadCreatureOutfitByEntry },
 
     { NULL, NULL }
 };

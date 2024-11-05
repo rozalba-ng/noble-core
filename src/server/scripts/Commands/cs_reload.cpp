@@ -165,6 +165,7 @@ public:
 			{ "creature_equip_template",	   rbac::RBAC_PERM_COMMAND_RELOAD_CREATURE_EQUIPMENT_TEMPLATE,      true,  &HandleReloadEquipmentTemplateCommand,		   "" },
 			{ "creature_template_addon",	   rbac::RBAC_PERM_COMMAND_RELOAD_CREATURE_TEMPLATE_ADDON ,			true,  &HandleReloadCreatureTemplateAddonCommand,	   "" },
 			{ "creature",	                   rbac::RBAC_PERM_COMMAND_RELOAD_ONE_CREATURE,			            true,  &HandleReloadOneCreatureCommand,	               "" },
+            { "creature_template_outfit",      rbac::RBAC_PERM_COMMAND_RELOAD_CREATURE_TEMPLATE_OUTFIT,         true,  &HandleReloadCreatureTemplateOutfitCommand,     "" },
         };
         static std::vector<ChatCommand> commandTable =
         {
@@ -542,6 +543,23 @@ public:
         return true;
     }
 
+    static bool HandleReloadCreatureTemplateOutfitCommand(ChatHandler* handler, char const* args)
+    {
+        TC_LOG_INFO("misc", "Loading Creature Template Outfit... (`creature_template_outfits`)");
+        if (!*args)
+            return false;
+
+        char* id = strtok((char*)args, " ");
+        if (!id)
+            return false;
+
+        uint32 creatureOutfitId = atoi(id);
+        if (!creatureOutfitId)
+            return false;
+
+        sObjectMgr->LoadCreatureOutfit(creatureOutfitId);
+        return true;
+    }
     static bool HandleReloadAllGameObjectTemplateCommand(ChatHandler* handler, const char* /*args*/)
 	{
 		TC_LOG_INFO("misc", "Loading Gameobject Templates... (`gameobject_template`)");

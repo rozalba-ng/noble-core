@@ -1704,7 +1704,7 @@ void ObjectMgr::ReloadCreature(uint32 guid)
     uint32 oldMSTime = getMSTime();
     PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_CREATURE);
     stmt->setUInt32(0, guid);
-    PreparedQueryResult result = CharacterDatabase.Query(stmt);
+    PreparedQueryResult result = WorldDatabase.Query(stmt);
     if (!result)
     {
         TC_LOG_ERROR("creature.loading", ">> Loaded 0 creatures. No creature with guid=%d in `creature`.");
@@ -1712,7 +1712,7 @@ void ObjectMgr::ReloadCreature(uint32 guid)
     }
     Field* fields = result->Fetch();
 
-    uint32 entry        = fields[1].GetUInt32();
+    uint32 entry = fields[1].GetUInt32();
 
     CreatureTemplate const* cInfo = GetCreatureTemplate(entry);
     if (!cInfo)
@@ -8898,6 +8898,71 @@ SkillRangeType GetSkillRangeType(SkillRaceClassInfoEntry const* rcEntry)
     }
 
     return SKILL_RANGE_LEVEL;
+}
+
+void ObjectMgr::LoadCreatureOutfit(uint32 entry)
+{
+    uint32 oldMSTime = getMSTime();
+    PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_CREATURE_OUTFIT);
+    stmt->setUInt32(0, entry);
+    PreparedQueryResult result = WorldDatabase.Query(stmt);
+    if (!result)
+    {
+        TC_LOG_ERROR("creature.loading", ">> Loaded 0 outfits. No outfit with guid=%u in `creature_template_outfits`.");
+        return;
+    }
+    CreatureOutfit& data = _creatureOutfitStore[entry];
+    Field* fields = result->Fetch();
+    // fields[0] is entry
+    data.race = fields[1].GetUInt8();
+    const ChrRacesEntry* rEntry = sChrRacesStore.LookupEntry(data.race);
+    if (!rEntry)
+    {
+        TC_LOG_ERROR("server.loading", ">> Outfit entry %u in `creature_template_outfits` has incorrect race (%u).", entry, uint32(data.race));
+        return;
+    }
+
+    data.Class = fields[2].GetUInt8();
+    const ChrClassesEntry* cEntry = sChrClassesStore.LookupEntry(data.Class);
+    if (!cEntry)
+    {
+        TC_LOG_ERROR("server.loading", ">> Outfit entry %u in `creature_template_outfits` has incorrect class (%u).", entry, uint32(data.Class));
+        return;
+    }
+
+    data.gender = fields[3].GetUInt8();
+    switch (data.gender)
+    {
+        case GENDER_FEMALE: data.displayId = rEntry->model_f; break;
+        case GENDER_MALE:   data.displayId = rEntry->model_m; break;
+        default:
+            TC_LOG_ERROR("server.loading", ">> Outfit entry %u in `creature_template_outfits` has invalid gender %u", entry, uint32(data.gender));
+            return;
+    }
+
+    data.skin = fields[4].GetUInt8();
+    data.face = fields[5].GetUInt8();
+    data.hair = fields[6].GetUInt8();
+    data.haircolor = fields[7].GetUInt8();
+    data.facialhair = fields[8].GetUInt8();
+    // transmog
+    for (uint32 j = 0; j < MAX_CREATURE_OUTFIT_DISPLAYS; ++j)
+    {
+        int32 displayInfo = fields[9 + j].GetInt32();
+        if (displayInfo > 0) // entry
+        {
+            ItemTemplate const* proto = sObjectMgr->GetItemTemplate(uint32(displayInfo));
+            if (proto)
+                data.outfit[j] = proto->DisplayInfoID;
+            else
+            {
+                //TC_LOG_ERROR("server.loading", ">> Creature entry %u in `creature_template_outfits` has invalid item entry %u", entry, uint32(displayInfo));
+                data.outfit[j] = 0;
+            }
+        }
+        else // display
+            data.outfit[j] = uint32(-displayInfo);
+    }
 }
 
 void ObjectMgr::LoadCreatureOutfits()

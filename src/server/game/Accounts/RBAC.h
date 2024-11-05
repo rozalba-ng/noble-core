@@ -710,6 +710,7 @@ enum RBACPermissions
     RBAC_PERM_COMMAND_SET_SIZE                               = 856,
     RBAC_PERM_COMMAND_RELOAD_ONE_ITEM_TEMPLATE	             = 857,
     RBAC_PERM_COMMAND_RELOAD_ONE_CREATURE   	             = 858,
+    RBAC_PERM_COMMAND_RELOAD_CREATURE_TEMPLATE_OUTFIT        = 859,
 
     // custom permissions 1000+
     RBAC_PERM_MAX
